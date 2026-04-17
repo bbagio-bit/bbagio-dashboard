@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBagio 자사몰 대시보드</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card2: #1e2130;
+    --accent: #7c5cfc;
+    --accent2: #fc5c7d;
+    --green: #22c55e;
+    --yellow: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --border: #2a2f3e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; }
+
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header h1 { font-size: 1.2rem; font-weight: 700; }
+  header h1 span { color: var(--accent); }
+  #updated { font-size: 0.78rem; color: var(--muted); }
+
+  .period-bar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 28px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .period-bar button {
+    background: var(--border);
+    border: none;
+    color: var(--muted);
+    padding: 5px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: all .15s;
+  }
+  .period-bar button.active, .period-bar button:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+  .period-bar .spacer { flex: 1; }
+  .period-bar .mall-badge {
+    background: #2a2f3e;
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  main { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.yellow::before { background: var(--yellow); }
+  .kpi-card.pink::before { background: var(--accent2); }
+  .kpi-label { font-size: 0.76rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em; }
+  .kpi-value { font-size: 1.7rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .kpi-sub { font-size: 0.76rem; color: var(--muted); margin-top: 6px; }
+
+  /* Charts */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .chart-card h3 {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .chart-wrap { position: relative; height: 240px; }
+
+  /* Products Table */
+  .section-title {
+    font-size: 0.88rem;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 12px;
+  }
+  .products-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .products-card h3 {
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding: 16px 20px 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    border-bottom: 1px solid var(--border);
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 9px 16px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--card2);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #1f2333;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,92,252,.06); }
+  .rank { color: var(--accent); font-weight: 700; width: 32px; }
+  .product-name { font-weight: 500; }
+  .option-list { margin-top: 4px; }
+  .option-item {
+    display: inline-block;
+    background: var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.72rem;
+    margin: 2px 2px 0 0;
+  }
+  .bar-cell { padding-top: 14px; }
+  .revenue-bar-wrap { background: #1f2333; border-radius: 4px; height: 6px; width: 100%; margin-top: 5px; }
+  .revenue-bar { height: 6px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .green { color: var(--green); }
+  .accent { color: var(--accent); }
+
+  /* Daily Table */
+  .daily-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .daily-card h3 {
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding: 16px 20px 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Loading */
+  #loading {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: var(--muted);
+    z-index: 999;
+  }
+  .spinner {
+    width: 28px; height: 28px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-banner {
+    background: #3d1515;
+    border: 1px solid #7f2020;
+    color: #f87171;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 900px) {
+    .charts-grid { grid-template-columns: 1fr; }
+    main { padding: 16px; }
+    header, .period-bar { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+<div id="loading"><div class="spinner"></div>데이터 로딩 중...</div>
+
+<header>
+  <h1>🛒 <span>BBagio</span> 자사몰 대시보드</h1>
+  <div id="updated">-</div>
+</header>
+
+<div class="period-bar">
+  <button data-days="7" onclick="setDays(7)">7일</button>
+  <button data-days="14" onclick="setDays(14)">14일</button>
+  <button data-days="30" onclick="setDays(30)" class="active">30일</button>
+  <div class="spacer"></div>
+  <span class="mall-badge" id="period-label">-</span>
+</div>
+
+<main>
+  <div id="error-area"></div>
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">총 매출</div>
+      <div class="kpi-value" id="kpi-revenue">-</div>
+      <div class="kpi-sub" id="kpi-revenue-sub">-</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">주문 건수</div>
+      <div class="kpi-value" id="kpi-orders">-</div>
+      <div class="kpi-sub" id="kpi-orders-sub">-</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">평균 주문액</div>
+      <div class="kpi-value" id="kpi-aov">-</div>
+      <div class="kpi-sub">주문 1건당</div>
+    </div>
+    <div class="kpi-card pink">
+      <div class="kpi-label">신규 고객</div>
+      <div class="kpi-value" id="kpi-newcust">-</div>
+      <div class="kpi-sub" id="kpi-newcust-sub">첫 구매</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">취소 건수</div>
+      <div class="kpi-value" id="kpi-canceled">-</div>
+      <div class="kpi-sub" id="kpi-canceled-rate">-</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">일평균 매출</div>
+      <div class="kpi-value" id="kpi-daily-avg">-</div>
+      <div class="kpi-sub">기간 평균</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>일별 매출 & 주문</h3>
+      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>신규 고객 추이</h3>
+      <div class="chart-wrap"><canvas id="custChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div class="products-card">
+    <h3>상품별 판매 성과 (매출 순위)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>상품명</th>
+          <th class="num">수량</th>
+          <th class="num">매출</th>
+          <th style="width:200px">비율</th>
+        </tr>
+      </thead>
+      <tbody id="products-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Daily Table -->
+  <div class="daily-card">
+    <h3>일별 상세 데이터</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>날짜</th>
+          <th class="num">주문</th>
+          <th class="num">매출</th>
+          <th class="num">평균주문액</th>
+          <th class="num">신규고객</th>
+          <th class="num">취소</th>
+        </tr>
+      </thead>
+      <tbody id="daily-tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+const DATA_URL = 'https://raw.githubusercontent.com/bbagio-bit/bbagio-dashboard/main/cafe24_latest.json';
+let _all = null;
+let _days = 30;
+let revenueChart = null, custChart = null;
+
+const fmt = n => Math.round(n).toLocaleString('ko-KR');
+const fmtW = n => fmt(n) + '원';
+
+async function load() {
+  try {
+    const r = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    _all = await r.json();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('updated').textContent = '수집: ' + (_all.collected_at || '-');
+    render();
+  } catch(e) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error-area').innerHTML = `<div class="error-banner">⚠️ 데이터 로드 실패: ${e.message}<br>잠시 후 새로고침 해주세요.</div>`;
+  }
+}
+
+function setDays(d) {
+  _days = d;
+  document.querySelectorAll('.period-bar button').forEach(b => {
+    b.classList.toggle('active', +b.dataset.days === d);
+  });
+  render();
+}
+
+function getFilteredDays() {
+  if (!_all) return [];
+  const allDates = Object.keys(_all.daily).sort();
+  return allDates.slice(-_days);
+}
+
+function render() {
+  if (!_all) return;
+  const dates = getFilteredDays();
+
+  // Period label
+  if (dates.length > 0) {
+    document.getElementById('period-label').textContent = dates[0] + ' ~ ' + dates[dates.length-1];
+  }
+
+  // Aggregate
+  let totalRevenue = 0, totalOrders = 0, totalNew = 0, totalCanceled = 0;
+  const dailyRevenue = [], dailyOrders = [], dailyNew = [];
+
+  for (const dt of dates) {
+    const d = _all.daily[dt] || {};
+    totalRevenue  += d.revenue  || 0;
+    totalOrders   += d.orders   || 0;
+    totalNew      += d.new_customers || 0;
+    totalCanceled += d.canceled || 0;
+    dailyRevenue.push(d.revenue || 0);
+    dailyOrders.push(d.orders || 0);
+    dailyNew.push(d.new_customers || 0);
+  }
+
+  const aov = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+  const dailyAvg = dates.length > 0 ? totalRevenue / dates.length : 0;
+  const cancelRate = (totalOrders + totalCanceled) > 0
+    ? (totalCanceled / (totalOrders + totalCanceled) * 100).toFixed(1) : 0;
+
+  // KPI
+  document.getElementById('kpi-revenue').textContent = fmtW(totalRevenue);
+  document.getElementById('kpi-revenue-sub').textContent = dates.length + '일 누적';
+  document.getElementById('kpi-orders').textContent = fmt(totalOrders) + '건';
+  document.getElementById('kpi-orders-sub').textContent = `일평균 ${(totalOrders/dates.length).toFixed(1)}건`;
+  document.getElementById('kpi-aov').textContent = fmtW(aov);
+  document.getElementById('kpi-newcust').textContent = fmt(totalNew) + '명';
+  document.getElementById('kpi-newcust-sub').textContent = `첫 구매 비율 ${totalOrders > 0 ? (totalNew/totalOrders*100).toFixed(0) : 0}%`;
+  document.getElementById('kpi-canceled').textContent = fmt(totalCanceled) + '건';
+  document.getElementById('kpi-canceled-rate').textContent = `취소율 ${cancelRate}%`;
+  document.getElementById('kpi-daily-avg').textContent = fmtW(dailyAvg);
+
+  // Revenue Chart
+  const shortDates = dates.map(d => d.slice(5));
+  if (revenueChart) revenueChart.destroy();
+  const ctx1 = document.getElementById('revenueChart').getContext('2d');
+  revenueChart = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: shortDates,
+      datasets: [
+        {
+          label: '매출',
+          data: dailyRevenue,
+          backgroundColor: 'rgba(124,92,252,0.5)',
+          borderColor: '#7c5cfc',
+          borderWidth: 1,
+          borderRadius: 3,
+          yAxisID: 'y',
+        },
+        {
+          label: '주문수',
+          data: dailyOrders,
+          type: 'line',
+          borderColor: '#fc5c7d',
+          backgroundColor: 'rgba(252,92,125,0.1)',
+          pointRadius: 3,
+          pointBackgroundColor: '#fc5c7d',
+          tension: 0.3,
+          yAxisID: 'y2',
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#8892a4', font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 0) return ` 매출: ${fmtW(ctx.raw)}`;
+              return ` 주문: ${ctx.raw}건`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#8892a4', font: { size: 10 }, maxRotation: 45 }, grid: { color: '#1f2333' } },
+        y: { ticks: { color: '#8892a4', font: { size: 10 }, callback: v => fmt(v/10000)+'만' }, grid: { color: '#1f2333' }, position: 'left' },
+        y2: { ticks: { color: '#fc5c7d', font: { size: 10 } }, grid: { display: false }, position: 'right' }
+      }
+    }
+  });
+
+  // Customer Chart
+  if (custChart) custChart.destroy();
+  const ctx2 = document.getElementById('custChart').getContext('2d');
+  custChart = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: shortDates,
+      datasets: [{
+        label: '신규 고객',
+        data: dailyNew,
+        backgroundColor: 'rgba(34,197,94,0.5)',
+        borderColor: '#22c55e',
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#8892a4', font: { size: 10 }, maxRotation: 45 }, grid: { color: '#1f2333' } },
+        y: { ticks: { color: '#8892a4', font: { size: 10 } }, grid: { color: '#1f2333' } }
+      }
+    }
+  });
+
+  // Products Table
+  const maxRev = _all.products.length > 0 ? _all.products[0].revenue : 1;
+  const tbody = document.getElementById('products-tbody');
+  tbody.innerHTML = '';
+  (_all.products || []).slice(0, 15).forEach((p, i) => {
+    const pct = maxRev > 0 ? (p.revenue / maxRev * 100).toFixed(0) : 0;
+    const opts = (p.options || []).slice(0, 5).map(o =>
+      `<span class="option-item">${(o.option_name||'').slice(0,20)} (${o.quantity}개)</span>`
+    ).join('');
+    tbody.innerHTML += `
+      <tr>
+        <td class="rank">${i+1}</td>
+        <td>
+          <div class="product-name">${p.product_name || '-'}</div>
+          <div class="option-list">${opts}</div>
+        </td>
+        <td class="num">${fmt(p.quantity)}개</td>
+        <td class="num accent">${fmtW(p.revenue)}</td>
+        <td class="bar-cell">
+          <div class="revenue-bar-wrap">
+            <div class="revenue-bar" style="width:${pct}%"></div>
+          </div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:3px">${pct}%</div>
+        </td>
+      </tr>`;
+  });
+
+  // Daily Table
+  const dtbody = document.getElementById('daily-tbody');
+  dtbody.innerHTML = '';
+  [...dates].reverse().forEach(dt => {
+    const d = _all.daily[dt] || {};
+    const aovD = d.orders > 0 ? d.revenue / d.orders : 0;
+    dtbody.innerHTML += `
+      <tr>
+        <td>${dt}</td>
+        <td class="num">${fmt(d.orders||0)}건</td>
+        <td class="num accent">${fmtW(d.revenue||0)}</td>
+        <td class="num">${fmtW(aovD)}</td>
+        <td class="num green">${fmt(d.new_customers||0)}명</td>
+        <td class="num" style="color:${(d.canceled||0)>0?'#f87171':'var(--muted)'}">
+          ${fmt(d.canceled||0)}건
+        </td>
+      </tr>`;
+  });
+}
+
+load();
+</script>
+</body>
+</html>
