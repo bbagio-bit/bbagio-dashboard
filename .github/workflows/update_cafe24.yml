@@ -2,7 +2,7 @@ name: Update Cafe24 Data
 
 on:
   schedule:
-    # KST 06:00, 13:00, 21:00 (UTC 기준)
+    # KST 06:00, 13:00, 21:00
     - cron: '0 21 * * *'
     - cron: '0 4 * * *'
     - cron: '0 12 * * *'
@@ -24,9 +24,8 @@ jobs:
       - name: Install dependencies
         run: pip install requests PyNaCl
 
-      - name: Set token env from secrets or file
+      - name: Load tokens from repo file or secrets
         run: |
-          # repo에 저장된 토큰 파일이 있으면 우선 사용, 없으면 Secrets 사용
           if [ -f "cafe24_tokens.json" ]; then
             AT=$(python3 -c "import json; d=json.load(open('cafe24_tokens.json')); print(d['access_token'])")
             RT=$(python3 -c "import json; d=json.load(open('cafe24_tokens.json')); print(d['refresh_token'])")
@@ -48,10 +47,44 @@ jobs:
           GH_REPO: bbagio-dashboard
         run: python cafe24_collector.py
 
-      - name: Commit updated tokens & data
+      - name: Commit tokens & data to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add cafe24_tokens.json cafe24_latest.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "[자동] Cafe24 토큰/데이터 $(date +'%Y-%m-%d %H:%M')"
+          git diff --staged --quiet || git commit -m "[자동] Cafe24 데이터 $(date +'%Y-%m-%d %H:%M KST')"
           git push || true
+
+      - name: Sync cafe24_latest.json to gh-pages
+        run: |
+          python3 << 'PYEOF'
+          import requests, base64, json, os
+
+          token = os.environ.get("GH_PAT_TOKEN", "")
+          if not token:
+              print("GH_PAT not set, skipping gh-pages sync")
+              exit(0)
+
+          headers = {
+              "Authorization": f"token {token}",
+              "Accept": "application/vnd.github+json",
+              "Content-Type": "application/json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+
+          with open("cafe24_latest.json", "rb") as f:
+              content_b64 = base64.b64encode(f.read()).decode()
+
+          api_url = "https://api.github.com/repos/bbagio-bit/bbagio-dashboard/contents/cafe24_latest.json"
+          r = requests.get(api_url + "?ref=gh-pages", headers=headers)
+          sha = r.json().get("sha") if r.status_code == 200 else None
+
+          body = {"message": "[자동] Cafe24 데이터 gh-pages 동기화", "content": content_b64, "branch": "gh-pages"}
+          if sha:
+              body["sha"] = sha
+
+          r2 = requests.put(api_url, headers=headers, data=json.dumps(body))
+          print(f"gh-pages 동기화: {r2.status_code}")
+          PYEOF
+        env:
+          GH_PAT_TOKEN: ${{ secrets.GH_PAT }}
