@@ -9,14 +9,12 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #f0f2f5; color: #1a1a2e; font-family: 'Segoe UI', -apple-system, sans-serif; font-size: 14px; }
 
-/* Header */
 .header { background: #fff; border-bottom: 3px solid #7c5cfc; padding: 8px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); position: sticky; top: 0; z-index: 100; }
 .logo { font-size: 1.05rem; font-weight: 900; color: #7c5cfc; letter-spacing: -.5px; }
 .logo span { color: #1a1a2e; }
 .header-sub { font-size: .78rem; color: #888; border-left: 1px solid #e5e7eb; padding-left: 12px; }
 .updated { font-size: .72rem; color: #aaa; margin-left: auto; }
 
-/* Filter */
 .filter-bar { background: #fff; border-bottom: 1px solid #e8eaf0; padding: 7px 20px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
 .filter-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-right: 3px; }
 .btn-p { background: #f4f5f7; border: 1px solid #e2e5ea; color: #666; padding: 4px 11px; border-radius: 4px; cursor: pointer; font-size: .78rem; transition: all .12s; }
@@ -28,15 +26,14 @@ body { background: #f0f2f5; color: #1a1a2e; font-family: 'Segoe UI', -apple-syst
 .custom-wrap .apply-btn { background: #7c5cfc; border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; }
 .range-badge { margin-left: auto; background: #f3f0ff; border: 1px solid #ddd6fe; padding: 3px 10px; border-radius: 20px; font-size: .72rem; color: #7c5cfc; font-weight: 600; }
 
-/* Main */
 main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
 
-/* KPI Section */
+/* KPI */
 .kpi-section { margin-bottom: 14px; }
 .kpi-section-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; padding-left: 2px; }
 .kpi-row { display: grid; gap: 10px; }
 .kpi-row-1 { grid-template-columns: repeat(4, 1fr); }
-.kpi-row-2 { grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
+.kpi-row-2 { grid-template-columns: 1fr 1fr; margin-top: 10px; }
 .kpi { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; padding: 13px 16px; border-top: 3px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
 .kpi.purple  { border-top-color: #7c5cfc; }
 .kpi.blue    { border-top-color: #3b82f6; }
@@ -44,10 +41,10 @@ main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
 .kpi.amber   { border-top-color: #f59e0b; }
 .kpi.red     { border-top-color: #ef4444; }
 .kpi.pink    { border-top-color: #ec4899; }
-.kpi.indigo  { border-top-color: #6366f1; }
-.kpi-lbl { font-size: .7rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+.kpi-lbl { font-size: .7rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
 .kpi-val { font-size: 1.45rem; font-weight: 900; color: #1a1a2e; line-height: 1; margin-bottom: 5px; }
 .kpi-val.xl { font-size: 1.15rem; }
+.kpi-val.xxl { font-size: 1.8rem; }
 .kpi-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .delta { font-size: .73rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; }
 .delta.up   { background: #fee2e2; color: #dc2626; }
@@ -70,9 +67,6 @@ main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
 .card-sub { font-size: .72rem; color: #bbb; }
 .card-body { padding: 10px 14px; }
 
-/* Divider */
-.section-sep { border: none; border-top: 1px solid #e8eaf0; margin: 14px 0; }
-
 /* H-bars */
 .hbar-list { padding: 6px 14px 10px; }
 .hbar-item { margin-bottom: 8px; }
@@ -83,11 +77,6 @@ main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
 .hbar-fill         { height: 7px; border-radius: 3px; background: linear-gradient(90deg,#7c5cfc,#a78bfa); }
 .hbar-fill.blue    { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
 .hbar-fill.green   { background: linear-gradient(90deg,#10b981,#34d399); }
-.hbar-fill.red     { background: linear-gradient(90deg,#ef4444,#fca5a5); }
-.hbar-fill.amber   { background: linear-gradient(90deg,#f59e0b,#fde68a); }
-
-/* ROAS trend section */
-.roas-section { margin-bottom: 12px; }
 
 /* Tables */
 .tbl-wrap { overflow-x: auto; }
@@ -115,6 +104,16 @@ tr:last-child td { border-bottom: none; }
 .di-opt{flex:1;color:#888;font-size:.72rem;margin-left:8px;}
 .di-q{width:44px;text-align:right;font-weight:700;color:#7c5cfc;}
 .di-r{width:78px;text-align:right;font-weight:700;color:#10b981;}
+
+/* Donut */
+.donut-wrap { display:flex; align-items:center; gap:14px; padding:10px 14px; }
+.donut-chart-area { position:relative; width:140px; height:140px; flex-shrink:0; }
+.donut-legend { flex:1; }
+.donut-leg-item { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+.donut-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.donut-leg-txt { font-size:.78rem; color:#444; }
+.donut-leg-val { font-size:.82rem; font-weight:800; color:#1a1a2e; }
+.donut-leg-sub { font-size:.68rem; color:#aaa; }
 
 /* Modal */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;}
@@ -192,10 +191,18 @@ tr:last-child td { border-bottom: none; }
       <div class="kpi green"> <div class="kpi-lbl">객단가 (평균주문액)</div><div class="kpi-val" id="kv-aov">-</div><div class="kpi-foot"><span class="delta" id="kd-aov">-</span><span class="kpi-prev-txt" id="kp-aov">-</span></div></div>
       <div class="kpi amber"> <div class="kpi-lbl">신규 고객</div><div class="kpi-val" id="kv-nc">-</div><div class="kpi-foot"><span class="delta" id="kd-nc">-</span><span class="kpi-prev-txt" id="kp-nc">-</span></div></div>
     </div>
+    <!-- 광고비 + ROAS (2열) -->
     <div class="kpi-row kpi-row-2" style="margin-top:10px">
-      <div class="kpi red"><div class="kpi-lbl">📣 Meta 광고비</div><div class="kpi-val" id="kv-sp">-</div><div class="kpi-foot"><span class="delta" id="kd-sp">-</span><span class="kpi-prev-txt" id="kp-sp">-</span></div></div>
-      <div class="kpi pink"><div class="kpi-lbl">🎯 실제 ROAS <span style="font-size:.62rem;color:#bbb;font-weight:400">(자사몰매출÷광고비)</span></div><div class="kpi-val xl" id="kv-roas">-</div><div class="kpi-foot" id="kv-roas-detail">-</div></div>
-      <div class="kpi indigo"><div class="kpi-lbl">💡 Meta 광고 ROAS <span style="font-size:.62rem;color:#bbb;font-weight:400">(귀인기준)</span></div><div class="kpi-val xl" id="kv-mroas">-</div><div class="kpi-foot"><span class="kpi-prev-txt">광고 귀인 매출 기준</span></div></div>
+      <div class="kpi red">
+        <div class="kpi-lbl">📣 Meta 광고비</div>
+        <div class="kpi-val" id="kv-sp">-</div>
+        <div class="kpi-foot"><span class="delta" id="kd-sp">-</span><span class="kpi-prev-txt" id="kp-sp">-</span></div>
+      </div>
+      <div class="kpi pink">
+        <div class="kpi-lbl">🎯 실제 ROAS <span style="font-size:.62rem;color:#bbb;font-weight:400">(자사몰 매출 ÷ 광고비)</span></div>
+        <div class="kpi-val xxl" id="kv-roas">-</div>
+        <div class="kpi-foot" id="kv-roas-detail">-</div>
+      </div>
     </div>
   </div>
 
@@ -211,7 +218,7 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
-  <!-- ═══ Row2: ROAS 추이 + 광고비vs매출 ═══ -->
+  <!-- ═══ Row2: 광고비vs매출 + 옵션 순위 ═══ -->
   <div class="row r-2-1">
     <div class="card">
       <div class="card-hd"><span class="card-ttl">📊 광고비 vs 자사몰 매출 추이</span><span class="card-sub">일별 ROAS 포함</span></div>
@@ -223,7 +230,22 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
-  <!-- ═══ Row3: 신규고객 + 비교카드 ═══ -->
+  <!-- ═══ Row3: 시간대별 + 회원/비회원 ═══ -->
+  <div class="row r-2-1">
+    <div class="card">
+      <div class="card-hd"><span class="card-ttl">🕐 시간대별 주문 현황</span><span class="card-sub" id="hourly-sub">선택 기간 합산</span></div>
+      <div class="card-body"><div style="position:relative;height:190px"><canvas id="hourlyChart"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="card-ttl">👤 회원 / 비회원 주문 비율</span><span class="card-sub">주문건수 기준</span></div>
+      <div class="donut-wrap">
+        <div class="donut-chart-area"><canvas id="memberChart"></canvas></div>
+        <div class="donut-legend" id="member-legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Row4: 신규고객 + 비교카드 ═══ -->
   <div class="row r-2-1">
     <div class="card">
       <div class="card-hd"><span class="card-ttl">👥 신규 고객 추이</span></div>
@@ -270,7 +292,7 @@ tr:last-child td { border-bottom: none; }
           <th class="td-r" style="width:115px">자사몰 매출</th>
           <th class="td-r" style="width:95px">객단가</th>
           <th class="td-r" style="width:100px">광고비</th>
-          <th class="td-r" style="width:75px">ROAS</th>
+          <th class="td-r" style="width:80px">ROAS</th>
           <th class="td-r" style="width:75px">신규고객</th>
         </tr></thead>
         <tbody id="daily-tbody"></tbody>
@@ -285,15 +307,21 @@ const C24_URL  = 'cafe24_latest.json';
 const META_URL = 'meta_summary.json';
 let _c24 = null, _meta = null;
 let _from = null, _to = null, _activeP = '30d';
-let trendCh = null, roacCh = null, custCh = null, moCh = null;
+let trendCh = null, roacCh = null, custCh = null, hourlyCh = null, memberCh = null, moCh = null;
 
-const fmt  = n => Math.round(n).toLocaleString('ko-KR');
-const fmtW = n => fmt(n) + '원';
-const fmtX = n => n.toFixed(2) + 'x';
-const roasBadge = v => {
+const fmt   = n => Math.round(n).toLocaleString('ko-KR');
+const fmtW  = n => fmt(n) + '원';
+const fmtPct= n => (n * 100).toFixed(0) + '%';   // ROAS as %
+
+const roasBadgePct = v => {
   const cls = v >= 3 ? 'roas-good' : v >= 1.5 ? 'roas-ok' : 'roas-bad';
-  return `<span class="roas-badge ${cls}">${fmtX(v)}</span>`;
+  return `<span class="roas-badge ${cls}">${fmtPct(v)}</span>`;
 };
+const roasBadgeSmall = v => {
+  const cls = v >= 3 ? 'roas-good' : v >= 1.5 ? 'roas-ok' : 'roas-bad';
+  return `<span class="roas-badge ${cls}" style="font-size:.7rem">${fmtPct(v)}</span>`;
+};
+
 function delta(cur, prv) {
   if (!prv || prv === 0) return { t: '-', c: 'same' };
   const p = ((cur - prv) / Math.abs(prv) * 100).toFixed(1);
@@ -327,6 +355,7 @@ function periodRange(p) {
     return {from:tds(f),to:tds(t)};
   }
   if (p==='3m') return {from:tds(addD(today,-89)),to:ts};
+  return {from:ts,to:ts};
 }
 function prevRange(from,to) {
   const f=new Date(from+'T00:00:00'), t=new Date(to+'T00:00:00');
@@ -356,14 +385,33 @@ function filterDates(from, to, src) {
   return Object.keys(src||_c24.daily).filter(d=>d>=from&&d<=to).sort();
 }
 function aggC24(dates) {
-  let r=0,o=0,nc=0; dates.forEach(d=>{const v=_c24.daily[d]||{};r+=v.revenue||0;o+=v.orders||0;nc+=v.new_customers||0;});
-  return {rev:r,ord:o,nc,aov:o>0?r/o:0};
+  let r=0,o=0,nc=0,mo=0,nmo=0;
+  dates.forEach(d=>{
+    const v=_c24.daily[d]||{};
+    r+=v.revenue||0; o+=v.orders||0; nc+=v.new_customers||0;
+    mo+=v.member_orders||0; nmo+=v.nonmember_orders||0;
+  });
+  return {rev:r,ord:o,nc,aov:o>0?r/o:0,mo,nmo};
 }
 function aggMeta(from,to) {
   if(!_meta) return {spend:0,revenue:0,roas:0};
   let sp=0,rv=0; const daily=_meta.daily||{};
   for(const [d,v] of Object.entries(daily)) { if(d>=from&&d<=to){sp+=v.spend||0;rv+=v.revenue||0;} }
   return {spend:sp,revenue:rv,roas:sp>0?rv/sp:0};
+}
+// Aggregate hourly from filtered dates
+function aggHourly(dates) {
+  const ho={}, hr={};
+  for(let i=0;i<24;i++){ho[String(i)]=0; hr[String(i)]=0;}
+  dates.forEach(d=>{
+    const dv=_c24.daily[d]||{};
+    const hod=dv.hourly_orders||{}, hrd=dv.hourly_revenue||{};
+    for(let i=0;i<24;i++){
+      const k=String(i);
+      ho[k]+=(hod[k]||0); hr[k]+=(hrd[k]||0);
+    }
+  });
+  return {orders:ho, revenue:hr};
 }
 
 // ── Load ──
@@ -393,6 +441,7 @@ function render() {
   document.getElementById('trend-sub').textContent  = `${_from} ~ ${_to}`;
   document.getElementById('prod-tbl-sub').textContent = `${dates.length}일 기준`;
   document.getElementById('compare-sub').textContent  = `현재 vs 전기(${prev.from}~${prev.to})`;
+  document.getElementById('hourly-sub').textContent = `${_from} ~ ${_to} 합산`;
 
   const cur  = aggC24(dates), prv = aggC24(pd);
   const mCur = aggMeta(_from,_to), mPrv = aggMeta(prev.from,prev.to);
@@ -400,17 +449,23 @@ function render() {
   const prevRealRoas = mPrv.spend>0 ? prv.rev/mPrv.spend : 0;
 
   // ── KPI ──
-  setKpi('kv-rev','kd-rev','kp-rev', cur.rev,  fmtW(cur.rev),  prv.rev,  `전기 ${fmtW(prv.rev)}`);
-  setKpi('kv-ord','kd-ord','kp-ord', cur.ord,  fmt(cur.ord)+'건', prv.ord, `전기 ${fmt(prv.ord)}건`);
-  setKpi('kv-aov','kd-aov','kp-aov', cur.aov,  fmtW(cur.aov),  prv.aov,  `전기 ${fmtW(prv.aov)}`);
-  setKpi('kv-nc', 'kd-nc', 'kp-nc',  cur.nc,   fmt(cur.nc)+'명',prv.nc,  `전기 ${fmt(prv.nc)}명`);
-  setKpi('kv-sp', 'kd-sp', 'kp-sp',  mCur.spend,fmtW(mCur.spend),mPrv.spend,`전기 ${fmtW(mPrv.spend)}`);
+  setKpi('kv-rev','kd-rev','kp-rev', cur.rev, fmtW(cur.rev), prv.rev, `전기 ${fmtW(prv.rev)}`);
+  setKpi('kv-ord','kd-ord','kp-ord', cur.ord, fmt(cur.ord)+'건', prv.ord, `전기 ${fmt(prv.ord)}건`);
+  setKpi('kv-aov','kd-aov','kp-aov', cur.aov, fmtW(cur.aov), prv.aov, `전기 ${fmtW(prv.aov)}`);
+  setKpi('kv-nc', 'kd-nc', 'kp-nc',  cur.nc,  fmt(cur.nc)+'명', prv.nc, `전기 ${fmt(prv.nc)}명`);
+  setKpi('kv-sp', 'kd-sp', 'kp-sp',  mCur.spend, fmtW(mCur.spend), mPrv.spend, `전기 ${fmtW(mPrv.spend)}`);
 
-  // ROAS KPI
+  // ROAS KPI — 크게, % 표기
   const rEl = document.getElementById('kv-roas');
-  rEl.innerHTML = roasBadge(realRoas) + ` <span style="font-size:.85rem;color:#666">${fmtX(realRoas)}</span>`;
-  document.getElementById('kv-roas-detail').innerHTML = `<span class="kpi-prev-txt">자사몰 ${fmtW(cur.rev)} ÷ 광고비 ${fmtW(mCur.spend)}</span>`;
-  document.getElementById('kv-mroas').innerHTML = roasBadge(mCur.roas) + ` <span style="font-size:.85rem;color:#666">${fmtX(mCur.roas)}</span>`;
+  if(realRoas>0) {
+    const cls = realRoas>=3?'roas-good':realRoas>=1.5?'roas-ok':'roas-bad';
+    rEl.innerHTML = `<span class="roas-badge ${cls}" style="font-size:1.5rem;padding:4px 14px">${fmtPct(realRoas)}</span>`;
+  } else {
+    rEl.textContent = 'N/A';
+  }
+  document.getElementById('kv-roas-detail').innerHTML =
+    `<span class="kpi-prev-txt">자사몰 ${fmtW(cur.rev)} ÷ 광고비 ${fmtW(mCur.spend)}</span>
+     <span class="delta ${delta(realRoas,prevRealRoas).c}" style="margin-left:4px">${delta(realRoas,prevRealRoas).t}</span>`;
 
   // ── Trend Chart ──
   const labels = dates.map(d=>d.slice(5));
@@ -433,28 +488,97 @@ function render() {
   });
 
   // ── ROAS / 광고비 Chart ──
-  const spends = dates.map(d=>(_meta&&_meta.daily[d]||{}).spend||0);
+  const spends = dates.map(d=>(_meta&&_meta.daily&&_meta.daily[d]||{}).spend||0);
   const roasVals = dates.map((d,i)=>spends[i]>0 ? revs[i]/spends[i] : null);
   if(roacCh) roacCh.destroy();
   roacCh = new Chart(document.getElementById('roasChart'),{
     data:{labels,datasets:[
       {type:'bar',label:'광고비',data:spends,backgroundColor:'rgba(239,68,68,.18)',borderColor:'#ef4444',borderWidth:1,borderRadius:2,yAxisID:'y'},
       {type:'bar',label:'자사몰매출',data:revs,backgroundColor:'rgba(124,92,252,.15)',borderColor:'#7c5cfc',borderWidth:1,borderRadius:2,yAxisID:'y'},
-      {type:'line',label:'ROAS',data:roasVals,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.1)',pointRadius:3,pointBackgroundColor:'#10b981',tension:.3,yAxisID:'y2',fill:false,spanGaps:true},
+      {type:'line',label:'ROAS(%)',data:roasVals,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.1)',pointRadius:3,pointBackgroundColor:'#10b981',tension:.3,yAxisID:'y2',fill:false,spanGaps:true},
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{labels:{color:'#777',font:{size:11}}},tooltip:{callbacks:{label:ctx=>{
         if(ctx.datasetIndex===0) return ` 광고비: ${fmtW(ctx.raw||0)}`;
         if(ctx.datasetIndex===1) return ` 자사몰매출: ${fmtW(ctx.raw||0)}`;
-        return ctx.raw!=null ? ` ROAS: ${fmtX(ctx.raw)}` : ' ROAS: -';
+        return ctx.raw!=null ? ` ROAS: ${fmtPct(ctx.raw)}` : ' ROAS: -';
       }}}},
       scales:{
         x:{ticks:{color:'#aaa',font:{size:10},maxRotation:45},grid:{color:'#f5f5f8'}},
         y:{ticks:{color:'#aaa',font:{size:10},callback:v=>fmt(v/10000)+'만'},grid:{color:'#f5f5f8'},position:'left'},
-        y2:{ticks:{color:'#10b981',font:{size:10},callback:v=>v+'x'},grid:{display:false},position:'right',suggestedMin:0}
+        y2:{ticks:{color:'#10b981',font:{size:10},callback:v=>v?fmtPct(v):'0%'},grid:{display:false},position:'right',suggestedMin:0}
       }
     }
   });
+
+  // ── Hourly Chart ──
+  const hData = aggHourly(dates);
+  const hLabels = Array.from({length:24},(_,i)=>i+'시');
+  const hOrders = Array.from({length:24},(_,i)=>hData.orders[String(i)]||0);
+  const hRevs   = Array.from({length:24},(_,i)=>hData.revenue[String(i)]||0);
+  const hasHourly = hOrders.some(v=>v>0);
+  if(hourlyCh) hourlyCh.destroy();
+  if(hasHourly) {
+    hourlyCh = new Chart(document.getElementById('hourlyChart'),{
+      data:{labels:hLabels,datasets:[
+        {type:'bar',label:'주문건수',data:hOrders,backgroundColor:'rgba(124,92,252,.2)',borderColor:'#7c5cfc',borderWidth:1,borderRadius:2,yAxisID:'y'},
+        {type:'line',label:'매출',data:hRevs,borderColor:'#f59e0b',pointRadius:2,tension:.3,yAxisID:'y2',fill:false},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+        plugins:{legend:{labels:{color:'#777',font:{size:11}}},tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?` 주문: ${ctx.raw}건`:` 매출: ${fmtW(ctx.raw)}`}}},
+        scales:{
+          x:{ticks:{color:'#aaa',font:{size:9}},grid:{color:'#f5f5f8'}},
+          y:{ticks:{color:'#aaa',font:{size:10}},grid:{color:'#f5f5f8'},position:'left'},
+          y2:{ticks:{color:'#f59e0b',font:{size:10},callback:v=>fmt(v/10000)+'만'},grid:{display:false},position:'right'}
+        }
+      }
+    });
+  } else {
+    // 데이터 없을 때 안내
+    document.getElementById('hourlyChart').getContext('2d').clearRect(0,0,9999,9999);
+    const parent = document.getElementById('hourlyChart').parentElement;
+    if(!parent.querySelector('.no-data-hl')) {
+      const nd=document.createElement('div'); nd.className='no-data no-data-hl';
+      nd.textContent='다음 수집 후 표시됩니다 (시간대별 데이터 수집 중)';
+      parent.appendChild(nd);
+    }
+  }
+
+  // ── Member / Non-member Donut ──
+  const totalMo = cur.mo, totalNmo = cur.nmo, totalO2 = totalMo + totalNmo;
+  if(memberCh) memberCh.destroy();
+  if(totalO2 > 0) {
+    const mColors = ['#7c5cfc','#a5b4fc'];
+    memberCh = new Chart(document.getElementById('memberChart'),{
+      type:'doughnut',
+      data:{
+        labels:['회원','비회원'],
+        datasets:[{data:[totalMo,totalNmo],backgroundColor:mColors,borderWidth:2,borderColor:'#fff',hoverOffset:4}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
+          const pct=((ctx.raw/totalO2)*100).toFixed(1);
+          return ` ${ctx.label}: ${fmt(ctx.raw)}건 (${pct}%)`;
+        }}}}
+      }
+    });
+    const mpct = totalO2>0?(totalMo/totalO2*100).toFixed(1):0;
+    const nmpct= totalO2>0?(totalNmo/totalO2*100).toFixed(1):0;
+    document.getElementById('member-legend').innerHTML=`
+      <div class="donut-leg-item"><div class="donut-dot" style="background:#7c5cfc"></div><div>
+        <div class="donut-leg-txt">회원</div>
+        <div class="donut-leg-val">${fmt(totalMo)}건</div>
+        <div class="donut-leg-sub">${mpct}%</div>
+      </div></div>
+      <div class="donut-leg-item"><div class="donut-dot" style="background:#a5b4fc"></div><div>
+        <div class="donut-leg-txt">비회원</div>
+        <div class="donut-leg-val">${fmt(totalNmo)}건</div>
+        <div class="donut-leg-sub">${nmpct}%</div>
+      </div></div>
+      <div style="margin-top:10px;font-size:.72rem;color:#bbb">총 ${fmt(totalO2)}건</div>`;
+  } else {
+    document.getElementById('member-legend').innerHTML='<div class="no-data" style="padding:30px 0">다음 수집 후 표시됩니다</div>';
+  }
 
   // ── Product HBar ──
   const dpAgg={};
@@ -500,12 +624,12 @@ function render() {
 
   // ── Compare Grid ──
   const cmpItems=[
-    {l:'기간 매출',cv:fmtW(cur.rev),d:delta(cur.rev,prv.rev)},
-    {l:'주문 건수',cv:fmt(cur.ord)+'건',d:delta(cur.ord,prv.ord)},
-    {l:'객단가',cv:fmtW(cur.aov),d:delta(cur.aov,prv.aov)},
-    {l:'신규 고객',cv:fmt(cur.nc)+'명',d:delta(cur.nc,prv.nc)},
-    {l:'광고비',cv:fmtW(mCur.spend),d:delta(mCur.spend,mPrv.spend)},
-    {l:'실제 ROAS',cv:fmtX(realRoas),d:delta(realRoas,prevRealRoas)},
+    {l:'기간 매출',  cv:fmtW(cur.rev),       d:delta(cur.rev,prv.rev)},
+    {l:'주문 건수',  cv:fmt(cur.ord)+'건',    d:delta(cur.ord,prv.ord)},
+    {l:'객단가',     cv:fmtW(cur.aov),        d:delta(cur.aov,prv.aov)},
+    {l:'신규 고객',  cv:fmt(cur.nc)+'명',     d:delta(cur.nc,prv.nc)},
+    {l:'광고비',     cv:fmtW(mCur.spend),     d:delta(mCur.spend,mPrv.spend)},
+    {l:'실제 ROAS',  cv:fmtPct(realRoas),     d:delta(realRoas,prevRealRoas)},
   ];
   document.getElementById('cmp-grid').innerHTML=cmpItems.map(c=>`
     <div style="background:#fafafe;border:1px solid #ece9ff;border-radius:5px;padding:8px 10px">
@@ -540,12 +664,12 @@ function render() {
   const dtb=document.getElementById('daily-tbody');
   dtb.innerHTML='';
   [...dates].reverse().forEach(dt=>{
-    const d=_c24.daily[dt]||{}, sp=(_meta&&_meta.daily[dt]||{}).spend||0;
+    const d=_c24.daily[dt]||{}, sp=(_meta&&_meta.daily&&_meta.daily[dt]||{}).spend||0;
     const aov2=d.orders>0?d.revenue/d.orders:0;
     const roas2=sp>0?d.revenue/sp:null;
     const rid='dd-'+dt.replace(/-/g,'');
     const items=_c24.daily_products[dt]||[];
-    const roasTxt=roas2!=null?`<span class="roas-badge ${roas2>=3?'roas-good':roas2>=1.5?'roas-ok':'roas-bad'}" style="font-size:.7rem">${fmtX(roas2)}</span>`:'<span style="color:#ccc">-</span>';
+    const roasTxt=roas2!=null?roasBadgeSmall(roas2):'<span style="color:#ccc">-</span>';
     dtb.innerHTML+=`
       <tr class="tr-hover" style="cursor:pointer" onclick="toggleDay('${rid}')">
         <td style="font-weight:600;color:#444">${dt}<span class="expand-ic" id="${rid}-ic">▶</span></td>
