@@ -1,0 +1,935 @@
+{
+  "collected_at": "2026-04-17 17:09:35",
+  "mall_id": "bionex",
+  "period": {
+    "start": "2026-03-18",
+    "end": "2026-04-17",
+    "days": 30
+  },
+  "daily": {
+    "2026-03-18": {
+      "orders": 4,
+      "revenue": 409800.0,
+      "items": 0,
+      "new_customers": 2,
+      "canceled": 0
+    },
+    "2026-03-19": {
+      "orders": 6,
+      "revenue": 216490.0,
+      "items": 0,
+      "new_customers": 3,
+      "canceled": 0
+    },
+    "2026-03-20": {
+      "orders": 3,
+      "revenue": 83080.0,
+      "items": 0,
+      "new_customers": 3,
+      "canceled": 2
+    },
+    "2026-03-21": {
+      "orders": 5,
+      "revenue": 215070.0,
+      "items": 0,
+      "new_customers": 4,
+      "canceled": 0
+    },
+    "2026-03-22": {
+      "orders": 2,
+      "revenue": 55080.0,
+      "items": 0,
+      "new_customers": 2,
+      "canceled": 0
+    },
+    "2026-03-23": {
+      "orders": 5,
+      "revenue": 171860.0,
+      "items": 0,
+      "new_customers": 5,
+      "canceled": 0
+    },
+    "2026-03-24": {
+      "orders": 6,
+      "revenue": 212960.0,
+      "items": 0,
+      "new_customers": 4,
+      "canceled": 0
+    },
+    "2026-03-25": {
+      "orders": 4,
+      "revenue": 177390.0,
+      "items": 0,
+      "new_customers": 3,
+      "canceled": 2
+    },
+    "2026-03-26": {
+      "orders": 4,
+      "revenue": 119626.0,
+      "items": 0,
+      "new_customers": 1,
+      "canceled": 3
+    },
+    "2026-03-27": {
+      "orders": 6,
+      "revenue": 234930.0,
+      "items": 0,
+      "new_customers": 5,
+      "canceled": 3
+    },
+    "2026-03-28": {
+      "orders": 6,
+      "revenue": 244190.0,
+      "items": 0,
+      "new_customers": 2,
+      "canceled": 0
+    },
+    "2026-03-29": {
+      "orders": 10,
+      "revenue": 335470.0,
+      "items": 0,
+      "new_customers": 6,
+      "canceled": 0
+    },
+    "2026-03-30": {
+      "orders": 15,
+      "revenue": 606257.0,
+      "items": 0,
+      "new_customers": 9,
+      "canceled": 1
+    },
+    "2026-03-31": {
+      "orders": 31,
+      "revenue": 1386949.0,
+      "items": 0,
+      "new_customers": 19,
+      "canceled": 5
+    },
+    "2026-04-01": {
+      "orders": 18,
+      "revenue": 936778.0,
+      "items": 0,
+      "new_customers": 14,
+      "canceled": 0
+    },
+    "2026-04-02": {
+      "orders": 17,
+      "revenue": 767240.0,
+      "items": 0,
+      "new_customers": 13,
+      "canceled": 0
+    },
+    "2026-04-03": {
+      "orders": 15,
+      "revenue": 716760.0,
+      "items": 0,
+      "new_customers": 11,
+      "canceled": 0
+    },
+    "2026-04-04": {
+      "orders": 25,
+      "revenue": 1317452.0,
+      "items": 0,
+      "new_customers": 16,
+      "canceled": 0
+    },
+    "2026-04-05": {
+      "orders": 8,
+      "revenue": 412780.0,
+      "items": 0,
+      "new_customers": 4,
+      "canceled": 1
+    },
+    "2026-04-06": {
+      "orders": 3,
+      "revenue": 125580.0,
+      "items": 0,
+      "new_customers": 2,
+      "canceled": 0
+    },
+    "2026-04-07": {
+      "orders": 2,
+      "revenue": 200300.0,
+      "items": 0,
+      "new_customers": 0,
+      "canceled": 4
+    },
+    "2026-04-08": {
+      "orders": 5,
+      "revenue": 227790.0,
+      "items": 0,
+      "new_customers": 3,
+      "canceled": 0
+    },
+    "2026-04-09": {
+      "orders": 4,
+      "revenue": 141470.0,
+      "items": 0,
+      "new_customers": 4,
+      "canceled": 0
+    },
+    "2026-04-10": {
+      "orders": 4,
+      "revenue": 235270.0,
+      "items": 0,
+      "new_customers": 2,
+      "canceled": 1
+    },
+    "2026-04-11": {
+      "orders": 6,
+      "revenue": 309020.0,
+      "items": 0,
+      "new_customers": 2,
+      "canceled": 0
+    },
+    "2026-04-12": {
+      "orders": 6,
+      "revenue": 249270.0,
+      "items": 0,
+      "new_customers": 4,
+      "canceled": 0
+    },
+    "2026-04-13": {
+      "orders": 6,
+      "revenue": 241740.0,
+      "items": 0,
+      "new_customers": 5,
+      "canceled": 0
+    },
+    "2026-04-14": {
+      "orders": 4,
+      "revenue": 109700.0,
+      "items": 0,
+      "new_customers": 1,
+      "canceled": 0
+    },
+    "2026-04-15": {
+      "orders": 7,
+      "revenue": 260960.0,
+      "items": 0,
+      "new_customers": 5,
+      "canceled": 0
+    },
+    "2026-04-16": {
+      "orders": 4,
+      "revenue": 144380.0,
+      "items": 0,
+      "new_customers": 4,
+      "canceled": 0
+    },
+    "2026-04-17": {
+      "orders": 1,
+      "revenue": 47290.0,
+      "items": 0,
+      "new_customers": 1,
+      "canceled": 0
+    }
+  },
+  "products": [
+    {
+      "product_no": "174",
+      "product_name": "[공구_비밀링크] 바지오 × 뷰티팡팡밍빵 역대급 공동구매 특가 (3/31~4/4) 단 5일간!",
+      "quantity": 82,
+      "revenue": 2928000.0,
+      "options": [
+        {
+          "option_name": "옵션=쉐이크 4세트 – 말차 1 + 초코 1 + 옥수수 1 + 곡물 1",
+          "quantity": 31,
+          "revenue": 1173300.0
+        },
+        {
+          "option_name": "옵션=쉐이크 파우치 2세트 – 말차 1 + 초코 1",
+          "quantity": 14,
+          "revenue": 474600.0
+        },
+        {
+          "option_name": "옵션=쉐이크 파우치 2세트 – 초코 1 + 옥수수 1",
+          "quantity": 9,
+          "revenue": 305100.0
+        },
+        {
+          "option_name": "옵션=쉐이크 파우치 2세트 – 말차 1 + 옥수수 1",
+          "quantity": 7,
+          "revenue": 237300.0
+        },
+        {
+          "option_name": "옵션=쉐이크 파우치 2세트 – 초코 1 + 곡물 1",
+          "quantity": 6,
+          "revenue": 203400.0
+        },
+        {
+          "option_name": "옵션=쉐이크 대용량 2세트 – 말차 1 + 초코 1",
+          "quantity": 5,
+          "revenue": 182400.0
+        },
+        {
+          "option_name": "옵션=쉐이크 대용량 2세트 – 초코 1 + 옥수수 1",
+          "quantity": 4,
+          "revenue": 135600.0
+        },
+        {
+          "option_name": "옵션=쉐이크 파우치 2세트 – 말차 1 + 곡물 1",
+          "quantity": 3,
+          "revenue": 101700.0
+        },
+        {
+          "option_name": "옵션=쉐이크 파우치 2세트 – 옥수수 1 + 곡물 1",
+          "quantity": 2,
+          "revenue": 67800.0
+        },
+        {
+          "option_name": "옵션=쉐이크 대용량 2세트 – 옥수수 1 + 곡물 1",
+          "quantity": 1,
+          "revenue": 46800.0
+        }
+      ]
+    },
+    {
+      "product_no": "179",
+      "product_name": "[선착순 비밀링크] 바지오 단백질 쉐이크 특가",
+      "quantity": 79,
+      "revenue": 2327300.0,
+      "options": [
+        {
+          "option_name": "종류=★스타터팩★, 맛 선택1=★모든맛구성★, 맛 선택2=7포 1세트 구성",
+          "quantity": 26,
+          "revenue": 644800.0
+        },
+        {
+          "option_name": "종류=★스타터팩★, 맛 선택1=모든맛구성, 맛 선택2=모든맛구성",
+          "quantity": 7,
+          "revenue": 238700.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 말차 솔티드카라멜, 맛 선택2=[한정판] 말차 딸기라떼",
+          "quantity": 5,
+          "revenue": 182200.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 말차 솔티드카라멜, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 4,
+          "revenue": 105500.0
+        },
+        {
+          "option_name": "종류=[옵션1] [오리지널 + 스페셜] 모든 맛 각 2개씩, 맛 선택1=모든맛구성, 맛 선택2=모든맛구성",
+          "quantity": 3,
+          "revenue": 102300.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 말차 딸기라떼, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 3,
+          "revenue": 90000.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 우롱밀크티, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 3,
+          "revenue": 90000.0
+        },
+        {
+          "option_name": "종류=[옵션3] [스페셜] 2세트 14개입, 맛 선택1=[한정판] 말차 딸기라떼, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 2,
+          "revenue": 68200.0
+        },
+        {
+          "option_name": "종류=[옵션3] [스페셜] 2세트 14개입, 맛 선택1=[한정판] 말차 솔티드카라멜, 맛 선택2=[한정판] 말차 딸기라떼",
+          "quantity": 2,
+          "revenue": 68200.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=옥수수맛, 맛 선택2=말차맛",
+          "quantity": 2,
+          "revenue": 61900.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[NEW] 말차 솔티드카라멜, 맛 선택2=[NEW] 우롱밀크티",
+          "quantity": 2,
+          "revenue": 55600.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[NEW] 말차 솔티드카라멜, 맛 선택2=[NEW] 말차 딸기라떼",
+          "quantity": 2,
+          "revenue": 55600.0
+        },
+        {
+          "option_name": "종류=★[옵션2] [오리지널 + 스페셜] 2세트 14개입, 맛 선택1=옥수수맛, 맛 선택2=[한정판] 말차 솔티드카라멜",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=★[옵션2] [오리지널 + 스페셜] 2세트 14개입, 맛 선택1=말차맛, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=★[옵션2] [오리지널 + 스페셜] 2세트 14개입, 맛 선택1=옥수수맛, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=★[옵션2] [오리지널 + 스페셜] 2세트 14개입, 맛 선택1=곡물맛, 맛 선택2=[한정판] 말차 솔티드카라멜",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=[옵션4] [오리지널] 2세트 14개입, 맛 선택1=말차맛, 맛 선택2=초코맛",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=[옵션3] [스페셜] 2세트 14개입, 맛 선택1=[한정판] 우롱밀크티, 맛 선택2=[한정판] 말차 솔티드카라멜",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=★[옵션2] [오리지널 + 스페셜] 2세트 14개입, 맛 선택1=곡물맛, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=★[옵션2] [오리지널 + 스페셜] 2세트 14개입, 맛 선택1=초코맛, 맛 선택2=[한정판] 말차 딸기라떼",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=[옵션3] [스페셜] 2세트 14개입, 맛 선택1=[한정판] 말차 솔티드카라멜, 맛 선택2=[한정판] 우롱밀크티",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=옥수수맛, 맛 선택2=초코맛",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 우롱밀크티, 맛 선택2=말차맛",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 우롱밀크티, 맛 선택2=초코맛",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 우롱밀크티, 맛 선택2=[한정판] 말차 솔티드카라멜",
+          "quantity": 1,
+          "revenue": 34100.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=초코맛, 맛 선택2=초코맛",
+          "quantity": 1,
+          "revenue": 21800.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 말차 솔티드카라멜, 맛 선택2=[한정판] 말차 솔티드카라멜",
+          "quantity": 1,
+          "revenue": 21800.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=[한정판] 말차 딸기라떼, 맛 선택2=[한정판] 말차 딸기라떼",
+          "quantity": 1,
+          "revenue": 21800.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=말차 딸기, 맛 선택2=말차맛",
+          "quantity": 1,
+          "revenue": 27800.0
+        },
+        {
+          "option_name": "종류=7포 1+1, 맛 선택1=말차 솔티드 카라멜, 맛 선택2=우롱 밀크티",
+          "quantity": 1,
+          "revenue": 27800.0
+        }
+      ]
+    },
+    {
+      "product_no": "154",
+      "product_name": "[🔒반값 비밀링크] 바지오 다이어트 커피 1+1",
+      "quantity": 39,
+      "revenue": 1328100.0,
+      "options": [
+        {
+          "option_name": "옵션=[옵션2] 다이어트 커피 대용량  50포 – 1세트(총 1박스)+보틀 증정",
+          "quantity": 7,
+          "revenue": 243300.0
+        },
+        {
+          "option_name": "옵션=[옵션1]  다이어트 커피 14포 – 1+2박스(총 3박스)",
+          "quantity": 5,
+          "revenue": 169500.0
+        },
+        {
+          "option_name": "종류=[옵션1] 14포 세트 3개(42회분)",
+          "quantity": 4,
+          "revenue": 135600.0
+        },
+        {
+          "option_name": "옵션=[70%🔻] 다이어트 커피 14포 – 3세트(42포)",
+          "quantity": 4,
+          "revenue": 135600.0
+        },
+        {
+          "option_name": "옵션=[옵션3] 다이어트 커피 대용량  50포 – 1+1세트(총2박스)+보틀 증정",
+          "quantity": 3,
+          "revenue": 101700.0
+        },
+        {
+          "option_name": "종류=[옵션2] 50포 세트 1개 (50회분)+보틀 증정",
+          "quantity": 2,
+          "revenue": 67800.0
+        },
+        {
+          "option_name": "옵션=[옵션1] 14포 세트 3개(42회분)",
+          "quantity": 2,
+          "revenue": 67800.0
+        },
+        {
+          "option_name": "옵션=★[옵션3] 50포 세트 2개+보틀증정(100회분)",
+          "quantity": 2,
+          "revenue": 67800.0
+        },
+        {
+          "option_name": "옵션=[81%] 다이어트 커피 대용량 50포 – 1+3세트(총4박스)+보틀 증정",
+          "quantity": 2,
+          "revenue": 67800.0
+        },
+        {
+          "option_name": "종류=★[옵션3] 50포 세트 2개+보틀증정(100회분)",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "종류=[옵션2] 대용량 50포 세트 1개 (50회분)+보틀 증정",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "종류=[옵션4] 대용량 50포 세트 3개 (150회분)+보틀 증정",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "옵션=[69%] 다이어트 커피 대용량 50포 – 1+1세트(총2박스)+보틀 증정",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "옵션=[70%] 다이어트 커피 14포 – 1+2박스(총 3박스)",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "옵션=[옵션5] 다이어트 커피 대용량  50포 – 1+3세트(총4박스)+보틀 증정",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "옵션=[69%🔻] 다이어트 커피 대용량 50포 – 1세트+보틀 증정",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "옵션=[77%🔻] 다이어트 커피 대용량  50포 – 2세트(100포)+보틀 증정",
+          "quantity": 1,
+          "revenue": 33900.0
+        }
+      ]
+    },
+    {
+      "product_no": "188",
+      "product_name": "[바지오] 단백질 쉐이크 스타터팩",
+      "quantity": 30,
+      "revenue": 573200.0,
+      "options": [
+        {
+          "option_name": "스타터팩 선택=[20%]쉐이크 풀 스타터팩 7종 1세트",
+          "quantity": 8,
+          "revenue": 126400.0
+        },
+        {
+          "option_name": "옵션=바지오 단백질쉐이크 얌 스타터팩 7종(바지오 전상품 맛보기)",
+          "quantity": 8,
+          "revenue": 253600.0
+        },
+        {
+          "option_name": "종류=[옵션2]  오리지널 + 스페셜 각 1개씩 7개입",
+          "quantity": 6,
+          "revenue": 82800.0
+        },
+        {
+          "option_name": "스타터팩 선택=베스트 쉐이크 4종 스타터팩 1세트",
+          "quantity": 3,
+          "revenue": 41400.0
+        },
+        {
+          "option_name": "종류=[옵션1] 오리지널 각 1개씩 4개입",
+          "quantity": 2,
+          "revenue": 27600.0
+        },
+        {
+          "option_name": "종류=[옵션3]  오리지널 + 스페셜 각 2개씩 14개입",
+          "quantity": 1,
+          "revenue": 13800.0
+        },
+        {
+          "option_name": "스타터팩 선택=쉐이크 풀 스타터팩 7종 2세트 (총 14포)",
+          "quantity": 1,
+          "revenue": 13800.0
+        },
+        {
+          "option_name": "스타터팩 선택=전구성 쉐이크 풀 스타터팩 7종 1세트",
+          "quantity": 1,
+          "revenue": 13800.0
+        }
+      ]
+    },
+    {
+      "product_no": "133",
+      "product_name": "[한정수량] 바지오 단백질 쉐이크 패키지",
+      "quantity": 4,
+      "revenue": 381800.0,
+      "options": [
+        {
+          "option_name": "옵션=[64%]쉐이크 대용량 4통 – 옥수수1+3+보틀증정",
+          "quantity": 1,
+          "revenue": 84800.0
+        },
+        {
+          "option_name": "옵션=쉐이크 대용량 4통 – 옥수수4+보틀증정",
+          "quantity": 1,
+          "revenue": 99000.0
+        },
+        {
+          "option_name": "옵션=쉐이크 대용량 4통 – 말차4+보틀증정",
+          "quantity": 1,
+          "revenue": 99000.0
+        },
+        {
+          "option_name": "옵션=쉐이크 대용량 4통 – 초코4+보틀증정",
+          "quantity": 1,
+          "revenue": 99000.0
+        }
+      ]
+    },
+    {
+      "product_no": "117",
+      "product_name": "[바지오] 슬림컷 다이어트 블랙 12ml x 50포｜커피맛 다이어트 커피",
+      "quantity": 6,
+      "revenue": 354000.0,
+      "options": [
+        {
+          "option_name": "옵션=[54%🔻] 다이어트 커피 50포 – 1세트+보틀 증정",
+          "quantity": 3,
+          "revenue": 177000.0
+        },
+        {
+          "option_name": "옵션=[67%] 다이어트 커피 50포 – 1+2세트(150포)+보틀1+스타터팩 4종 증정",
+          "quantity": 1,
+          "revenue": 59000.0
+        },
+        {
+          "option_name": "옵션=[54%] 다이어트 커피 50포 – 1세트+보틀 증정",
+          "quantity": 1,
+          "revenue": 59000.0
+        },
+        {
+          "option_name": "옵션=[62%🔻] 다이어트 커피 50포 – 2세트(100포)+보틀1+스타터팩 2종 증정",
+          "quantity": 1,
+          "revenue": 59000.0
+        }
+      ]
+    },
+    {
+      "product_no": "131",
+      "product_name": "[한정수량] 바지오 베스트 체험팩 패키지",
+      "quantity": 5,
+      "revenue": 275000.0,
+      "options": [
+        {
+          "option_name": "옵션=곡물7포 + 초코 2포 + 말차 2포 + 옥수수 2포 + 말카 2포 + 말딸 2포 + 우롱 3포",
+          "quantity": 4,
+          "revenue": 220000.0
+        },
+        {
+          "option_name": "종류=20회 패키지",
+          "quantity": 1,
+          "revenue": 55000.0
+        }
+      ]
+    },
+    {
+      "product_no": "148",
+      "product_name": "[바지오] 단백질 쉐이크얌 45g x 7포",
+      "quantity": 6,
+      "revenue": 171500.0,
+      "options": [
+        {
+          "option_name": "종류=[옵션2] [스페셜] 1세트 7개입, 맛선택1=말차 딸기라떼, 맛선택2=선택안함",
+          "quantity": 1,
+          "revenue": 28000.0
+        },
+        {
+          "option_name": "종류=[옵션4] [오리지널+스페셜] 2세트 14개입, 맛선택1=초코, 맛선택2=우롱밀크티",
+          "quantity": 1,
+          "revenue": 28000.0
+        },
+        {
+          "option_name": "종류=1세트, 맛선택1=말차 솔티드카라멜, 맛선택2=선택안함",
+          "quantity": 1,
+          "revenue": 31500.0
+        },
+        {
+          "option_name": "종류=2세트, 맛선택1=말차 딸기라떼, 맛선택2=말차",
+          "quantity": 1,
+          "revenue": 28000.0
+        },
+        {
+          "option_name": "종류=2세트, 맛선택1=우롱밀크티, 맛선택2=초코",
+          "quantity": 1,
+          "revenue": 28000.0
+        },
+        {
+          "option_name": "종류=1세트, 맛선택1=말차 딸기라떼, 맛선택2=선택안함",
+          "quantity": 1,
+          "revenue": 28000.0
+        }
+      ]
+    },
+    {
+      "product_no": "186",
+      "product_name": "[바지오] 단백질 쉐이크얌 말차 딸기라떼 45g x 7개입(1세트)",
+      "quantity": 5,
+      "revenue": 166600.0,
+      "options": [
+        {
+          "option_name": "옵션=바지오 단백질 쉐이크얌 말차 딸기라떼x7",
+          "quantity": 1,
+          "revenue": 40600.0
+        }
+      ]
+    },
+    {
+      "product_no": "-99999",
+      "product_name": "NEW 바지오 단백질쉐이크 얌 스타터팩 7종 세트(말차,곡물,초코,옥수수,말차솔티드카라멜,말차딸기,우롱밀크티)",
+      "quantity": 5,
+      "revenue": 159800.0,
+      "options": [
+        {
+          "option_name": "옵션1=모든맛 45g x 7포",
+          "quantity": 4,
+          "revenue": 119200.0
+        },
+        {
+          "option_name": "옵션1=우롱밀크티",
+          "quantity": 1,
+          "revenue": 40600.0
+        }
+      ]
+    },
+    {
+      "product_no": "166",
+      "product_name": "[990원 특가] 첫 구매 혜택 스페셜 3종 택1",
+      "quantity": 78,
+      "revenue": 77220.0,
+      "options": [
+        {
+          "option_name": "옵션=말차딸기라떼",
+          "quantity": 22,
+          "revenue": 21780.0
+        },
+        {
+          "option_name": "옵션=말차솔티드카라멜",
+          "quantity": 19,
+          "revenue": 18810.0
+        },
+        {
+          "option_name": "옵션=우롱밀크티",
+          "quantity": 11,
+          "revenue": 10890.0
+        },
+        {
+          "option_name": "종류=[스페셜] 우롱밀크티",
+          "quantity": 9,
+          "revenue": 8910.0
+        },
+        {
+          "option_name": "종류=[스페셜] 말차솔티드카라멜",
+          "quantity": 6,
+          "revenue": 5940.0
+        },
+        {
+          "option_name": "종류=[스페셜]  말차딸기라떼",
+          "quantity": 5,
+          "revenue": 4950.0
+        },
+        {
+          "option_name": "옵션=[스페셜] 우롱밀크티",
+          "quantity": 4,
+          "revenue": 3960.0
+        },
+        {
+          "option_name": "옵션=[스페셜] 말차솔티드카라멜",
+          "quantity": 1,
+          "revenue": 990.0
+        },
+        {
+          "option_name": "옵션=[첫구매] 990원 커피 입문팩",
+          "quantity": 1,
+          "revenue": 990.0
+        }
+      ]
+    },
+    {
+      "product_no": "193",
+      "product_name": "[공구_비밀링크] 바지오 × 미세스제아 역대급 공동구매 특가 (3/31~4/1) 단 3일간!",
+      "quantity": 2,
+      "revenue": 67800.0,
+      "options": [
+        {
+          "option_name": "옵션=쉐이크 파우치 2세트 – 말차 1 + 곡물 1",
+          "quantity": 1,
+          "revenue": 33900.0
+        },
+        {
+          "option_name": "옵션=쉐이크 4세트 – 말차 1 + 초코 1 + 옥수수 1 + 곡물 1",
+          "quantity": 1,
+          "revenue": 33900.0
+        }
+      ]
+    },
+    {
+      "product_no": "185",
+      "product_name": "[바지오] 단백질 쉐이크얌 말차 솔티드 카라멜 45g x 7개입(1세트)",
+      "quantity": 2,
+      "revenue": 63000.0,
+      "options": []
+    },
+    {
+      "product_no": "95",
+      "product_name": "[바지오] 직원특가",
+      "quantity": 9,
+      "revenue": 62100.0,
+      "options": [
+        {
+          "option_name": "구성=바지오 단백질 쉐이크얌 우롱 밀크티",
+          "quantity": 4,
+          "revenue": 27600.0
+        },
+        {
+          "option_name": "구성=바지오 단백질 쉐이크얌 말차 딸기라떼",
+          "quantity": 4,
+          "revenue": 27600.0
+        },
+        {
+          "option_name": "구성=쉐이크 파우치 – 초코",
+          "quantity": 1,
+          "revenue": 6900.0
+        }
+      ]
+    },
+    {
+      "product_no": "192",
+      "product_name": "[바지오] 단백질 쉐이크얌 대용량 540g",
+      "quantity": 2,
+      "revenue": 59600.0,
+      "options": [
+        {
+          "option_name": "종류=[옵션2] 대용량 1+1, 맛선택=초코, 맛선택2=말차",
+          "quantity": 1,
+          "revenue": 29800.0
+        },
+        {
+          "option_name": "종류=3+1통(골고루) / 초코 곡물 말차 옥수수, 맛선택=모든맛, 맛선택2=선택 안함",
+          "quantity": 1,
+          "revenue": 29800.0
+        }
+      ]
+    },
+    {
+      "product_no": "164",
+      "product_name": "★비밀링크★ 단백질 쉐이크 대용량 1+1 특가",
+      "quantity": 1,
+      "revenue": 39900.0,
+      "options": [
+        {
+          "option_name": "종류=대용량 1+1 + 보틀증정, 맛 선택1=초코맛, 맛 선택2=옥수수맛",
+          "quantity": 1,
+          "revenue": 39900.0
+        }
+      ]
+    },
+    {
+      "product_no": "144",
+      "product_name": "[바지오] 단백질 쉐이크얌 초코 540g, 1통",
+      "quantity": 1,
+      "revenue": 29800.0,
+      "options": [
+        {
+          "option_name": "옵션선=[49%] 초코 단백질 쉐이크얌 대용량 1통",
+          "quantity": 1,
+          "revenue": 29800.0
+        }
+      ]
+    },
+    {
+      "product_no": "102",
+      "product_name": "[바지오] 슬림컷 다이어트 블랙 12ml x 14포｜커피맛 다이어트 커피",
+      "quantity": 1,
+      "revenue": 21800.0,
+      "options": [
+        {
+          "option_name": "옵션=[48%] 다이어트 커피 14포 – 1+1세트(28포)",
+          "quantity": 1,
+          "revenue": 21800.0
+        }
+      ]
+    },
+    {
+      "product_no": "137",
+      "product_name": "[9,900원 특가] 첫구매 혜택",
+      "quantity": 2,
+      "revenue": 19800.0,
+      "options": [
+        {
+          "option_name": "옵션=[옵션2]스타터팩(맛별로 4포)",
+          "quantity": 2,
+          "revenue": 19800.0
+        }
+      ]
+    },
+    {
+      "product_no": "107",
+      "product_name": "[바지오] 보틀 350ml",
+      "quantity": 1,
+      "revenue": 3000.0,
+      "options": []
+    },
+    {
+      "product_no": "189",
+      "product_name": "[990원 특가] 첫구매 혜택",
+      "quantity": 2,
+      "revenue": 1980.0,
+      "options": [
+        {
+          "option_name": "쉐이크 3종 택 1=우롱밀크티",
+          "quantity": 1,
+          "revenue": 990.0
+        },
+        {
+          "option_name": "쉐이크 3종 택 1=말차솔티드카라멜",
+          "quantity": 1,
+          "revenue": 990.0
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_revenue": 10912932.0,
+    "total_orders": 242,
+    "total_items": 0,
+    "avg_order_value": 45095.0,
+    "new_customers": 159,
+    "canceled_orders": 22,
+    "top_product": "[공구_비밀링크] 바지오 × 뷰티팡팡밍빵 역대급 공동구매 특가 (3/31~4/4) 단 5일간!"
+  }
+}
