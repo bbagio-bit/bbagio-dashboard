@@ -6,545 +6,756 @@
 <title>BBagio 자사몰 대시보드</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  :root {
-    --bg: #0f1117;
-    --card: #1a1d27;
-    --card2: #1e2130;
-    --accent: #7c5cfc;
-    --accent2: #fc5c7d;
-    --green: #22c55e;
-    --yellow: #f59e0b;
-    --text: #e2e8f0;
-    --muted: #8892a4;
-    --border: #2a2f3e;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f4f5f7; color: #1a1a2e; font-family: 'Segoe UI', -apple-system, sans-serif; font-size: 14px; }
 
-  header {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  header h1 { font-size: 1.2rem; font-weight: 700; }
-  header h1 span { color: var(--accent); }
-  #updated { font-size: 0.78rem; color: var(--muted); }
+/* ── Header ── */
+.header {
+  background: #fff;
+  border-bottom: 2px solid #7c5cfc;
+  padding: 10px 20px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.header .logo { font-size: 1.1rem; font-weight: 800; color: #7c5cfc; letter-spacing: -.5px; }
+.header .logo span { color: #222; }
+.header .updated { font-size: .75rem; color: #888; margin-left: auto; }
 
-  .period-bar {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 28px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .period-bar button {
-    background: var(--border);
-    border: none;
-    color: var(--muted);
-    padding: 5px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.82rem;
-    transition: all .15s;
-  }
-  .period-bar button.active, .period-bar button:hover {
-    background: var(--accent);
-    color: #fff;
-  }
-  .period-bar .spacer { flex: 1; }
-  .period-bar .mall-badge {
-    background: #2a2f3e;
-    border: 1px solid var(--border);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
+/* ── Filter Bar ── */
+.filter-bar {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 8px 20px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.filter-bar .label { font-size: .75rem; color: #888; margin-right: 4px; font-weight: 600; }
+.btn-filter {
+  background: #f0f0f5; border: 1px solid #dde1e7; color: #555;
+  padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: .78rem;
+  transition: all .15s;
+}
+.btn-filter:hover { background: #ede9ff; border-color: #7c5cfc; color: #7c5cfc; }
+.btn-filter.active { background: #7c5cfc; border-color: #7c5cfc; color: #fff; font-weight: 600; }
+.date-range-display {
+  margin-left: auto; font-size: .75rem; color: #666;
+  background: #f8f8ff; border: 1px solid #e0deff;
+  padding: 3px 10px; border-radius: 4px;
+}
+.custom-date-wrap { display: none; align-items: center; gap: 6px; }
+.custom-date-wrap.show { display: flex; }
+.custom-date-wrap input {
+  border: 1px solid #dde1e7; border-radius: 4px; padding: 3px 8px;
+  font-size: .78rem; color: #333;
+}
+.custom-date-wrap button {
+  background: #7c5cfc; border: none; color: #fff;
+  padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .78rem;
+}
 
-  main { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
+/* ── Main ── */
+main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
 
-  /* KPI Cards */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-  .kpi-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--accent);
-  }
-  .kpi-card.green::before { background: var(--green); }
-  .kpi-card.yellow::before { background: var(--yellow); }
-  .kpi-card.pink::before { background: var(--accent2); }
-  .kpi-label { font-size: 0.76rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em; }
-  .kpi-value { font-size: 1.7rem; font-weight: 700; color: var(--text); line-height: 1; }
-  .kpi-sub { font-size: 0.76rem; color: var(--muted); margin-top: 6px; }
+/* ── KPI Bar ── */
+.kpi-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.kpi-card {
+  background: #fff;
+  border: 1px solid #e8eaf0;
+  border-radius: 6px;
+  padding: 12px 16px;
+  border-top: 3px solid #7c5cfc;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.kpi-card.c1 { border-top-color: #7c5cfc; }
+.kpi-card.c2 { border-top-color: #3b82f6; }
+.kpi-card.c3 { border-top-color: #10b981; }
+.kpi-card.c4 { border-top-color: #f59e0b; }
+.kpi-card.c5 { border-top-color: #ef4444; }
+.kpi-label { font-size: .72rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+.kpi-value { font-size: 1.5rem; font-weight: 800; color: #1a1a2e; line-height: 1.1; }
+.kpi-sub { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.kpi-compare { font-size: .75rem; font-weight: 700; }
+.kpi-compare.up { color: #ef4444; }
+.kpi-compare.down { color: #3b82f6; }
+.kpi-prev { font-size: .72rem; color: #aaa; }
 
-  /* Charts */
-  .charts-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  .chart-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-  }
-  .chart-card h3 {
-    font-size: 0.88rem;
-    color: var(--muted);
-    margin-bottom: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-  }
-  .chart-wrap { position: relative; height: 240px; }
+/* ── Grid Layouts ── */
+.row { display: grid; gap: 12px; margin-bottom: 12px; }
+.row-2-1 { grid-template-columns: 2fr 1fr; }
+.row-3 { grid-template-columns: 1fr 1fr 1fr; }
+.row-2 { grid-template-columns: 1fr 1fr; }
+.row-1-1-1-1 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
-  /* Products Table */
-  .section-title {
-    font-size: 0.88rem;
-    color: var(--muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    margin-bottom: 12px;
-  }
-  .products-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-  .products-card h3 {
-    font-size: 0.88rem;
-    color: var(--muted);
-    padding: 16px 20px 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    border-bottom: 1px solid var(--border);
-  }
-  table { width: 100%; border-collapse: collapse; }
-  th {
-    text-align: left;
-    padding: 9px 16px;
-    font-size: 0.76rem;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    background: var(--card2);
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  td {
-    padding: 10px 16px;
-    font-size: 0.85rem;
-    border-bottom: 1px solid #1f2333;
-    vertical-align: top;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(124,92,252,.06); }
-  .rank { color: var(--accent); font-weight: 700; width: 32px; }
-  .product-name { font-weight: 500; }
-  .option-list { margin-top: 4px; }
-  .option-item {
-    display: inline-block;
-    background: var(--border);
-    color: var(--muted);
-    border-radius: 4px;
-    padding: 2px 7px;
-    font-size: 0.72rem;
-    margin: 2px 2px 0 0;
-  }
-  .bar-cell { padding-top: 14px; }
-  .revenue-bar-wrap { background: #1f2333; border-radius: 4px; height: 6px; width: 100%; margin-top: 5px; }
-  .revenue-bar { height: 6px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-  .num { text-align: right; font-variant-numeric: tabular-nums; }
-  .green { color: var(--green); }
-  .accent { color: var(--accent); }
+/* ── Cards ── */
+.card {
+  background: #fff;
+  border: 1px solid #e8eaf0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  overflow: hidden;
+}
+.card-header {
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid #f0f0f5;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title { font-size: .8rem; font-weight: 700; color: #444; }
+.card-sub { font-size: .72rem; color: #999; }
+.card-body { padding: 12px 14px; }
+.chart-wrap { position: relative; }
 
-  /* Daily Table */
-  .daily-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-  .daily-card h3 {
-    font-size: 0.88rem;
-    color: var(--muted);
-    padding: 16px 20px 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    border-bottom: 1px solid var(--border);
-  }
+/* ── Horizontal Bar ── */
+.hbar-list { padding: 8px 14px; }
+.hbar-item { margin-bottom: 9px; }
+.hbar-label { font-size: .75rem; color: #444; margin-bottom: 3px; display: flex; justify-content: space-between; }
+.hbar-label .val { font-weight: 700; color: #7c5cfc; }
+.hbar-track { background: #f0f0f8; border-radius: 3px; height: 8px; }
+.hbar-fill { height: 8px; border-radius: 3px; background: linear-gradient(90deg, #7c5cfc, #a78bfa); }
+.hbar-fill.blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.hbar-fill.green { background: linear-gradient(90deg, #10b981, #34d399); }
+.hbar-fill.orange { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
 
-  /* Loading */
-  #loading {
-    position: fixed; inset: 0;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    color: var(--muted);
-    z-index: 999;
-  }
-  .spinner {
-    width: 28px; height: 28px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-right: 12px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── Products Table ── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { font-size: .72rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+     padding: 7px 10px; border-bottom: 2px solid #f0f0f5; text-align: left; background: #fafafa; }
+td { padding: 8px 10px; font-size: .82rem; border-bottom: 1px solid #f5f5f8; vertical-align: top; }
+tr:hover td { background: #faf8ff; }
+tr:last-child td { border-bottom: none; }
+.td-num { text-align: right; font-variant-numeric: tabular-nums; }
+.rank-badge { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: #ede9ff;
+  color: #7c5cfc; font-size: .72rem; font-weight: 800; text-align: center; line-height: 22px; }
+.rank-badge.g1 { background: #fef3c7; color: #d97706; }
+.rank-badge.g2 { background: #e5e7eb; color: #6b7280; }
+.rank-badge.g3 { background: #fde8d8; color: #c2410c; }
+.product-name { font-weight: 600; color: #1a1a2e; cursor: pointer; }
+.product-name:hover { color: #7c5cfc; text-decoration: underline; }
+.option-chip { display: inline-block; background: #f3f0ff; color: #7c5cfc; border-radius: 3px;
+  padding: 1px 6px; font-size: .7rem; margin: 1px 2px 0 0; }
+.rev-bar-wrap { background: #f0f0f8; border-radius: 2px; height: 5px; margin-top: 4px; }
+.rev-bar { height: 5px; border-radius: 2px; background: linear-gradient(90deg,#7c5cfc,#a78bfa); }
 
-  .error-banner {
-    background: #3d1515;
-    border: 1px solid #7f2020;
-    color: #f87171;
-    padding: 12px 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 0.88rem;
-  }
+/* ── Daily Table ── */
+.daily-row { cursor: pointer; }
+.daily-row:hover td { background: #f5f3ff !important; }
+.daily-row td:first-child { font-weight: 600; color: #444; }
+.expand-icon { float: right; color: #bbb; font-size: .8rem; }
+.drilldown-row { display: none; }
+.drilldown-row.open { display: table-row; }
+.drilldown-cell { background: #fafafe !important; padding: 0 !important; }
+.drilldown-inner { padding: 8px 16px 12px 32px; }
+.drilldown-item { display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 0; border-bottom: 1px solid #f0f0f8; font-size: .8rem; }
+.drilldown-item:last-child { border-bottom: none; }
+.drilldown-pname { color: #444; font-weight: 500; flex: 1; }
+.drilldown-oname { color: #888; font-size: .74rem; flex: 1; margin-left: 8px; }
+.drilldown-qty { color: #7c5cfc; font-weight: 700; width: 50px; text-align: right; }
+.drilldown-rev { color: #10b981; font-weight: 700; width: 80px; text-align: right; }
 
-  @media (max-width: 900px) {
-    .charts-grid { grid-template-columns: 1fr; }
-    main { padding: 16px; }
-    header, .period-bar { padding: 12px 16px; }
-  }
+/* ── Modal ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 1000; align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: #fff; border-radius: 10px; width: 640px; max-width: 95vw; max-height: 85vh;
+  overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.modal-header { padding: 16px 20px 12px; border-bottom: 1px solid #f0f0f5;
+  display: flex; justify-content: space-between; align-items: flex-start; }
+.modal-title { font-size: .95rem; font-weight: 800; color: #1a1a2e; }
+.modal-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888;
+  padding: 0 4px; line-height: 1; }
+.modal-body { padding: 16px 20px; }
+.modal-chart-wrap { position: relative; height: 200px; margin-bottom: 16px; }
+.modal-options { }
+.modal-opt-item { display: flex; align-items: center; gap: 8px; padding: 6px 0;
+  border-bottom: 1px solid #f5f5f8; }
+.modal-opt-item:last-child { border-bottom: none; }
+.modal-opt-rank { width: 22px; text-align: center; font-size: .72rem; color: #999; font-weight: 700; }
+.modal-opt-name { flex: 1; font-size: .82rem; color: #333; }
+.modal-opt-bar { width: 120px; height: 6px; background: #f0f0f8; border-radius: 3px; }
+.modal-opt-bar-fill { height: 6px; border-radius: 3px; background: linear-gradient(90deg,#7c5cfc,#a78bfa); }
+.modal-opt-qty { width: 50px; text-align: right; font-size: .8rem; font-weight: 700; color: #7c5cfc; }
+.modal-opt-rev { width: 80px; text-align: right; font-size: .8rem; font-weight: 700; color: #10b981; }
+
+/* ── Donut Section ── */
+.donut-wrap { position: relative; display: flex; justify-content: center; }
+.donut-legend { margin-top: 8px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: #555; margin-bottom: 4px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Compare Box ── */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.compare-item { padding: 8px 10px; background: #fafafe; border-radius: 6px; border: 1px solid #ece9ff; }
+.compare-label { font-size: .72rem; color: #888; margin-bottom: 2px; }
+.compare-val { font-size: 1rem; font-weight: 800; color: #1a1a2e; }
+.compare-chg { font-size: .72rem; font-weight: 700; margin-top: 2px; }
+.up { color: #ef4444; } .down { color: #3b82f6; } .same { color: #888; }
+
+/* ── Loading ── */
+#loading { position: fixed; inset: 0; background: #fff; display: flex; align-items: center;
+  justify-content: center; flex-direction: column; gap: 12px; z-index: 9999; }
+.spinner { width: 32px; height: 32px; border: 3px solid #e0deff; border-top-color: #7c5cfc;
+  border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#loading p { color: #888; font-size: .88rem; }
+
+.no-data { text-align: center; color: #ccc; font-size: .82rem; padding: 20px; }
+
+@media (max-width: 1100px) {
+  .row-2-1, .row-3 { grid-template-columns: 1fr; }
+  .kpi-bar { grid-template-columns: repeat(3,1fr); }
+}
+@media (max-width: 700px) {
+  .kpi-bar { grid-template-columns: repeat(2,1fr); }
+  .row-2, .row-1-1-1-1 { grid-template-columns: 1fr; }
+  main { padding: 10px 12px; }
+}
 </style>
 </head>
 <body>
-<div id="loading"><div class="spinner"></div>데이터 로딩 중...</div>
+<div id="loading"><div class="spinner"></div><p>데이터 로딩 중...</p></div>
 
-<header>
-  <h1>🛒 <span>BBagio</span> 자사몰 대시보드</h1>
-  <div id="updated">-</div>
-</header>
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title">-</div>
+        <div style="font-size:.74rem;color:#888;margin-top:2px" id="modal-sub">-</div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
 
-<div class="period-bar">
-  <button data-days="7" onclick="setDays(7)">7일</button>
-  <button data-days="14" onclick="setDays(14)">14일</button>
-  <button data-days="30" onclick="setDays(30)" class="active">30일</button>
-  <div class="spacer"></div>
-  <span class="mall-badge" id="period-label">-</span>
+<div class="header">
+  <div class="logo">BBagio <span>자사몰</span></div>
+  <div style="font-size:.8rem;color:#555;">커머스 분석 대시보드</div>
+  <div class="updated" id="updated">-</div>
+</div>
+
+<div class="filter-bar">
+  <span class="label">기간</span>
+  <button class="btn-filter" data-p="today"    onclick="setPeriod('today')">오늘</button>
+  <button class="btn-filter" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
+  <button class="btn-filter" data-p="7d"        onclick="setPeriod('7d')">최근 7일</button>
+  <button class="btn-filter" data-p="30d" class="active" onclick="setPeriod('30d')">최근 30일</button>
+  <button class="btn-filter" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
+  <button class="btn-filter" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
+  <button class="btn-filter" data-p="3m"        onclick="setPeriod('3m')">3개월</button>
+  <button class="btn-filter" data-p="custom"    onclick="setPeriod('custom')">날짜선택</button>
+  <div class="custom-date-wrap" id="custom-date-wrap">
+    <input type="date" id="date-from">
+    <span style="color:#aaa">~</span>
+    <input type="date" id="date-to">
+    <button onclick="applyCustomDate()">적용</button>
+  </div>
+  <div class="date-range-display" id="range-display">-</div>
 </div>
 
 <main>
-  <div id="error-area"></div>
-
   <!-- KPI -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-label">총 매출</div>
-      <div class="kpi-value" id="kpi-revenue">-</div>
-      <div class="kpi-sub" id="kpi-revenue-sub">-</div>
+  <div class="kpi-bar" id="kpi-bar">
+    <div class="kpi-card c1"><div class="kpi-label">총 매출</div><div class="kpi-value" id="kpi-rev">-</div><div class="kpi-sub"><span class="kpi-compare" id="kpi-rev-chg">-</span><span class="kpi-prev" id="kpi-rev-prev">전기 대비</span></div></div>
+    <div class="kpi-card c2"><div class="kpi-label">주문 건수</div><div class="kpi-value" id="kpi-ord">-</div><div class="kpi-sub"><span class="kpi-compare" id="kpi-ord-chg">-</span><span class="kpi-prev" id="kpi-ord-prev">전기 대비</span></div></div>
+    <div class="kpi-card c3"><div class="kpi-label">객단가 (평균주문액)</div><div class="kpi-value" id="kpi-aov">-</div><div class="kpi-sub"><span class="kpi-compare" id="kpi-aov-chg">-</span><span class="kpi-prev" id="kpi-aov-prev">전기 대비</span></div></div>
+    <div class="kpi-card c4"><div class="kpi-label">신규 고객</div><div class="kpi-value" id="kpi-new">-</div><div class="kpi-sub"><span class="kpi-compare" id="kpi-new-chg">-</span><span class="kpi-prev" id="kpi-new-prev">전기 대비</span></div></div>
+    <div class="kpi-card c5"><div class="kpi-label">취소 건수</div><div class="kpi-value" id="kpi-can">-</div><div class="kpi-sub"><span class="kpi-compare" id="kpi-can-chg">-</span><span class="kpi-prev" id="kpi-can-prev">전기 대비</span></div></div>
+  </div>
+
+  <!-- Row 1: 매출추이 + 상품별 매출 -->
+  <div class="row row-2-1">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📈 일별 매출 & 주문 추이</span>
+        <span class="card-sub" id="trend-sub">-</span>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap" style="height:220px"><canvas id="trendChart"></canvas></div>
+      </div>
     </div>
-    <div class="kpi-card green">
-      <div class="kpi-label">주문 건수</div>
-      <div class="kpi-value" id="kpi-orders">-</div>
-      <div class="kpi-sub" id="kpi-orders-sub">-</div>
-    </div>
-    <div class="kpi-card yellow">
-      <div class="kpi-label">평균 주문액</div>
-      <div class="kpi-value" id="kpi-aov">-</div>
-      <div class="kpi-sub">주문 1건당</div>
-    </div>
-    <div class="kpi-card pink">
-      <div class="kpi-label">신규 고객</div>
-      <div class="kpi-value" id="kpi-newcust">-</div>
-      <div class="kpi-sub" id="kpi-newcust-sub">첫 구매</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">취소 건수</div>
-      <div class="kpi-value" id="kpi-canceled">-</div>
-      <div class="kpi-sub" id="kpi-canceled-rate">-</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="kpi-label">일평균 매출</div>
-      <div class="kpi-value" id="kpi-daily-avg">-</div>
-      <div class="kpi-sub">기간 평균</div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📦 상품별 매출 순위</span>
+        <span class="card-sub">TOP 8</span>
+      </div>
+      <div class="hbar-list" id="product-hbar" style="padding-top:8px"></div>
     </div>
   </div>
 
-  <!-- Charts -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <h3>일별 매출 & 주문</h3>
-      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+  <!-- Row 2: 옵션 성과 + 신규고객 + 요약 비교 -->
+  <div class="row row-2-1">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🎯 옵션 조합별 판매 순위</span>
+        <span class="card-sub">매출 기준 TOP 15</span>
+      </div>
+      <div class="hbar-list" id="option-hbar"></div>
     </div>
-    <div class="chart-card">
-      <h3>신규 고객 추이</h3>
-      <div class="chart-wrap"><canvas id="custChart"></canvas></div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">👥 신규 고객 추이</span>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap" style="height:200px"><canvas id="newCustChart"></canvas></div>
+        <div class="compare-grid" id="compare-grid" style="margin-top:10px"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Products -->
-  <div class="products-card">
-    <h3>상품별 판매 성과 (매출 순위)</h3>
-    <table>
-      <thead>
-        <tr>
-          <th style="width:40px">#</th>
-          <th>상품명</th>
-          <th class="num">수량</th>
-          <th class="num">매출</th>
-          <th style="width:200px">비율</th>
-        </tr>
-      </thead>
-      <tbody id="products-tbody"></tbody>
-    </table>
+  <!-- Row 3: 상품별 성과 테이블 -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">🏆 상품별 판매 성과 <span style="font-weight:400;color:#999;font-size:.75rem">— 상품명 클릭 시 일별 추이 팝업</span></span>
+      <span class="card-sub" id="prod-table-sub">-</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:36px">#</th>
+            <th>상품명</th>
+            <th class="td-num" style="width:70px">수량</th>
+            <th class="td-num" style="width:110px">매출</th>
+            <th style="width:130px">비율</th>
+            <th class="td-num" style="width:80px">옵션수</th>
+          </tr>
+        </thead>
+        <tbody id="product-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- Daily Table -->
-  <div class="daily-card">
-    <h3>일별 상세 데이터</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>날짜</th>
-          <th class="num">주문</th>
-          <th class="num">매출</th>
-          <th class="num">평균주문액</th>
-          <th class="num">신규고객</th>
-          <th class="num">취소</th>
-        </tr>
-      </thead>
-      <tbody id="daily-tbody"></tbody>
-    </table>
+  <!-- Row 4: 일별 상세 -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">📅 일별 상세 데이터 <span style="font-weight:400;color:#999;font-size:.75rem">— 날짜 클릭 시 당일 상품 내역 펼치기</span></span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:110px">날짜</th>
+            <th class="td-num" style="width:80px">주문</th>
+            <th class="td-num" style="width:120px">매출</th>
+            <th class="td-num" style="width:100px">객단가</th>
+            <th class="td-num" style="width:80px">신규고객</th>
+            <th class="td-num" style="width:70px">취소</th>
+          </tr>
+        </thead>
+        <tbody id="daily-tbody"></tbody>
+      </table>
+    </div>
   </div>
+
 </main>
 
 <script>
-const DATA_URL = 'https://raw.githubusercontent.com/bbagio-bit/bbagio-dashboard/main/cafe24_latest.json';
-let _all = null;
-let _days = 30;
-let revenueChart = null, custChart = null;
+const DATA_URL = 'cafe24_latest.json';
+let _data = null;
+let _period = { from: null, to: null };
+let _activeP = '30d';
+let trendChart = null, custChart = null, modalChart = null;
 
-const fmt = n => Math.round(n).toLocaleString('ko-KR');
+const fmt  = n => Math.round(n).toLocaleString('ko-KR');
 const fmtW = n => fmt(n) + '원';
+const fmtPct = (cur, prev) => {
+  if (!prev || prev === 0) return { text: '-', cls: 'same' };
+  const p = ((cur - prev) / prev * 100).toFixed(1);
+  if (p > 0) return { text: `▲ ${p}%`, cls: 'up' };
+  if (p < 0) return { text: `▼ ${Math.abs(p)}%`, cls: 'down' };
+  return { text: '±0%', cls: 'same' };
+};
 
-async function load() {
-  try {
-    const r = await fetch(DATA_URL + '?t=' + Date.now());
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    _all = await r.json();
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('updated').textContent = '수집: ' + (_all.collected_at || '-');
-    render();
-  } catch(e) {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('error-area').innerHTML = `<div class="error-banner">⚠️ 데이터 로드 실패: ${e.message}<br>잠시 후 새로고침 해주세요.</div>`;
+// ── Date helpers ──
+function toDateStr(d) { return d.toISOString().slice(0, 10); }
+function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
+function parseDate(s) { return new Date(s + 'T00:00:00'); }
+
+function getPeriodRange(p) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = toDateStr(today);
+  let from, to;
+  if (p === 'today') {
+    from = to = todayStr;
+  } else if (p === 'yesterday') {
+    const y = addDays(today, -1);
+    from = to = toDateStr(y);
+  } else if (p === '7d') {
+    from = toDateStr(addDays(today, -6)); to = todayStr;
+  } else if (p === '30d') {
+    from = toDateStr(addDays(today, -29)); to = todayStr;
+  } else if (p === 'thismonth') {
+    const d = new Date(today.getFullYear(), today.getMonth(), 1);
+    from = toDateStr(d); to = todayStr;
+  } else if (p === 'lastmonth') {
+    const f = new Date(today.getFullYear(), today.getMonth()-1, 1);
+    const t = new Date(today.getFullYear(), today.getMonth(), 0);
+    from = toDateStr(f); to = toDateStr(t);
+  } else if (p === '3m') {
+    from = toDateStr(addDays(today, -89)); to = todayStr;
   }
+  return { from, to };
 }
 
-function setDays(d) {
-  _days = d;
-  document.querySelectorAll('.period-bar button').forEach(b => {
-    b.classList.toggle('active', +b.dataset.days === d);
-  });
+function setPeriod(p) {
+  _activeP = p;
+  document.querySelectorAll('.btn-filter').forEach(b => b.classList.toggle('active', b.dataset.p === p));
+  const cdw = document.getElementById('custom-date-wrap');
+  if (p === 'custom') { cdw.classList.add('show'); return; }
+  cdw.classList.remove('show');
+  const r = getPeriodRange(p);
+  _period = r;
   render();
 }
 
-function getFilteredDays() {
-  if (!_all) return [];
-  const allDates = Object.keys(_all.daily).sort();
-  return allDates.slice(-_days);
+function applyCustomDate() {
+  const f = document.getElementById('date-from').value;
+  const t = document.getElementById('date-to').value;
+  if (!f || !t) return;
+  _period = { from: f, to: t };
+  render();
 }
 
-function render() {
-  if (!_all) return;
-  const dates = getFilteredDays();
+// ── Filter daily data ──
+function filterDates(from, to) {
+  if (!_data) return [];
+  return Object.keys(_data.daily).filter(d => d >= from && d <= to).sort();
+}
 
-  // Period label
-  if (dates.length > 0) {
-    document.getElementById('period-label').textContent = dates[0] + ' ~ ' + dates[dates.length-1];
+function prevPeriodRange(from, to) {
+  const f = parseDate(from), t = parseDate(to);
+  const days = Math.round((t - f) / 86400000) + 1;
+  const pTo = addDays(f, -1);
+  const pFrom = addDays(pTo, -(days - 1));
+  return { from: toDateStr(pFrom), to: toDateStr(pTo) };
+}
+
+// ── Load ──
+async function load() {
+  try {
+    const r = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    _data = await r.json();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('updated').textContent = '최종 수집: ' + (_data.collected_at || '-');
+    setPeriod('30d');
+  } catch(e) {
+    document.getElementById('loading').innerHTML = `<p style="color:#e00">데이터 로드 실패: ${e.message}</p>`;
   }
+}
+
+// ── Render ──
+function render() {
+  if (!_data || !_period.from) return;
+  const { from, to } = _period;
+  const dates = filterDates(from, to);
+  const prev  = prevPeriodRange(from, to);
+  const prevDates = filterDates(prev.from, prev.to);
+
+  document.getElementById('range-display').textContent = `${from} ~ ${to} (${dates.length}일)`;
+  document.getElementById('trend-sub').textContent = `${from} ~ ${to}`;
+  document.getElementById('prod-table-sub').textContent = `${dates.length}일 기준`;
 
   // Aggregate
-  let totalRevenue = 0, totalOrders = 0, totalNew = 0, totalCanceled = 0;
-  const dailyRevenue = [], dailyOrders = [], dailyNew = [];
-
-  for (const dt of dates) {
-    const d = _all.daily[dt] || {};
-    totalRevenue  += d.revenue  || 0;
-    totalOrders   += d.orders   || 0;
-    totalNew      += d.new_customers || 0;
-    totalCanceled += d.canceled || 0;
-    dailyRevenue.push(d.revenue || 0);
-    dailyOrders.push(d.orders || 0);
-    dailyNew.push(d.new_customers || 0);
-  }
-
-  const aov = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-  const dailyAvg = dates.length > 0 ? totalRevenue / dates.length : 0;
-  const cancelRate = (totalOrders + totalCanceled) > 0
-    ? (totalCanceled / (totalOrders + totalCanceled) * 100).toFixed(1) : 0;
+  const agg = (ds) => {
+    let rev = 0, ord = 0, nc = 0, can = 0;
+    ds.forEach(d => { const v = _data.daily[d] || {}; rev += v.revenue||0; ord += v.orders||0; nc += v.new_customers||0; can += v.canceled||0; });
+    return { rev, ord, nc, can, aov: ord > 0 ? rev/ord : 0 };
+  };
+  const cur = agg(dates), prv = agg(prevDates);
 
   // KPI
-  document.getElementById('kpi-revenue').textContent = fmtW(totalRevenue);
-  document.getElementById('kpi-revenue-sub').textContent = dates.length + '일 누적';
-  document.getElementById('kpi-orders').textContent = fmt(totalOrders) + '건';
-  document.getElementById('kpi-orders-sub').textContent = `일평균 ${(totalOrders/dates.length).toFixed(1)}건`;
-  document.getElementById('kpi-aov').textContent = fmtW(aov);
-  document.getElementById('kpi-newcust').textContent = fmt(totalNew) + '명';
-  document.getElementById('kpi-newcust-sub').textContent = `첫 구매 비율 ${totalOrders > 0 ? (totalNew/totalOrders*100).toFixed(0) : 0}%`;
-  document.getElementById('kpi-canceled').textContent = fmt(totalCanceled) + '건';
-  document.getElementById('kpi-canceled-rate').textContent = `취소율 ${cancelRate}%`;
-  document.getElementById('kpi-daily-avg').textContent = fmtW(dailyAvg);
+  const setKpi = (id, val, cur_, prev_) => {
+    document.getElementById(id).textContent = val;
+    const c = fmtPct(cur_, prev_);
+    const el = document.getElementById(id + '-chg');
+    el.textContent = c.text;
+    el.className = 'kpi-compare ' + c.cls;
+    document.getElementById(id + '-prev').textContent = `전기 ${fmtW(prev_)}`;
+  };
+  document.getElementById('kpi-rev').textContent = fmtW(cur.rev);
+  document.getElementById('kpi-ord').textContent = fmt(cur.ord) + '건';
+  document.getElementById('kpi-aov').textContent = fmtW(cur.aov);
+  document.getElementById('kpi-new').textContent = fmt(cur.nc) + '명';
+  document.getElementById('kpi-can').textContent = fmt(cur.can) + '건';
+  const setChg = (sid, cid, pidTxt, curV, prvV) => {
+    const c = fmtPct(curV, prvV);
+    const el = document.getElementById(sid); el.textContent = c.text; el.className = 'kpi-compare ' + c.cls;
+    document.getElementById(cid).textContent = pidTxt;
+  };
+  setChg('kpi-rev-chg','kpi-rev-prev',`전기 ${fmtW(prv.rev)}`, cur.rev, prv.rev);
+  setChg('kpi-ord-chg','kpi-ord-prev',`전기 ${fmt(prv.ord)}건`, cur.ord, prv.ord);
+  setChg('kpi-aov-chg','kpi-aov-prev',`전기 ${fmtW(prv.aov)}`, cur.aov, prv.aov);
+  setChg('kpi-new-chg','kpi-new-prev',`전기 ${fmt(prv.nc)}명`, cur.nc, prv.nc);
+  setChg('kpi-can-chg','kpi-can-prev',`전기 ${fmt(prv.can)}건`, cur.can, prv.can);
 
-  // Revenue Chart
-  const shortDates = dates.map(d => d.slice(5));
-  if (revenueChart) revenueChart.destroy();
-  const ctx1 = document.getElementById('revenueChart').getContext('2d');
-  revenueChart = new Chart(ctx1, {
-    type: 'bar',
+  // Trend Chart
+  const labels = dates.map(d => d.slice(5));
+  const revs   = dates.map(d => (_data.daily[d]||{}).revenue||0);
+  const ords   = dates.map(d => (_data.daily[d]||{}).orders||0);
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(document.getElementById('trendChart'), {
     data: {
-      labels: shortDates,
+      labels,
       datasets: [
-        {
-          label: '매출',
-          data: dailyRevenue,
-          backgroundColor: 'rgba(124,92,252,0.5)',
-          borderColor: '#7c5cfc',
-          borderWidth: 1,
-          borderRadius: 3,
-          yAxisID: 'y',
-        },
-        {
-          label: '주문수',
-          data: dailyOrders,
-          type: 'line',
-          borderColor: '#fc5c7d',
-          backgroundColor: 'rgba(252,92,125,0.1)',
-          pointRadius: 3,
-          pointBackgroundColor: '#fc5c7d',
-          tension: 0.3,
-          yAxisID: 'y2',
-          fill: false,
-        }
+        { type:'bar', label:'매출', data: revs, backgroundColor:'rgba(124,92,252,.18)', borderColor:'#7c5cfc', borderWidth:1, borderRadius:2, yAxisID:'y' },
+        { type:'line', label:'주문수', data: ords, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.1)', pointRadius:3, pointBackgroundColor:'#3b82f6', tension:.3, yAxisID:'y2', fill:false },
       ]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { labels: { color: '#8892a4', font: { size: 11 } } },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              if (ctx.datasetIndex === 0) return ` 매출: ${fmtW(ctx.raw)}`;
-              return ` 주문: ${ctx.raw}건`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: { ticks: { color: '#8892a4', font: { size: 10 }, maxRotation: 45 }, grid: { color: '#1f2333' } },
-        y: { ticks: { color: '#8892a4', font: { size: 10 }, callback: v => fmt(v/10000)+'만' }, grid: { color: '#1f2333' }, position: 'left' },
-        y2: { ticks: { color: '#fc5c7d', font: { size: 10 } }, grid: { display: false }, position: 'right' }
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{ legend:{ labels:{ color:'#666', font:{size:11} } }, tooltip:{ callbacks:{ label:ctx => ctx.datasetIndex===0 ? ` 매출: ${fmtW(ctx.raw)}` : ` 주문: ${ctx.raw}건` } } },
+      scales:{
+        x:{ ticks:{ color:'#999', font:{size:10}, maxRotation:45 }, grid:{ color:'#f0f0f5' } },
+        y:{ ticks:{ color:'#999', font:{size:10}, callback:v=>fmt(v/10000)+'만' }, grid:{ color:'#f5f5f8' }, position:'left' },
+        y2:{ ticks:{ color:'#3b82f6', font:{size:10} }, grid:{ display:false }, position:'right' }
       }
     }
   });
 
-  // Customer Chart
+  // Product HBar (top 8, filtered by dates)
+  const prodRev = {};
+  const prodName = {};
+  (_data.products||[]).forEach(p => {
+    let rev = 0, qty = 0;
+    (p.daily||{}) && dates.forEach(d => { qty += (p.daily[d]||0); });
+    // Fallback: if no daily breakdown, use total scaled
+    prodRev[p.product_no] = { name: p.product_name, rev: p.revenue, qty: p.quantity };
+  });
+  // Filter products by period using daily_products
+  const dpAgg = {}; // product_name → {rev, qty}
+  dates.forEach(d => {
+    (_data.daily_products[d]||[]).forEach(it => {
+      if (!dpAgg[it.product_name]) dpAgg[it.product_name] = { rev:0, qty:0 };
+      dpAgg[it.product_name].rev += it.revenue||0;
+      dpAgg[it.product_name].qty += it.quantity||0;
+    });
+  });
+  const sortedProds = Object.entries(dpAgg).sort((a,b)=>b[1].rev-a[1].rev).slice(0,8);
+  const maxPRev = sortedProds[0] ? sortedProds[0][1].rev : 1;
+  const phbar = document.getElementById('product-hbar');
+  phbar.innerHTML = sortedProds.length ? '' : '<div class="no-data">데이터 없음</div>';
+  sortedProds.forEach(([name, s]) => {
+    const pct = (s.rev/maxPRev*100).toFixed(0);
+    phbar.innerHTML += `<div class="hbar-item">
+      <div class="hbar-label"><span style="max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span><span class="val">${fmtW(s.rev)}</span></div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  });
+
+  // Option HBar (top 15, filtered)
+  const optAgg = {}; // "product::option" → {pname, oname, rev, qty}
+  dates.forEach(d => {
+    (_data.daily_products[d]||[]).forEach(it => {
+      const k = it.product_name + '::' + it.option_name;
+      if (!optAgg[k]) optAgg[k] = { pname: it.product_name, oname: it.option_name, rev:0, qty:0 };
+      optAgg[k].rev += it.revenue||0;
+      optAgg[k].qty += it.quantity||0;
+    });
+  });
+  const sortedOpts = Object.values(optAgg).sort((a,b)=>b.rev-a.rev).slice(0,15);
+  const maxORev = sortedOpts[0] ? sortedOpts[0].rev : 1;
+  const ohbar = document.getElementById('option-hbar');
+  ohbar.innerHTML = '';
+  sortedOpts.forEach(o => {
+    const pct = (o.rev/maxORev*100).toFixed(0);
+    const shortP = o.pname.length > 14 ? o.pname.slice(0,14)+'…' : o.pname;
+    const shortO = o.oname.length > 22 ? o.oname.slice(0,22)+'…' : o.oname;
+    ohbar.innerHTML += `<div class="hbar-item">
+      <div class="hbar-label">
+        <span><span style="color:#aaa;font-size:.7rem">[${shortP}]</span> ${shortO}</span>
+        <span class="val">${o.qty}개 · ${fmtW(o.rev)}</span>
+      </div>
+      <div class="hbar-track"><div class="hbar-fill blue" style="width:${pct}%"></div></div>
+    </div>`;
+  });
+
+  // New Customer Chart
+  const ncDates = dates.slice(-30);
+  const ncVals  = ncDates.map(d=>(_data.daily[d]||{}).new_customers||0);
   if (custChart) custChart.destroy();
-  const ctx2 = document.getElementById('custChart').getContext('2d');
-  custChart = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: shortDates,
-      datasets: [{
-        label: '신규 고객',
-        data: dailyNew,
-        backgroundColor: 'rgba(34,197,94,0.5)',
-        borderColor: '#22c55e',
-        borderWidth: 1,
-        borderRadius: 3,
-      }]
+  custChart = new Chart(document.getElementById('newCustChart'), {
+    type:'bar', data:{
+      labels: ncDates.map(d=>d.slice(5)),
+      datasets:[{ label:'신규고객', data:ncVals, backgroundColor:'rgba(16,185,129,.2)', borderColor:'#10b981', borderWidth:1, borderRadius:2 }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#8892a4', font: { size: 10 }, maxRotation: 45 }, grid: { color: '#1f2333' } },
-        y: { ticks: { color: '#8892a4', font: { size: 10 } }, grid: { color: '#1f2333' } }
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ ticks:{ color:'#999', font:{size:10}, maxRotation:45 }, grid:{ color:'#f5f5f8' } },
+        y:{ ticks:{ color:'#999', font:{size:10} }, grid:{ color:'#f5f5f8' } }
       }
     }
   });
+
+  // Compare Grid
+  const cgEl = document.getElementById('compare-grid');
+  cgEl.innerHTML = `
+    <div class="compare-item"><div class="compare-label">기간 주문</div><div class="compare-val">${fmt(cur.ord)}건</div><div class="compare-chg ${fmtPct(cur.ord,prv.ord).cls}">${fmtPct(cur.ord,prv.ord).text} vs 전기</div></div>
+    <div class="compare-item"><div class="compare-label">신규 고객</div><div class="compare-val">${fmt(cur.nc)}명</div><div class="compare-chg ${fmtPct(cur.nc,prv.nc).cls}">${fmtPct(cur.nc,prv.nc).text} vs 전기</div></div>
+    <div class="compare-item"><div class="compare-label">평균 객단가</div><div class="compare-val">${fmtW(cur.aov)}</div><div class="compare-chg ${fmtPct(cur.aov,prv.aov).cls}">${fmtPct(cur.aov,prv.aov).text} vs 전기</div></div>
+    <div class="compare-item"><div class="compare-label">취소율</div><div class="compare-val">${cur.ord+cur.can>0?(cur.can/(cur.ord+cur.can)*100).toFixed(1):0}%</div><div class="compare-chg same">-</div></div>`;
 
   // Products Table
-  const maxRev = _all.products.length > 0 ? _all.products[0].revenue : 1;
-  const tbody = document.getElementById('products-tbody');
-  tbody.innerHTML = '';
-  (_all.products || []).slice(0, 15).forEach((p, i) => {
-    const pct = maxRev > 0 ? (p.revenue / maxRev * 100).toFixed(0) : 0;
-    const opts = (p.options || []).slice(0, 5).map(o =>
-      `<span class="option-item">${(o.option_name||'').slice(0,20)} (${o.quantity}개)</span>`
-    ).join('');
-    tbody.innerHTML += `
-      <tr>
-        <td class="rank">${i+1}</td>
-        <td>
-          <div class="product-name">${p.product_name || '-'}</div>
-          <div class="option-list">${opts}</div>
-        </td>
-        <td class="num">${fmt(p.quantity)}개</td>
-        <td class="num accent">${fmtW(p.revenue)}</td>
-        <td class="bar-cell">
-          <div class="revenue-bar-wrap">
-            <div class="revenue-bar" style="width:${pct}%"></div>
-          </div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:3px">${pct}%</div>
-        </td>
-      </tr>`;
+  const ptbody = document.getElementById('product-tbody');
+  ptbody.innerHTML = '';
+  const sortedProds2 = Object.entries(dpAgg).sort((a,b)=>b[1].rev-a[1].rev);
+  const maxTableRev = sortedProds2[0] ? sortedProds2[0][1].rev : 1;
+  sortedProds2.slice(0,20).forEach(([pname, s], i) => {
+    const pct = (s.rev/maxTableRev*100).toFixed(0);
+    const rank = i+1;
+    const rankCls = rank===1?'g1':rank===2?'g2':rank===3?'g3':'';
+    // Find options for this product in the period
+    const optMap = {};
+    dates.forEach(d => {
+      (_data.daily_products[d]||[]).filter(it=>it.product_name===pname).forEach(it => {
+        if (!optMap[it.option_name]) optMap[it.option_name] = {qty:0,rev:0};
+        optMap[it.option_name].qty += it.quantity||0;
+        optMap[it.option_name].rev += it.revenue||0;
+      });
+    });
+    const optCount = Object.keys(optMap).length;
+    const topOpts = Object.entries(optMap).sort((a,b)=>b[1].qty-a[1].qty).slice(0,3);
+    const optChips = topOpts.map(([on,ov])=>`<span class="option-chip">${on.slice(0,18)} (${ov.qty}개)</span>`).join('');
+    ptbody.innerHTML += `<tr>
+      <td><span class="rank-badge ${rankCls}">${rank}</span></td>
+      <td>
+        <div class="product-name" onclick='showProductModal(${JSON.stringify(pname)})'>${pname}</div>
+        <div style="margin-top:3px">${optChips}</div>
+        <div class="rev-bar-wrap"><div class="rev-bar" style="width:${pct}%"></div></div>
+      </td>
+      <td class="td-num">${fmt(s.qty)}개</td>
+      <td class="td-num" style="color:#7c5cfc;font-weight:700">${fmtW(s.rev)}</td>
+      <td style="padding-top:14px"><div style="font-size:.72rem;color:#999">${pct}%</div></td>
+      <td class="td-num">${optCount}개</td>
+    </tr>`;
   });
 
   // Daily Table
   const dtbody = document.getElementById('daily-tbody');
   dtbody.innerHTML = '';
   [...dates].reverse().forEach(dt => {
-    const d = _all.daily[dt] || {};
-    const aovD = d.orders > 0 ? d.revenue / d.orders : 0;
+    const d = _data.daily[dt] || {};
+    const aov = d.orders > 0 ? d.revenue/d.orders : 0;
+    const rid = 'dr-' + dt.replace(/-/g,'');
+    const items = _data.daily_products[dt] || [];
     dtbody.innerHTML += `
-      <tr>
-        <td>${dt}</td>
-        <td class="num">${fmt(d.orders||0)}건</td>
-        <td class="num accent">${fmtW(d.revenue||0)}</td>
-        <td class="num">${fmtW(aovD)}</td>
-        <td class="num green">${fmt(d.new_customers||0)}명</td>
-        <td class="num" style="color:${(d.canceled||0)>0?'#f87171':'var(--muted)'}">
-          ${fmt(d.canceled||0)}건
+      <tr class="daily-row" onclick="toggleDay('${rid}','${dt}')">
+        <td>${dt} <span class="expand-icon" id="${rid}-icon">▶</span></td>
+        <td class="td-num">${fmt(d.orders||0)}건</td>
+        <td class="td-num" style="color:#7c5cfc;font-weight:700">${fmtW(d.revenue||0)}</td>
+        <td class="td-num">${fmtW(aov)}</td>
+        <td class="td-num" style="color:#10b981">${fmt(d.new_customers||0)}명</td>
+        <td class="td-num" style="color:${(d.canceled||0)>0?'#ef4444':'#aaa'}">${fmt(d.canceled||0)}건</td>
+      </tr>
+      <tr class="drilldown-row" id="${rid}">
+        <td colspan="6" class="drilldown-cell">
+          <div class="drilldown-inner">
+            ${items.length ? items.slice(0,15).map(it=>`
+              <div class="drilldown-item">
+                <span class="drilldown-pname">${it.product_name}</span>
+                <span class="drilldown-oname">${it.option_name}</span>
+                <span class="drilldown-qty">${it.quantity}개</span>
+                <span class="drilldown-rev">${fmtW(it.revenue)}</span>
+              </div>`).join('') : '<div style="color:#ccc;font-size:.8rem;padding:8px">주문 내역 없음</div>'}
+          </div>
         </td>
       </tr>`;
   });
+}
+
+function toggleDay(rid, dt) {
+  const row = document.getElementById(rid);
+  const icon = document.getElementById(rid + '-icon');
+  if (!row) return;
+  const isOpen = row.classList.toggle('open');
+  icon.textContent = isOpen ? '▼' : '▶';
+}
+
+// ── Product Modal ──
+function showProductModal(pname) {
+  const dates = filterDates(_period.from, _period.to);
+  // Daily trend for this product
+  const dailyQty = {}, dailyRev = {};
+  dates.forEach(d => {
+    (_data.daily_products[d]||[]).filter(it=>it.product_name===pname).forEach(it=>{
+      dailyQty[d] = (dailyQty[d]||0) + it.quantity;
+      dailyRev[d] = (dailyRev[d]||0) + it.revenue;
+    });
+  });
+  // Options
+  const optMap = {};
+  dates.forEach(d => {
+    (_data.daily_products[d]||[]).filter(it=>it.product_name===pname).forEach(it=>{
+      if (!optMap[it.option_name]) optMap[it.option_name]={qty:0,rev:0};
+      optMap[it.option_name].qty += it.quantity||0;
+      optMap[it.option_name].rev += it.revenue||0;
+    });
+  });
+  const sortedOpts = Object.entries(optMap).sort((a,b)=>b[1].rev-a[1].rev);
+  const maxOptRev = sortedOpts[0] ? sortedOpts[0][1].rev : 1;
+  const totalRev = Object.values(dailyRev).reduce((a,b)=>a+b,0);
+  const totalQty = Object.values(dailyQty).reduce((a,b)=>a+b,0);
+
+  document.getElementById('modal-title').textContent = pname.slice(0,45);
+  document.getElementById('modal-sub').textContent = `${_period.from} ~ ${_period.to}  |  총 ${fmt(totalQty)}개  ·  ${fmtW(totalRev)}`;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = `
+    <div class="modal-chart-wrap"><canvas id="modalChart"></canvas></div>
+    <div style="font-size:.78rem;font-weight:700;color:#666;margin-bottom:8px">옵션별 판매 현황 (${sortedOpts.length}종)</div>
+    <div class="modal-options">
+      ${sortedOpts.map(([on,ov],i)=>`
+        <div class="modal-opt-item">
+          <span class="modal-opt-rank">${i+1}</span>
+          <span class="modal-opt-name">${on}</span>
+          <div class="modal-opt-bar"><div class="modal-opt-bar-fill" style="width:${(ov.rev/maxOptRev*100).toFixed(0)}%"></div></div>
+          <span class="modal-opt-qty">${ov.qty}개</span>
+          <span class="modal-opt-rev">${fmtW(ov.rev)}</span>
+        </div>`).join('')}
+    </div>`;
+
+  document.getElementById('modal').classList.add('show');
+
+  if (modalChart) modalChart.destroy();
+  const chartDates = dates.filter(d => dailyQty[d]||dailyRev[d]);
+  modalChart = new Chart(document.getElementById('modalChart'), {
+    data:{
+      labels: dates.map(d=>d.slice(5)),
+      datasets:[
+        { type:'bar', label:'수량', data:dates.map(d=>dailyQty[d]||0), backgroundColor:'rgba(124,92,252,.15)', borderColor:'#7c5cfc', borderWidth:1, borderRadius:2, yAxisID:'y' },
+        { type:'line', label:'매출', data:dates.map(d=>dailyRev[d]||0), borderColor:'#10b981', pointRadius:3, pointBackgroundColor:'#10b981', tension:.3, yAxisID:'y2', fill:false },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{ legend:{ labels:{ color:'#666', font:{size:11} } }, tooltip:{ callbacks:{ label:ctx=>ctx.datasetIndex===0?` 수량: ${ctx.raw}개`:` 매출: ${fmtW(ctx.raw)}` } } },
+      scales:{
+        x:{ ticks:{ color:'#999', font:{size:10}, maxRotation:45 }, grid:{ color:'#f5f5f8' } },
+        y:{ ticks:{ color:'#999', font:{size:10} }, grid:{ color:'#f5f5f8' }, position:'left' },
+        y2:{ ticks:{ color:'#10b981', font:{size:10}, callback:v=>fmt(v/10000)+'만' }, grid:{ display:false }, position:'right' }
+      }
+    }
+  });
+}
+
+function closeModal(e) { if (e.target===document.getElementById('modal')) closeModalBtn(); }
+function closeModalBtn() {
+  document.getElementById('modal').classList.remove('show');
+  if (modalChart) { modalChart.destroy(); modalChart=null; }
 }
 
 load();
