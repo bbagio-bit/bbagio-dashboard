@@ -200,10 +200,12 @@ def _parse_option(raw):
 def collect_all(token, start_date, end_date):
     """
     주문 1회 순회로 다음을 동시 집계:
-      - daily:          일별 {orders, revenue, new_customers, canceled}
+      - daily:          일별 {orders, revenue, new_customers, canceled, member_orders, nonmember_orders}
       - products:       상품별 {name, qty, revenue, options, daily_qty}
       - options:        옵션별 전체 집계 (상품명 포함)
       - daily_products: 날짜 → [{product_name, option_name, qty, revenue}]
+      - hourly:         시간대별 {orders, revenue} (0~23시)
+      - member_stats:   {member: {orders, revenue}, nonmember: {orders, revenue}}
     """
     print("  주문 데이터 수집 중 (단일 패스)...")
 
@@ -211,6 +213,11 @@ def collect_all(token, start_date, end_date):
     product_stats = {}   # pid  → stats
     option_stats  = {}   # "pid::oname" → stats
     daily_products = {}  # date → list of {product_name, option_name, qty, revenue}
+    hourly        = {str(h): {"orders": 0, "revenue": 0.0} for h in range(24)}
+    member_stats  = {
+        "member":    {"orders": 0, "revenue": 0.0},
+        "nonmember": {"orders": 0, "revenue": 0.0},
+    }
 
     page = 1
     while True:
@@ -231,7 +238,13 @@ def collect_all(token, start_date, end_date):
 
             # ── 일별 초기화
             if date not in daily:
-                daily[date] = {"orders": 0, "revenue": 0.0, "new_customers": 0, "canceled": 0}
+                daily[date] = {
+                    "orders": 0, "revenue": 0.0,
+                    "new_customers": 0, "canceled": 0,
+                    "member_orders": 0, "nonmember_orders": 0,
+                    "hourly_orders":  {str(h): 0   for h in range(24)},
+                    "hourly_revenue": {str(h): 0.0 for h in range(24)},
+                }
             if date not in daily_products:
                 daily_products[date] = []
 
@@ -247,6 +260,29 @@ def collect_all(token, start_date, end_date):
             daily[date]["revenue"] += revenue
             if o.get("first_order") == "T":
                 daily[date]["new_customers"] += 1
+
+            # ── 시간대별 (글로벌 + 일별)
+            try:
+                hour = str(int(raw_date[11:13])) if len(raw_date) >= 13 else "0"
+                if hour in hourly:
+                    hourly[hour]["orders"]  += 1
+                    hourly[hour]["revenue"] += revenue
+                if hour in daily[date]["hourly_orders"]:
+                    daily[date]["hourly_orders"][hour]  += 1
+                    daily[date]["hourly_revenue"][hour] += revenue
+            except Exception:
+                pass
+
+            # ── 회원/비회원
+            is_member = bool(o.get("member_id"))
+            if is_member:
+                daily[date]["member_orders"] += 1
+                member_stats["member"]["orders"]  += 1
+                member_stats["member"]["revenue"] += revenue
+            else:
+                daily[date]["nonmember_orders"] += 1
+                member_stats["nonmember"]["orders"]  += 1
+                member_stats["nonmember"]["revenue"] += revenue
 
             # ── 상품/옵션 집계
             items = o.get("items", [])
@@ -325,7 +361,7 @@ def collect_all(token, start_date, end_date):
     for date in daily_products:
         daily_products[date].sort(key=lambda x: x["revenue"], reverse=True)
 
-    return daily, sorted_products, sorted_options, daily_products
+    return daily, sorted_products, sorted_options, daily_products, hourly, member_stats
 
 
 # ──────────────────────────────────────────────
@@ -389,7 +425,7 @@ def main():
     print(f"수집 기간: {start_date} ~ {end_date} ({days_back}일)")
 
     # 단일 패스 수집
-    daily_data, products, options, daily_products = collect_all(token, start_date, end_date)
+    daily_data, products, options, daily_products, hourly, member_stats = collect_all(token, start_date, end_date)
 
     # 요약
     total_revenue       = sum(d["revenue"]       for d in daily_data.values())
@@ -411,16 +447,28 @@ def main():
         },
         "daily": {
             date: {
-                "orders":        d["orders"],
-                "revenue":       round(d["revenue"], 0),
-                "new_customers": d["new_customers"],
-                "canceled":      d["canceled"],
+                "orders":           d["orders"],
+                "revenue":          round(d["revenue"], 0),
+                "new_customers":    d["new_customers"],
+                "canceled":         d["canceled"],
+                "member_orders":    d.get("member_orders", 0),
+                "nonmember_orders": d.get("nonmember_orders", 0),
+                "hourly_orders":    {h: round(v,0) for h,v in d.get("hourly_orders",{}).items()},
+                "hourly_revenue":   {h: round(v,0) for h,v in d.get("hourly_revenue",{}).items()},
             }
             for date, d in sorted(daily_data.items())
         },
         "products":        products,
         "options":         options,
         "daily_products":  daily_products,
+        "hourly": {
+            h: {"orders": v["orders"], "revenue": round(v["revenue"], 0)}
+            for h, v in sorted(hourly.items(), key=lambda x: int(x[0]))
+        },
+        "member_stats": {
+            "member":    {"orders": member_stats["member"]["orders"],    "revenue": round(member_stats["member"]["revenue"], 0)},
+            "nonmember": {"orders": member_stats["nonmember"]["orders"], "revenue": round(member_stats["nonmember"]["revenue"], 0)},
+        },
     }
 
     out_path = OUTPUT_DIR / "cafe24_latest.json"
