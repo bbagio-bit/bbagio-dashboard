@@ -13,12 +13,22 @@ from pathlib import Path
 # ── 설정 ────────────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).parent
 KEY_FILE = BASE_DIR / "ga4_service_account.json"
-
-# GA4 Property ID (숫자형 ID) - G-로 시작하는 Measurement ID가 아님
-# GA4 관리 > 속성 설정 > 속성 ID 에서 확인
-GA4_PROPERTY_ID = os.environ.get("GA4_PROPERTY_ID", "")   # e.g. "123456789"
-
 OUTPUT_FILE = BASE_DIR / "ga4_latest.json"
+
+def _load_property_id():
+    """config.json → ga4_property_id 우선, 환경변수 GA4_PROPERTY_ID 보조"""
+    cfg_file = BASE_DIR / "config.json"
+    if cfg_file.exists():
+        try:
+            cfg = json.loads(cfg_file.read_text(encoding="utf-8"))
+            pid = cfg.get("ga4_property_id", "").strip()
+            if pid:
+                return pid
+        except Exception:
+            pass
+    return os.environ.get("GA4_PROPERTY_ID", "").strip()
+
+GA4_PROPERTY_ID = _load_property_id()
 # ────────────────────────────────────────────────────────────────────────────
 
 
@@ -189,83 +199,94 @@ def collect_7day_trend(client, end_date):
 
 
 def main():
+    # ── 전제조건 확인 (미설정 시 조용히 종료, exit 0) ────────────────────
     if not GA4_PROPERTY_ID:
-        print("❌ GA4_PROPERTY_ID 환경변수가 설정되지 않았습니다.")
-        print("   예: export GA4_PROPERTY_ID=123456789")
-        print("   GA4 관리 > 속성 설정 > 속성 ID 에서 확인하세요.")
+        print("⏭  GA4 수집 건너뜀: config.json의 ga4_property_id 미설정")
+        print("   GA4 관리 → 속성 설정 → 속성 ID (숫자) 를 config.json에 입력하세요.")
         return
 
-    print(f"[GA4] Property ID: {GA4_PROPERTY_ID}")
-    print(f"[GA4] Key file: {KEY_FILE}")
+    if not KEY_FILE.exists():
+        print(f"⏭  GA4 수집 건너뜀: {KEY_FILE.name} 없음")
+        print("   Downloads 폴더의 marine-resource-*.json 을 이 폴더에 복사 후")
+        print("   파일명을 ga4_service_account.json 으로 변경하세요.")
+        return
 
-    client = get_client()
+    print(f"[GA4] Property ID : {GA4_PROPERTY_ID}")
+    print(f"[GA4] Key file    : {KEY_FILE.name}")
 
-    today     = datetime.now()
-    today_str = today.strftime("%Y-%m-%d")
+    try:
+        client = get_client()
+    except Exception as e:
+        print(f"⏭  GA4 클라이언트 초기화 실패: {e}")
+        return
+
+    today         = datetime.now()
+    today_str     = today.strftime("%Y-%m-%d")
     yesterday_str = (today - timedelta(days=1)).strftime("%Y-%m-%d")
-    week_start = (today - timedelta(days=6)).strftime("%Y-%m-%d")
+    week_start    = (today - timedelta(days=6)).strftime("%Y-%m-%d")
 
     print(f"[GA4] 데이터 수집 중... ({today_str})")
 
-    # 1. 오늘/어제 기본 지표
-    overview = collect_overview(client, today_str, yesterday_str)
-    print(f"  ✓ 개요 지표 수집")
+    try:
+        # 1. 오늘/어제 기본 지표
+        overview = collect_overview(client, today_str, yesterday_str)
+        print("  ✓ 개요 지표")
 
-    # 2. 유입 채널 (최근 7일)
-    traffic_sources = collect_traffic_sources(client, week_start, today_str)
-    print(f"  ✓ 유입 채널 {len(traffic_sources)}개")
+        # 2. 유입 채널 (최근 7일)
+        traffic_sources = collect_traffic_sources(client, week_start, today_str)
+        print(f"  ✓ 유입 채널 {len(traffic_sources)}개")
 
-    # 3. 상위 페이지 (최근 7일)
-    top_pages = collect_top_pages(client, week_start, today_str, limit=10)
-    print(f"  ✓ 상위 페이지 {len(top_pages)}개")
+        # 3. 상위 페이지 (최근 7일)
+        top_pages = collect_top_pages(client, week_start, today_str, limit=10)
+        print(f"  ✓ 상위 페이지 {len(top_pages)}개")
 
-    # 4. 시간대별 UV (오늘)
-    hourly_uv = collect_hourly_uv(client, today_str)
-    print(f"  ✓ 시간대별 UV")
+        # 4. 시간대별 UV (오늘)
+        hourly_uv = collect_hourly_uv(client, today_str)
+        print("  ✓ 시간대별 UV")
 
-    # 5. 기기별 비중
-    device_breakdown = collect_device_breakdown(client, week_start, today_str)
-    print(f"  ✓ 기기별 분석")
+        # 5. 기기별 비중
+        device_breakdown = collect_device_breakdown(client, week_start, today_str)
+        print("  ✓ 기기별 분석")
 
-    # 6. 최근 7일 트렌드
-    trend_7day = collect_7day_trend(client, today_str)
-    print(f"  ✓ 7일 트렌드")
+        # 6. 최근 7일 트렌드
+        trend_7day = collect_7day_trend(client, today_str)
+        print("  ✓ 7일 트렌드")
 
-    # ── 결과 조합 ──────────────────────────────────────────────────────────
-    result = {
-        "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "property_id": GA4_PROPERTY_ID,
-        "today": today_str,
-        "yesterday": yesterday_str,
+        # ── 결과 저장 ──────────────────────────────────────────────────────
+        result = {
+            "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "property_id": GA4_PROPERTY_ID,
+            "today": today_str,
+            "yesterday": yesterday_str,
+            "today_metrics": overview.get(today_str.replace("-", ""), {
+                "sessions": 0, "uv": 0, "pageviews": 0, "bounce_rate": 0,
+            }),
+            "yesterday_metrics": overview.get(yesterday_str.replace("-", ""), {
+                "sessions": 0, "uv": 0, "pageviews": 0, "bounce_rate": 0,
+            }),
+            "traffic_sources":  traffic_sources,
+            "top_pages":        top_pages,
+            "hourly_uv_today":  hourly_uv,
+            "device_breakdown": device_breakdown,
+            "trend_7day":       trend_7day,
+        }
 
-        # 오늘 지표
-        "today_metrics": overview.get(today_str.replace("-", ""), {
-            "sessions": 0, "uv": 0, "pageviews": 0, "bounce_rate": 0
-        }),
-        # 어제 지표
-        "yesterday_metrics": overview.get(yesterday_str.replace("-", ""), {
-            "sessions": 0, "uv": 0, "pageviews": 0, "bounce_rate": 0
-        }),
+        OUTPUT_FILE.write_text(
+            json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        print(f"\n✅ 저장: {OUTPUT_FILE}")
 
-        # 7일 데이터
-        "traffic_sources": traffic_sources,
-        "top_pages":        top_pages,
-        "hourly_uv_today":  hourly_uv,
-        "device_breakdown": device_breakdown,
-        "trend_7day":       trend_7day,
-    }
+        td = result["today_metrics"]
+        yd = result["yesterday_metrics"]
+        print(f"📊 오늘: UV {td.get('uv',0):,}  세션 {td.get('sessions',0):,}  PV {td.get('pageviews',0):,}")
+        print(f"📊 어제: UV {yd.get('uv',0):,}  세션 {yd.get('sessions',0):,}  PV {yd.get('pageviews',0):,}")
+        if traffic_sources:
+            top = traffic_sources[0]
+            print(f"🔝 최고 유입: {top['channel']} ({top['sessions']:,} 세션)")
 
-    OUTPUT_FILE.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\n✅ 저장 완료: {OUTPUT_FILE}")
-
-    # 간단 요약 출력
-    td = result["today_metrics"]
-    yd = result["yesterday_metrics"]
-    print(f"\n📊 오늘: UV {td.get('uv',0):,}  세션 {td.get('sessions',0):,}  PV {td.get('pageviews',0):,}")
-    print(f"📊 어제: UV {yd.get('uv',0):,}  세션 {yd.get('sessions',0):,}  PV {yd.get('pageviews',0):,}")
-    if traffic_sources:
-        top = traffic_sources[0]
-        print(f"🔝 최고 유입: {top['channel']} ({top['sessions']:,} 세션)")
+    except Exception as e:
+        print(f"❌ GA4 수집 오류: {e}")
+        import traceback; traceback.print_exc()
 
 
 if __name__ == "__main__":
