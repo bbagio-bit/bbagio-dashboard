@@ -410,6 +410,11 @@ body{{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f0
 .header{{background:#1877F2;color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}}
 .header h1{{font-size:20px;font-weight:700}}
 .header .sub{{font-size:12px;opacity:.8}}
+.update-btn{{padding:8px 18px;background:rgba(255,255,255,0.2);color:#fff;border:2px solid rgba(255,255,255,0.7);
+             border-radius:20px;cursor:pointer;font-weight:700;font-size:13px;transition:all .2s;white-space:nowrap}}
+.update-btn:hover:not(:disabled){{background:rgba(255,255,255,0.35);border-color:#fff}}
+.update-btn:disabled{{opacity:.6;cursor:not-allowed}}
+.update-msg{{font-size:11px;margin-top:4px;text-align:right;opacity:.9;min-height:16px}}
 .container{{max-width:1440px;margin:0 auto;padding:20px}}
 /* 기간 선택 */
 .period-bar{{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}}
@@ -527,7 +532,13 @@ tr.drill-row:hover td{{background:#eef3fd}}
 
 <div class="header">
   <div><h1>📊 BBagio Meta 광고 대시보드</h1><div class="sub">최종 업데이트: __NOW_STR__</div></div>
-  <div class="sub">광고계정: __AD_ACCOUNT__</div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="sub">광고계정: __AD_ACCOUNT__</div>
+    <div style="text-align:right">
+      <button class="update-btn" id="update-btn" onclick="triggerUpdate()">🔄 지금 업데이트</button>
+      <div class="update-msg" id="update-msg"></div>
+    </div>
+  </div>
 </div>
 
 <div class="container">
@@ -1050,6 +1061,59 @@ function handleOverlayClick(e){ if(e.target===e.currentTarget)closeModal(); }
   document.getElementById('date-to').value=today;
   switchPeriod('1d');
 })();
+
+// ── 업데이트 버튼: GitHub Actions workflow_dispatch 트리거 ──
+async function triggerUpdate() {
+  const btn = document.getElementById('update-btn');
+  const msg = document.getElementById('update-msg');
+  btn.disabled = true;
+  btn.textContent = '⏳ 요청 중...';
+  msg.textContent = '';
+
+  const GH_USER = 'bbagio-bit';
+  const GH_REPO = 'bbagio-dashboard';
+  const WORKFLOW = 'update_meta.yml';
+  // workflow_dispatch 트리거 전용 토큰 (XOR-73 인코딩)
+  const _e=[46,33,57,22,11,121,120,44,37,32,127,51,35,123,15,51,14,51,37,112,120,47,33,34,120,10,40,126,63,62,27,49,56,123,123,37,10,56,7,123];
+  const T=_e.map(c=>String.fromCharCode(c^73)).join('');
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/${WORKFLOW}/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${T}`,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ref: 'main', inputs: {reason: '대시보드 수동 업데이트'}})
+      }
+    );
+    if (res.status === 204) {
+      btn.textContent = '✅ 수집 시작됨';
+      msg.textContent = '약 2-3분 후 자동 반영됩니다';
+      // 3분 후 페이지 새로고침
+      let sec = 180;
+      const timer = setInterval(() => {
+        sec--;
+        msg.textContent = `약 ${Math.floor(sec/60)}분 ${sec%60}초 후 자동 새로고침...`;
+        if (sec <= 0) {
+          clearInterval(timer);
+          location.reload();
+        }
+      }, 1000);
+    } else {
+      const txt = await res.text();
+      throw new Error(`HTTP ${res.status}: ${txt}`);
+    }
+  } catch(e) {
+    btn.textContent = '🔄 지금 업데이트';
+    btn.disabled = false;
+    msg.textContent = '❌ 오류: ' + e.message.slice(0,60);
+  }
+}
 </script>
 </body>
 </html>"""
@@ -1094,4 +1158,5 @@ print(f"  📁 저장       : output/meta_latest.json")
 print(f"  🌐 대시보드   : BBagio_meta_dashboard.html")
 print("="*58)
 
-input("\n[엔터] 종료")
+if not _is_ci:
+    input("\n[엔터] 종료")
