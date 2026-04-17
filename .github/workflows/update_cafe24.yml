@@ -2,22 +2,19 @@ name: Update Cafe24 Data
 
 on:
   schedule:
-    # 매일 오전 6시, 오후 1시, 오후 9시 (KST = UTC+9)
-    - cron: '0 21 * * *'   # KST 06:00
-    - cron: '0 4 * * *'    # KST 13:00
-    - cron: '0 12 * * *'   # KST 21:00
+    # KST 06:00, 13:00, 21:00 (UTC 기준)
+    - cron: '0 21 * * *'
+    - cron: '0 4 * * *'
+    - cron: '0 12 * * *'
   workflow_dispatch:
-    inputs:
-      days_back:
-        description: '수집 기간 (일)'
-        required: false
-        default: '30'
 
 jobs:
   collect:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,7 +22,20 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests PyNaCl
+
+      - name: Set token env from secrets or file
+        run: |
+          # repo에 저장된 토큰 파일이 있으면 우선 사용, 없으면 Secrets 사용
+          if [ -f "cafe24_tokens.json" ]; then
+            AT=$(python3 -c "import json; d=json.load(open('cafe24_tokens.json')); print(d['access_token'])")
+            RT=$(python3 -c "import json; d=json.load(open('cafe24_tokens.json')); print(d['refresh_token'])")
+            echo "CAFE24_ACCESS_TOKEN=$AT" >> $GITHUB_ENV
+            echo "CAFE24_REFRESH_TOKEN=$RT" >> $GITHUB_ENV
+          else
+            echo "CAFE24_ACCESS_TOKEN=${{ secrets.CAFE24_ACCESS_TOKEN }}" >> $GITHUB_ENV
+            echo "CAFE24_REFRESH_TOKEN=${{ secrets.CAFE24_REFRESH_TOKEN }}" >> $GITHUB_ENV
+          fi
 
       - name: Run Cafe24 collector
         env:
@@ -33,17 +43,15 @@ jobs:
           CAFE24_MALL_ID: ${{ secrets.CAFE24_MALL_ID }}
           CAFE24_CLIENT_ID: ${{ secrets.CAFE24_CLIENT_ID }}
           CAFE24_CLIENT_SECRET: ${{ secrets.CAFE24_CLIENT_SECRET }}
-          CAFE24_ACCESS_TOKEN: ${{ secrets.CAFE24_ACCESS_TOKEN }}
-          CAFE24_REFRESH_TOKEN: ${{ secrets.CAFE24_REFRESH_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
           GH_USER: bbagio-bit
           GH_REPO: bbagio-dashboard
         run: python cafe24_collector.py
 
-      - name: Commit updated tokens
+      - name: Commit updated tokens & data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cafe24_tokens.json cafe24_latest.json || true
-          git diff --staged --quiet || git commit -m "[자동] Cafe24 토큰/데이터 업데이트"
+          git add cafe24_tokens.json cafe24_latest.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "[자동] Cafe24 토큰/데이터 $(date +'%Y-%m-%d %H:%M')"
           git push || true
