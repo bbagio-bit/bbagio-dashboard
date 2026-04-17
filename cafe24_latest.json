@@ -4737,5 +4737,114 @@
         "revenue": 9900.0
       }
     ]
-  }
+  },
+  "hourly": {
+    "0": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "1": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "2": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "3": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "4": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "5": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "6": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "7": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "8": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "9": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "10": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "11": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "12": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "13": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "14": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "15": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "16": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "17": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "18": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "19": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "20": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "21": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "22": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "23": {
+      "orders": 0,
+      "revenue": 0
+    }
+  },
+  "member_stats": {
+    "member": {
+      "orders": 0,
+      "revenue": 0
+    },
+    "nonmember": {
+      "orders": 0,
+      "revenue": 0
+    }
+  },
+  "_note": "hourly/member_stats will populate on next collector run"
 }
