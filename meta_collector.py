@@ -1062,6 +1062,24 @@ function handleOverlayClick(e){ if(e.target===e.currentTarget)closeModal(); }
   switchPeriod('1d');
 })();
 
+// ── 자동 버전 체크: CDN 캐시 우회 ────────────────────────
+(function checkVersion(){
+  const MY_VER = '__NOW_STR__';
+  const BASE = location.origin + location.pathname;
+  // 이미 ?t= 파라미터가 있으면 체크 불필요
+  if(new URLSearchParams(location.search).has('t')) return;
+  fetch('version.txt?_=' + Date.now(), {cache:'no-store'})
+    .then(r => r.text())
+    .then(latest => {
+      latest = latest.trim();
+      if(latest && latest !== MY_VER) {
+        // 최신 버전이 다르면 ?t= 파라미터로 강제 새로고침
+        location.replace(BASE + '?t=' + encodeURIComponent(latest));
+      }
+    })
+    .catch(()=>{}); // 실패해도 무시 (오프라인 등)
+})();
+
 // ── 업데이트 버튼: GitHub Actions workflow_dispatch 트리거 ──
 async function triggerUpdate() {
   const btn = document.getElementById('update-btn');
@@ -1132,9 +1150,20 @@ with open(html_path, "w", encoding="utf-8") as f:
     f.write(HTML)
 print(f"  ✅ BBagio_meta_dashboard.html 생성 완료 (v2.2 — 상태·기간 + 드릴다운 + 날짜선택)")
 
+# version.txt 생성 (CDN 캐시 우회용)
+ver_path = OUTPUT_DIR / "version.txt"
+with open(ver_path, "w", encoding="utf-8") as f:
+    f.write(NOW_STR)
+
 # ─────────────────────────────────────────
 # 업로드 (GitHub Pages 우선 → SFTP → FTP)
 # ─────────────────────────────────────────
+# 1) version.txt 먼저 업로드 (작은 파일, 빠름)
+upload_dashboard(
+    ver_path, "version.txt",
+    github_token=GH_TOKEN, github_user=GH_USER, github_repo=GH_REPO,
+)
+# 2) 대시보드 HTML 업로드
 upload_dashboard(
     html_path, "BBagio_meta_dashboard.html",
     host=FTP_HOST, user=FTP_USER, password=FTP_PW,
