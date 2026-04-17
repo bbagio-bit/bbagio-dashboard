@@ -300,12 +300,64 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
+  <!-- ═══ GA4 트래픽 섹션 ═══ -->
+  <div id="ga4-section" style="display:none">
+    <div class="kpi-section" style="margin-top:4px">
+      <div class="kpi-section-label">🌐 GA4 웹사이트 트래픽 <span style="font-size:.66rem;font-weight:400;color:#bbb;text-transform:none" id="ga4-updated-badge"></span></div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi blue">  <div class="kpi-lbl">오늘 UV</div>  <div class="kpi-val" id="g4-uv-today">-</div>  <div class="kpi-foot"><span class="delta" id="g4-uv-d">-</span><span class="kpi-prev-txt" id="g4-uv-p">-</span></div></div>
+        <div class="kpi green"> <div class="kpi-lbl">오늘 세션</div><div class="kpi-val" id="g4-ss-today">-</div><div class="kpi-foot"><span class="delta" id="g4-ss-d">-</span><span class="kpi-prev-txt" id="g4-ss-p">-</span></div></div>
+        <div class="kpi amber"> <div class="kpi-lbl">오늘 페이지뷰</div><div class="kpi-val" id="g4-pv-today">-</div><div class="kpi-foot"><span class="delta" id="g4-pv-d">-</span><span class="kpi-prev-txt" id="g4-pv-p">-</span></div></div>
+        <div class="kpi purple"><div class="kpi-lbl">이탈률 (오늘)</div><div class="kpi-val" id="g4-br-today">-</div><div class="kpi-foot"><span style="font-size:.7rem;color:#bbb">어제 <span id="g4-br-p">-</span></span></div></div>
+      </div>
+    </div>
+
+    <div class="row r-2-1">
+      <!-- 7일 UV 트렌드 -->
+      <div class="card">
+        <div class="card-hd"><span class="card-ttl">📈 최근 7일 UV / 세션 추이</span><span class="card-sub">Google Analytics 4</span></div>
+        <div class="card-body"><div style="position:relative;height:190px"><canvas id="ga4TrendChart"></canvas></div></div>
+      </div>
+      <!-- 유입 채널 -->
+      <div class="card">
+        <div class="card-hd"><span class="card-ttl">🔗 유입 채널별 세션</span><span class="card-sub">최근 7일</span></div>
+        <div class="hbar-list" id="ga4-channel-bars"></div>
+      </div>
+    </div>
+
+    <div class="row r-2">
+      <!-- 기기별 -->
+      <div class="card">
+        <div class="card-hd"><span class="card-ttl">📱 기기별 세션 비중</span><span class="card-sub">최근 7일</span></div>
+        <div class="donut-wrap">
+          <div class="donut-chart-area"><canvas id="ga4DeviceChart"></canvas></div>
+          <div class="donut-legend" id="ga4-device-legend"></div>
+        </div>
+      </div>
+      <!-- 상위 페이지 -->
+      <div class="card">
+        <div class="card-hd"><span class="card-ttl">📄 상위 페이지</span><span class="card-sub">페이지뷰 TOP 10</span></div>
+        <div class="hbar-list" id="ga4-page-bars"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GA4 미설정 안내 -->
+  <div id="ga4-placeholder" style="margin-bottom:12px;background:#fff;border-radius:6px;border:1px dashed #e0deff;padding:18px 20px;display:none">
+    <div style="font-size:.82rem;font-weight:700;color:#7c5cfc;margin-bottom:6px">🌐 GA4 트래픽 연동 준비 중</div>
+    <div style="font-size:.78rem;color:#999">
+      <code>ga4_latest.json</code> 파일이 없습니다.<br>
+      <code>ga4_collector.py</code>를 실행하면 웹사이트 UV·세션·유입 채널 데이터가 여기에 표시됩니다.
+    </div>
+  </div>
+
 </main>
 
 <script>
 const C24_URL  = 'cafe24_latest.json';
 const META_URL = 'meta_summary.json';
-let _c24 = null, _meta = null;
+const GA4_URL  = 'ga4_latest.json';
+let _c24 = null, _meta = null, _ga4 = null;
 let _from = null, _to = null, _activeP = '30d';
 let trendCh = null, roacCh = null, custCh = null, hourlyCh = null, memberCh = null, moCh = null;
 
@@ -418,13 +470,19 @@ function aggHourly(dates) {
 async function load() {
   try {
     const t = '?t='+Date.now();
-    const [r1,r2] = await Promise.all([fetch(C24_URL+t),fetch(META_URL+t)]);
+    const [r1,r2,r3] = await Promise.all([
+      fetch(C24_URL+t),
+      fetch(META_URL+t),
+      fetch(GA4_URL+t).catch(()=>null),
+    ]);
     _c24 = await r1.json();
     if(r2.ok) _meta = await r2.json();
+    if(r3 && r3.ok) { _ga4 = await r3.json(); }
     document.getElementById('loading').style.display='none';
     const metaAt = _meta ? ` | Meta: ${_meta.collected_at||'-'}` : '';
     document.getElementById('updated').textContent = `카페24: ${_c24.collected_at||'-'}${metaAt}`;
     setPeriod('30d');
+    renderGa4();
   } catch(e) {
     document.getElementById('loading').innerHTML=`<p style="color:#e00">로드 실패: ${e.message}</p>`;
   }
@@ -728,6 +786,115 @@ function showMo(pname) {
 
 function closeMo(e){if(e.target===document.getElementById('modal')) closeMoBtn();}
 function closeMoBtn(){document.getElementById('modal').classList.remove('show');if(moCh){moCh.destroy();moCh=null;}}
+
+// ── GA4 렌더 ──────────────────────────────────────────────────────────────
+let ga4TrendCh = null, ga4DeviceCh = null;
+
+function ga4Delta(cur, prv) {
+  if(!prv || prv===0) return {t:'-', c:'same'};
+  const p=((cur-prv)/Math.abs(prv)*100).toFixed(1);
+  if(p>0) return {t:`▲ ${p}%`,c:'up'};
+  if(p<0) return {t:`▼ ${Math.abs(p)}%`,c:'down'};
+  return {t:'±0%',c:'same'};
+}
+
+function renderGa4() {
+  const sec  = document.getElementById('ga4-section');
+  const ph   = document.getElementById('ga4-placeholder');
+
+  if(!_ga4) { ph.style.display='block'; return; }
+
+  sec.style.display='block';
+
+  // ── 업데이트 시간
+  document.getElementById('ga4-updated-badge').textContent = `(업데이트: ${_ga4.updated_at||'-'})`;
+
+  // ── KPI
+  const td = _ga4.today_metrics || {uv:0,sessions:0,pageviews:0,bounce_rate:0};
+  const yd = _ga4.yesterday_metrics || {uv:0,sessions:0,pageviews:0,bounce_rate:0};
+
+  const setG4Kpi = (vid,did,pid,cur,prv,fmt) => {
+    document.getElementById(vid).textContent = fmt(cur);
+    const d = ga4Delta(cur,prv);
+    const el = document.getElementById(did); el.textContent=d.t; el.className='delta '+d.c;
+    document.getElementById(pid).textContent = `어제 ${fmt(prv)}`;
+  };
+  setG4Kpi('g4-uv-today','g4-uv-d','g4-uv-p', td.uv,       yd.uv,       v=>Math.round(v).toLocaleString('ko-KR'));
+  setG4Kpi('g4-ss-today','g4-ss-d','g4-ss-p', td.sessions,  yd.sessions, v=>Math.round(v).toLocaleString('ko-KR'));
+  setG4Kpi('g4-pv-today','g4-pv-d','g4-pv-p', td.pageviews, yd.pageviews,v=>Math.round(v).toLocaleString('ko-KR'));
+  document.getElementById('g4-br-today').textContent = td.bounce_rate.toFixed(1)+'%';
+  document.getElementById('g4-br-p').textContent = yd.bounce_rate.toFixed(1)+'%';
+
+  // ── 7일 트렌드 차트
+  const trend = _ga4.trend_7day || [];
+  const tlabels = trend.map(r=>r.date.slice(5));
+  const tUv     = trend.map(r=>r.uv||0);
+  const tSess   = trend.map(r=>r.sessions||0);
+  if(ga4TrendCh) ga4TrendCh.destroy();
+  ga4TrendCh = new Chart(document.getElementById('ga4TrendChart'),{
+    data:{labels:tlabels,datasets:[
+      {type:'bar', label:'UV',     data:tUv,   backgroundColor:'rgba(59,130,246,.18)', borderColor:'#3b82f6',borderWidth:1,borderRadius:3,yAxisID:'y'},
+      {type:'line',label:'세션수', data:tSess, borderColor:'#10b981',pointRadius:3,tension:.35,fill:false,yAxisID:'y'},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#777',font:{size:11}}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${Math.round(ctx.raw).toLocaleString('ko-KR')}`}}},
+      scales:{
+        x:{ticks:{color:'#aaa',font:{size:10}},grid:{color:'#f5f5f8'}},
+        y:{ticks:{color:'#aaa',font:{size:10}},grid:{color:'#f5f5f8'},title:{display:true,text:'UV',color:'#bbb',font:{size:10}}},
+      }
+    }
+  });
+
+  // ── 유입 채널 바
+  const channels = _ga4.traffic_sources || [];
+  const maxCh = channels[0]?channels[0].sessions:1;
+  const chColors = ['blue','green','purple',''];
+  document.getElementById('ga4-channel-bars').innerHTML = channels.slice(0,8).map((c,i)=>`
+    <div class="hbar-item">
+      <div class="hbar-hd"><span class="hbar-name">${c.channel}</span><span class="hbar-val">${c.sessions.toLocaleString('ko-KR')} 세션</span></div>
+      <div class="hbar-track"><div class="hbar-fill ${chColors[i%chColors.length]}" style="width:${(c.sessions/maxCh*100).toFixed(0)}%"></div></div>
+    </div>`).join('');
+
+  // ── 기기별 도넛
+  const devices = _ga4.device_breakdown || [];
+  const devColors = ['#3b82f6','#10b981','#f59e0b','#8b5cf6'];
+  const devNames  = {mobile:'모바일',desktop:'데스크톱',tablet:'태블릿'};
+  const totalDev  = devices.reduce((a,d)=>a+d.sessions,0)||1;
+  if(ga4DeviceCh) ga4DeviceCh.destroy();
+  ga4DeviceCh = new Chart(document.getElementById('ga4DeviceChart'),{
+    type:'doughnut',
+    data:{
+      labels: devices.map(d=>devNames[d.device]||d.device),
+      datasets:[{data:devices.map(d=>d.sessions), backgroundColor:devColors, borderWidth:0, hoverOffset:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw.toLocaleString('ko-KR')} 세션 (${(ctx.raw/totalDev*100).toFixed(0)}%)`}}}}
+  });
+  document.getElementById('ga4-device-legend').innerHTML = devices.map((d,i)=>`
+    <div class="donut-leg-item">
+      <div class="donut-dot" style="background:${devColors[i]}"></div>
+      <div>
+        <div class="donut-leg-txt">${devNames[d.device]||d.device}</div>
+        <div class="donut-leg-val">${(d.sessions/totalDev*100).toFixed(0)}%</div>
+        <div class="donut-leg-sub">${d.sessions.toLocaleString('ko-KR')} 세션</div>
+      </div>
+    </div>`).join('');
+
+  // ── 상위 페이지 바
+  const pages = _ga4.top_pages || [];
+  const maxPv = pages[0]?pages[0].pageviews:1;
+  document.getElementById('ga4-page-bars').innerHTML = pages.slice(0,10).map((p,i)=>`
+    <div class="hbar-item">
+      <div class="hbar-hd">
+        <span class="hbar-name" title="${p.page}" style="font-size:.71rem">${p.page.length>40?p.page.slice(0,40)+'…':p.page}</span>
+        <span class="hbar-val">${p.pageviews.toLocaleString('ko-KR')} PV</span>
+      </div>
+      <div class="hbar-track"><div class="hbar-fill green" style="width:${(p.pageviews/maxPv*100).toFixed(0)}%"></div></div>
+    </div>`).join('');
+}
+// ──────────────────────────────────────────────────────────────────────────
 
 load();
 </script>
