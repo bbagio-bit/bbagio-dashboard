@@ -1,0 +1,50 @@
+name: BBagio Meta 대시보드 업데이트
+
+on:
+  # 매일 KST 08:30 자동 실행 (UTC 23:30)
+  schedule:
+    - cron: '30 23 * * *'
+  # 수동 트리거 (대시보드 버튼 or GitHub Actions 페이지)
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '실행 이유 (선택)'
+        required: false
+        default: '수동 업데이트'
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 패키지 설치
+        run: |
+          pip install requests
+
+      - name: Meta 대시보드 수집 및 업로드
+        env:
+          META_APP_ID: ${{ secrets.META_APP_ID }}
+          META_APP_SECRET: ${{ secrets.META_APP_SECRET }}
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_AD_ACCOUNT_ID: ${{ secrets.META_AD_ACCOUNT_ID }}
+          GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+          GH_USER: bbagio-bit
+          GH_REPO: bbagio-dashboard
+          CI: "true"
+        run: |
+          python meta_collector.py
+
+      - name: 완료 시각 출력
+        run: |
+          echo "✅ 업데이트 완료: $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M KST')"
