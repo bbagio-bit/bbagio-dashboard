@@ -161,6 +161,9 @@ tr:last-child td { border-bottom: none; }
   <div class="logo">BBagio <span>자사몰</span></div>
   <div class="header-sub">커머스 분석 대시보드</div>
   <div class="updated" id="updated">-</div>
+  <button id="refresh-btn" onclick="refreshData()" style="margin-left:10px;background:#7c5cfc;border:none;color:#fff;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:5px;transition:opacity .15s;" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
+    <span id="refresh-icon">🔄</span> 데이터 갱신
+  </button>
 </div>
 
 <div class="filter-bar">
@@ -897,6 +900,22 @@ function renderGa4() {
 // ──────────────────────────────────────────────────────────────────────────
 
 load();
+
+async function refreshData() {
+  const btn = document.getElementById('refresh-btn');
+  const icon = document.getElementById('refresh-icon');
+  btn.disabled = true;
+  icon.textContent = '⏳';
+  btn.style.opacity = '.6';
+  try {
+    await load();
+    icon.textContent = '✅';
+    setTimeout(() => { icon.textContent = '🔄'; btn.disabled = false; btn.style.opacity = '1'; }, 1500);
+  } catch(e) {
+    icon.textContent = '❌';
+    setTimeout(() => { icon.textContent = '🔄'; btn.disabled = false; btn.style.opacity = '1'; }, 1500);
+  }
+}
 </script>
 </body>
 </html>
