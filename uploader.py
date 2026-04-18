@@ -252,55 +252,66 @@ def upload_both(local_path, remote_filename,
 
     # ── FTP (SFTP → Passive → Active) ────────────────────────
     if host and user and password:
+        import socket
         ftp_ok = False
 
-        # SFTP 시도
-        try:
-            import paramiko
-            for sftp_port in [port_sftp, 2222]:
-                try:
-                    print(f"  🔗 SFTP(port {sftp_port})...", end=" ", flush=True)
-                    _try_sftp(host, sftp_port, user, password,
-                              local_path, remote_dir, remote_filename)
-                    ftp_url = (public_url.rstrip("/") + "/" + remote_filename) if public_url else ""
-                    print(f"✅" + (f" → {ftp_url}" if ftp_url else ""))
-                    results.append(ftp_url or True)
-                    ftp_ok = True
-                    break
-                except Exception as e:
-                    print(f"❌ 실패: {e}")
-            if ftp_ok:
-                pass  # SFTP 성공, FTP 불필요
-        except ImportError:
-            pass
+        # 포트 접속 가능 여부 사전 체크 (3초) — 막히면 전체 스킵
+        def _port_open(h, p, t=3):
+            try:
+                socket.create_connection((h, p), timeout=t).close()
+                return True
+            except Exception:
+                return False
 
-        # FTP Passive / Active
-        if not ftp_ok:
-            for pasv in [True, False]:
-                mode = "Passive" if pasv else "Active"
-                try:
-                    print(f"  🔗 FTP({mode})...", end=" ", flush=True)
-                    ftp = ftplib.FTP(timeout=30)
-                    ftp.connect(host, port_ftp, timeout=30)
-                    ftp.login(user, password)
-                    ftp.set_pasv(pasv)
-                    dirs = [d for d in remote_dir.strip("/").split("/") if d]
-                    ftp.cwd("/")
-                    for d in dirs:
-                        try: ftp.cwd(d)
-                        except: ftp.mkd(d); ftp.cwd(d)
-                    with open(local_path, "rb") as f:
-                        ftp.storbinary(f"STOR {remote_filename}", f)
-                    ftp.quit()
-                    ftp_url = (public_url.rstrip("/") + "/" + remote_filename) if public_url else ""
-                    print(f"✅" + (f" → {ftp_url}" if ftp_url else ""))
-                    results.append(ftp_url or True)
-                    ftp_ok = True
-                    break
-                except Exception as e:
-                    print(f"❌ 실패: {e}")
+        ftp_reachable = _port_open(host, 22) or _port_open(host, 21)
+        if not ftp_reachable:
+            print(f"  ⚡ FTP/SFTP 포트 차단 감지 → 스킵")
+        else:
+            # SFTP 시도
+            try:
+                import paramiko
+                for sftp_port in [port_sftp, 2222]:
+                    try:
+                        print(f"  🔗 SFTP(port {sftp_port})...", end=" ", flush=True)
+                        _try_sftp(host, sftp_port, user, password,
+                                  local_path, remote_dir, remote_filename)
+                        ftp_url = (public_url.rstrip("/") + "/" + remote_filename) if public_url else ""
+                        print(f"✅" + (f" → {ftp_url}" if ftp_url else ""))
+                        results.append(ftp_url or True)
+                        ftp_ok = True
+                        break
+                    except Exception as e:
+                        print(f"❌ 실패: {e}")
+            except ImportError:
+                pass
 
-        if not ftp_ok:
-            print(f"  ⚠️  FTP 업로드 실패 — 수동으로 {remote_filename} 을 {remote_dir} 에 업로드하세요.")
+            # FTP Passive / Active
+            if not ftp_ok:
+                for pasv in [True, False]:
+                    mode = "Passive" if pasv else "Active"
+                    try:
+                        print(f"  🔗 FTP({mode})...", end=" ", flush=True)
+                        ftp = ftplib.FTP(timeout=10)
+                        ftp.connect(host, port_ftp, timeout=10)
+                        ftp.login(user, password)
+                        ftp.set_pasv(pasv)
+                        dirs = [d for d in remote_dir.strip("/").split("/") if d]
+                        ftp.cwd("/")
+                        for d in dirs:
+                            try: ftp.cwd(d)
+                            except: ftp.mkd(d); ftp.cwd(d)
+                        with open(local_path, "rb") as f:
+                            ftp.storbinary(f"STOR {remote_filename}", f)
+                        ftp.quit()
+                        ftp_url = (public_url.rstrip("/") + "/" + remote_filename) if public_url else ""
+                        print(f"✅" + (f" → {ftp_url}" if ftp_url else ""))
+                        results.append(ftp_url or True)
+                        ftp_ok = True
+                        break
+                    except Exception as e:
+                        print(f"❌ 실패: {e}")
+
+            if not ftp_ok:
+                print(f"  ⚠️  FTP 업로드 실패 — {remote_filename} 수동 업로드 필요")
 
     return results[0] if results else None
