@@ -55,14 +55,10 @@ TOKEN_FILE = _dir / "cafe24_tokens.json"
 # 토큰 저장/로드
 # ──────────────────────────────────────────────
 def _save_tokens(access, refresh):
+    # 토큰은 cafe24_tokens.json에만 저장 (config.json은 건드리지 않음)
     data = {"access_token": access, "refresh_token": refresh, "saved_at": datetime.now().isoformat()}
     with open(TOKEN_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    if cfg_path.exists():
-        cfg["cafe24_access_token"] = access
-        cfg["cafe24_refresh_token"] = refresh
-        with open(cfg_path, "w", encoding="utf-8") as f:
-            json.dump(cfg, f, ensure_ascii=False, indent=4)
     print("  토큰 저장 완료")
 
 
