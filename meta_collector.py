@@ -350,9 +350,20 @@ if cafe24_path.exists():
     try:
         with open(cafe24_path, "r", encoding="utf-8") as f:
             c24 = json.load(f)
+        # cafe24_collector는 daily를 {날짜: {revenue, orders, ...}} dict로 저장
+        daily_raw = c24.get("daily", {})
+        if isinstance(daily_raw, dict):
+            for date, stats in daily_raw.items():
+                if date and isinstance(stats, dict):
+                    cafe24_daily[date] = float(stats.get("revenue", 0))
+        elif isinstance(daily_raw, list):  # 구버전 호환
+            for row in daily_raw:
+                d = row.get("date", ""); v = row.get("revenue", 0)
+                if d: cafe24_daily[d] = float(v)
+        # order_stats 키도 호환
         for row in c24.get("order_stats", []):
             d = row.get("date", ""); v = row.get("revenue", 0)
-            if d: cafe24_daily[d] = v
+            if d and d not in cafe24_daily: cafe24_daily[d] = float(v)
         print(f"  ✅ 카페24 {len(cafe24_daily)}일 데이터 로드")
     except Exception as e:
         print(f"  ⚠ 카페24 로드 실패: {e}")
