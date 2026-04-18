@@ -382,6 +382,15 @@ for pk, pi in PERIODS.items():
     print(f"  [{pi['label']}] 카페24매출 ₩{int(c24_rev):,} / 광고비 ₩{int(meta_spend):,} → 실제ROAS {real_roas}x")
 
 # ─────────────────────────────────────────
+# daily_data 각 행에 cafe24 일별 매출 추가 (어제/이번달/저번달/커스텀 기간 ROAS 계산용)
+# ─────────────────────────────────────────
+for row in daily_data:
+    d = row.get("date", "")
+    c24_rev = cafe24_daily.get(d, 0)
+    row["cafe24_revenue"] = c24_rev
+    row["real_roas"] = round(c24_rev / row["spend"], 2) if row.get("spend", 0) > 0 else 0.0
+
+# ─────────────────────────────────────────
 # JSON 저장
 # ─────────────────────────────────────────
 s30 = breakdown.get("30d", {}).get("summary", {})
@@ -731,14 +740,15 @@ function getDailyRange(from,to) {
   return(DATA.daily||[]).filter(r=>r.date>=from&&r.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
 }
 function aggregateDaily(rows) {
-  const s={spend:0,impressions:0,clicks:0,purchases:0,revenue:0,reach:0};
+  const s={spend:0,impressions:0,clicks:0,purchases:0,revenue:0,reach:0,cafe24_revenue:0};
   rows.forEach(r=>{s.spend+=r.spend||0;s.impressions+=r.impressions||0;s.clicks+=r.clicks||0;
-    s.purchases+=r.purchases||0;s.revenue+=r.revenue||0;s.reach+=r.reach||0;});
+    s.purchases+=r.purchases||0;s.revenue+=r.revenue||0;s.reach+=r.reach||0;
+    s.cafe24_revenue+=r.cafe24_revenue||0;});
   s.ctr=s.impressions>0?s.clicks/s.impressions*100:0;
   s.cpc=s.clicks>0?s.spend/s.clicks:0;
   s.roas=s.spend>0?s.revenue/s.spend:0;
   s.cpa=s.purchases>0?s.spend/s.purchases:0;
-  s.cafe24_revenue=0;s.real_roas=0;
+  s.real_roas=s.spend>0?s.cafe24_revenue/s.spend:0;
   return s;
 }
 
