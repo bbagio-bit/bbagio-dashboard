@@ -343,7 +343,9 @@ for pk in breakdown:
 # ─────────────────────────────────────────
 print("\n[5/6] 실제 ROAS 계산 (카페24 연동)...")
 cafe24_daily = {}
-cafe24_path  = OUTPUT_DIR / "cafe24_latest.json"
+cafe24_path  = BASE_DIR / "cafe24_latest.json"   # cafe24_collector가 저장하는 위치
+if not cafe24_path.exists():
+    cafe24_path = OUTPUT_DIR / "cafe24_latest.json"  # 구버전 호환
 if cafe24_path.exists():
     try:
         with open(cafe24_path, "r", encoding="utf-8") as f:
