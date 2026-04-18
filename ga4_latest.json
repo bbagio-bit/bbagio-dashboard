@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-04-17 19:30:56",
+  "updated_at": "2026-04-19 08:03:25",
   "property_id": "492805857",
-  "today": "2026-04-17",
-  "yesterday": "2026-04-16",
+  "today": "2026-04-19",
+  "yesterday": "2026-04-18",
   "today_metrics": {
     "sessions": 0,
     "uv": 0,
@@ -18,38 +18,38 @@
   "traffic_sources": [
     {
       "channel": "Paid Social",
-      "sessions": 361,
-      "uv": 319
+      "sessions": 523,
+      "uv": 461
     },
     {
       "channel": "Direct",
-      "sessions": 320,
-      "uv": 251
-    },
-    {
-      "channel": "Organic Search",
-      "sessions": 284,
-      "uv": 169
+      "sessions": 383,
+      "uv": 301
     },
     {
       "channel": "Organic Social",
-      "sessions": 281,
-      "uv": 228
+      "sessions": 379,
+      "uv": 310
+    },
+    {
+      "channel": "Organic Search",
+      "sessions": 332,
+      "uv": 204
     },
     {
       "channel": "Referral",
-      "sessions": 92,
-      "uv": 36
+      "sessions": 116,
+      "uv": 48
     },
     {
       "channel": "Paid Other",
-      "sessions": 16,
-      "uv": 15
+      "sessions": 26,
+      "uv": 25
     },
     {
       "channel": "Unassigned",
-      "sessions": 15,
-      "uv": 14
+      "sessions": 20,
+      "uv": 19
     },
     {
       "channel": "Organic Shopping",
@@ -58,126 +58,126 @@
     },
     {
       "channel": "Organic Video",
-      "sessions": 3,
-      "uv": 2
+      "sessions": 6,
+      "uv": 3
     }
   ],
   "top_pages": [
     {
       "page": "/shop1/order/basket.html",
-      "pageviews": 3237,
-      "uv": 1037
+      "pageviews": 3186,
+      "uv": 1039
     },
     {
       "page": "/",
-      "pageviews": 1011,
-      "uv": 396
+      "pageviews": 1008,
+      "uv": 385
     },
     {
       "page": "/product/list.html",
-      "pageviews": 1001,
-      "uv": 162
+      "pageviews": 943,
+      "uv": 164
     },
     {
       "page": "/surl/P/179",
-      "pageviews": 815,
-      "uv": 630
+      "pageviews": 844,
+      "uv": 651
     },
     {
       "page": "/protected/loginSns.html",
-      "pageviews": 249,
-      "uv": 75
+      "pageviews": 222,
+      "uv": 69
     },
     {
       "page": "/member/login.html",
-      "pageviews": 163,
-      "uv": 68
+      "pageviews": 151,
+      "uv": 65
     },
     {
       "page": "/order/basket.html",
-      "pageviews": 143,
-      "uv": 32
-    },
-    {
-      "page": "/skin-skin2/index.html",
-      "pageviews": 137,
-      "uv": 2
+      "pageviews": 142,
+      "uv": 31
     },
     {
       "page": "/product/바지오-슬림컷-다이어트-블랙｜커피맛-다이어트-14포/154/category/46/display/1/",
-      "pageviews": 126,
-      "uv": 86
+      "pageviews": 141,
+      "uv": 99
+    },
+    {
+      "page": "/skin-skin2/index.html",
+      "pageviews": 140,
+      "uv": 2
     },
     {
       "page": "/shop1/product/detail.html",
       "pageviews": 115,
-      "uv": 62
+      "uv": 63
     }
   ],
   "hourly_uv_today": {
     "00": {
-      "uv": 14,
-      "sessions": 14
+      "uv": 20,
+      "sessions": 21
     },
     "01": {
-      "uv": 10,
-      "sessions": 10
-    },
-    "02": {
-      "uv": 11,
-      "sessions": 12
-    },
-    "03": {
-      "uv": 7,
-      "sessions": 8
-    },
-    "04": {
-      "uv": 3,
-      "sessions": 5
-    },
-    "05": {
-      "uv": 1,
-      "sessions": 1
-    },
-    "06": {
-      "uv": 2,
-      "sessions": 2
-    },
-    "07": {
-      "uv": 5,
-      "sessions": 5
-    },
-    "08": {
-      "uv": 10,
-      "sessions": 11
-    },
-    "09": {
       "uv": 12,
       "sessions": 12
     },
+    "02": {
+      "uv": 4,
+      "sessions": 4
+    },
+    "03": {
+      "uv": 2,
+      "sessions": 2
+    },
+    "04": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "05": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "06": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "07": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "08": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "09": {
+      "uv": 0,
+      "sessions": 0
+    },
     "10": {
-      "uv": 14,
-      "sessions": 14
+      "uv": 0,
+      "sessions": 0
     },
     "11": {
-      "uv": 68,
-      "sessions": 69
+      "uv": 0,
+      "sessions": 0
     },
     "12": {
-      "uv": 30,
-      "sessions": 37
+      "uv": 0,
+      "sessions": 0
     },
     "13": {
-      "uv": 16,
-      "sessions": 21
+      "uv": 0,
+      "sessions": 0
     },
     "14": {
-      "uv": 13,
-      "sessions": 15
+      "uv": 0,
+      "sessions": 0
     },
     "15": {
-      "uv": 9,
-      "sessions": 11
+      "uv": 0,
+      "sessions": 0
     },
     "16": {
       "uv": 0,
@@ -215,33 +215,21 @@
   "device_breakdown": [
     {
       "device": "mobile",
-      "sessions": 1272,
-      "uv": 1051
+      "sessions": 1280,
+      "uv": 1070
     },
     {
       "device": "desktop",
-      "sessions": 488,
-      "uv": 280
+      "sessions": 504,
+      "uv": 273
     },
     {
       "device": "tablet",
-      "sessions": 9,
-      "uv": 8
+      "sessions": 11,
+      "uv": 9
     }
   ],
   "trend_7day": [
-    {
-      "date": "20260411",
-      "uv": 157,
-      "sessions": 168,
-      "pageviews": 911
-    },
-    {
-      "date": "20260412",
-      "uv": 198,
-      "sessions": 219,
-      "pageviews": 828
-    },
     {
       "date": "20260413",
       "uv": 254,
@@ -268,9 +256,21 @@
     },
     {
       "date": "20260417",
-      "uv": 209,
-      "sessions": 239,
-      "pageviews": 827
+      "uv": 335,
+      "sessions": 391,
+      "pageviews": 1495
+    },
+    {
+      "date": "20260418",
+      "uv": 201,
+      "sessions": 223,
+      "pageviews": 826
+    },
+    {
+      "date": "20260419",
+      "uv": 38,
+      "sessions": 39,
+      "pageviews": 97
     }
   ]
 }
