@@ -250,8 +250,11 @@ const fmtW = n => n == null ? '-' : '₩' + Math.round(n).toLocaleString('ko-KR'
 const fmtR = (n,d=2) => n == null ? '-' : n.toFixed(d) + 'x';
 const fmtPct = n => n == null ? '-' : n.toFixed(1) + '%';
 
+// ⚠️ toISOString()은 UTC → KST(+9) 환경에서 자정 이후 하루 밀림
+//    getFullYear/Month/Date 로컬 기준으로 직접 포맷
 function yyyymmdd(d) {
-  return d.toISOString().slice(0,10);
+  const y = d.getFullYear(), m = d.getMonth()+1, day = d.getDate();
+  return `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
 }
 function dateRange(period) {
   const now = new Date();
