@@ -400,7 +400,12 @@ function setKpi(vid, did, pid, val, valTxt, prv, prvTxt) {
 }
 
 // ── Date helpers ──
-const tds = d => d.toISOString().slice(0,10);
+// ⚠️ toISOString()은 UTC 기준이라 KST(+9) 환경에서 자정 이후 하루 밀림
+//    → getFullYear/Month/Date 로컬 기준으로 직접 포맷
+const tds = d => {
+  const y = d.getFullYear(), m = d.getMonth()+1, day = d.getDate();
+  return `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+};
 const addD = (d,n) => { const r=new Date(d); r.setDate(r.getDate()+n); return r; };
 
 function periodRange(p) {
