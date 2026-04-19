@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-04-19 08:03:25",
+  "updated_at": "2026-04-20 08:13:39",
   "property_id": "492805857",
-  "today": "2026-04-19",
-  "yesterday": "2026-04-18",
+  "today": "2026-04-20",
+  "yesterday": "2026-04-19",
   "today_metrics": {
     "sessions": 0,
     "uv": 0,
@@ -18,28 +18,28 @@
   "traffic_sources": [
     {
       "channel": "Paid Social",
-      "sessions": 523,
-      "uv": 461
-    },
-    {
-      "channel": "Direct",
-      "sessions": 383,
-      "uv": 301
+      "sessions": 482,
+      "uv": 425
     },
     {
       "channel": "Organic Social",
-      "sessions": 379,
-      "uv": 310
+      "sessions": 360,
+      "uv": 299
+    },
+    {
+      "channel": "Direct",
+      "sessions": 344,
+      "uv": 282
     },
     {
       "channel": "Organic Search",
-      "sessions": 332,
-      "uv": 204
+      "sessions": 270,
+      "uv": 174
     },
     {
       "channel": "Referral",
-      "sessions": 116,
-      "uv": 48
+      "sessions": 100,
+      "uv": 47
     },
     {
       "channel": "Paid Other",
@@ -48,8 +48,8 @@
     },
     {
       "channel": "Unassigned",
-      "sessions": 20,
-      "uv": 19
+      "sessions": 19,
+      "uv": 18
     },
     {
       "channel": "Organic Shopping",
@@ -58,78 +58,78 @@
     },
     {
       "channel": "Organic Video",
-      "sessions": 6,
+      "sessions": 7,
       "uv": 3
     }
   ],
   "top_pages": [
     {
       "page": "/shop1/order/basket.html",
-      "pageviews": 3186,
-      "uv": 1039
-    },
-    {
-      "page": "/",
-      "pageviews": 1008,
-      "uv": 385
-    },
-    {
-      "page": "/product/list.html",
-      "pageviews": 943,
-      "uv": 164
+      "pageviews": 2445,
+      "uv": 972
     },
     {
       "page": "/surl/P/179",
-      "pageviews": 844,
-      "uv": 651
+      "pageviews": 776,
+      "uv": 606
+    },
+    {
+      "page": "/",
+      "pageviews": 728,
+      "uv": 343
+    },
+    {
+      "page": "/product/list.html",
+      "pageviews": 601,
+      "uv": 145
     },
     {
       "page": "/protected/loginSns.html",
-      "pageviews": 222,
-      "uv": 69
-    },
-    {
-      "page": "/member/login.html",
-      "pageviews": 151,
-      "uv": 65
-    },
-    {
-      "page": "/order/basket.html",
-      "pageviews": 142,
-      "uv": 31
+      "pageviews": 192,
+      "uv": 64
     },
     {
       "page": "/product/바지오-슬림컷-다이어트-블랙｜커피맛-다이어트-14포/154/category/46/display/1/",
-      "pageviews": 141,
-      "uv": 99
+      "pageviews": 144,
+      "uv": 105
     },
     {
-      "page": "/skin-skin2/index.html",
-      "pageviews": 140,
-      "uv": 2
+      "page": "/member/login.html",
+      "pageviews": 125,
+      "uv": 60
+    },
+    {
+      "page": "/order/basket.html",
+      "pageviews": 109,
+      "uv": 26
     },
     {
       "page": "/shop1/product/detail.html",
-      "pageviews": 115,
-      "uv": 63
+      "pageviews": 101,
+      "uv": 54
+    },
+    {
+      "page": "/product/detail.html",
+      "pageviews": 67,
+      "uv": 51
     }
   ],
   "hourly_uv_today": {
     "00": {
-      "uv": 20,
-      "sessions": 21
-    },
-    "01": {
-      "uv": 12,
-      "sessions": 12
-    },
-    "02": {
       "uv": 4,
       "sessions": 4
     },
+    "01": {
+      "uv": 3,
+      "sessions": 3
+    },
+    "02": {
+      "uv": 1,
+      "sessions": 1
+    },
     "03": {
-      "uv": 2,
-      "sessions": 2
+      "uv": 1,
+      "sessions": 1
     },
     "04": {
       "uv": 0,
@@ -215,27 +215,21 @@
   "device_breakdown": [
     {
       "device": "mobile",
-      "sessions": 1280,
-      "uv": 1070
+      "sessions": 1188,
+      "uv": 1007
     },
     {
       "device": "desktop",
-      "sessions": 504,
-      "uv": 273
+      "sessions": 421,
+      "uv": 241
     },
     {
       "device": "tablet",
-      "sessions": 11,
-      "uv": 9
+      "sessions": 8,
+      "uv": 8
     }
   ],
   "trend_7day": [
-    {
-      "date": "20260413",
-      "uv": 254,
-      "sessions": 334,
-      "pageviews": 2791
-    },
     {
       "date": "20260414",
       "uv": 255,
@@ -268,9 +262,15 @@
     },
     {
       "date": "20260419",
-      "uv": 38,
-      "sessions": 39,
-      "pageviews": 97
+      "uv": 167,
+      "sessions": 183,
+      "pageviews": 619
+    },
+    {
+      "date": "20260420",
+      "uv": 9,
+      "sessions": 9,
+      "pageviews": 35
     }
   ]
 }
