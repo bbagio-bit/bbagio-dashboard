@@ -128,9 +128,9 @@ tr:last-child td { border-bottom: none; }
 <div class="filter-bar">
   <span class="filter-label">기간</span>
   <button class="btn-p" data-p="today"     onclick="setPeriod('today')">오늘</button>
-  <button class="btn-p" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
+  <button class="btn-p active" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
   <button class="btn-p" data-p="7d"        onclick="setPeriod('7d')">최근 7일</button>
-  <button class="btn-p active" data-p="30d" onclick="setPeriod('30d')">최근 30일</button>
+  <button class="btn-p" data-p="30d" onclick="setPeriod('30d')">최근 30일</button>
   <button class="btn-p" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
   <button class="btn-p" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
   <button class="btn-p" data-p="3m"        onclick="setPeriod('3m')">3개월</button>
@@ -296,7 +296,7 @@ tr:last-child td { border-bottom: none; }
 
 <script>
 // ── 전역 상태 ─────────────────────────────────────────────────────
-let CUR_PERIOD = '30d';
+let CUR_PERIOD = 'yesterday';
 let CHARTS = {};
 let C24 = {}, META_D = {}, GA4 = {};
 
