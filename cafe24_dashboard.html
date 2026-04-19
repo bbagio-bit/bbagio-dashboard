@@ -417,11 +417,11 @@ function calcPeriod(set) {
 
 function renderKPI(ds, prevDs) {
   const c = calcPeriod(ds), p = calcPeriod(prevDs);
-  setText('kv-rev', '₩'+krw(c.rev));
+  setText('kv-rev', krwFull(c.rev));
   setText('kv-ord', c.ord.toLocaleString()+'건');
-  setText('kv-aov', '₩'+krw(c.aov));
+  setText('kv-aov', krwFull(c.aov));
   setText('kv-nc',  c.nc.toLocaleString()+'명');
-  setText('kv-sp',  c.sp ? '₩'+krw(c.sp) : '없음');
+  setText('kv-sp',  c.sp ? krwFull(c.sp) : '없음');
   setHtml('kd-rev', deltaHtml(c.rev,p.rev)); setText('kp-rev', p.rev?'직전 ₩'+krw(p.rev):'비교 없음');
   setHtml('kd-ord', deltaHtml(c.ord,p.ord)); setText('kp-ord', p.ord?'직전 '+p.ord+'건':'-');
   setHtml('kd-aov', deltaHtml(c.aov,p.aov)); setText('kp-aov', p.aov?'직전 ₩'+krw(p.aov):'-');
@@ -441,9 +441,9 @@ function renderKPI(ds, prevDs) {
 function renderCmpGrid(ds, prevDs) {
   const c = calcPeriod(ds), p = calcPeriod(prevDs);
   const items = [
-    ['매출','₩'+krw(c.rev),'₩'+krw(p.rev),c.rev,p.rev],
+    ['매출',krwFull(c.rev),krwFull(p.rev),c.rev,p.rev],
     ['주문',c.ord+'건',p.ord+'건',c.ord,p.ord],
-    ['객단가','₩'+krw(c.aov),'₩'+krw(p.aov),c.aov,p.aov],
+    ['객단가',krwFull(c.aov),krwFull(p.aov),c.aov,p.aov],
     ['신규고객',c.nc+'명',p.nc+'명',c.nc,p.nc],
   ];
   document.getElementById('cmp-grid').innerHTML = items.map(([lbl,cv,pv,cn,pn]) =>
