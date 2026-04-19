@@ -6,620 +6,707 @@
 <title>BBagio 쿠팡 대시보드</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #f0f2f5; color: #1a1a2e; font-family: 'Segoe UI', -apple-system, sans-serif; font-size: 14px; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;background:#f0f2f5;color:#1a1a2e;font-size:14px}
+header{background:linear-gradient(135deg,#2d1b69 0%,#11998e 100%);color:#fff;padding:18px 28px;display:flex;align-items:center;gap:16px}
+header h1{font-size:20px;font-weight:700;letter-spacing:-0.5px}
+header .sub{font-size:12px;opacity:.75;margin-top:2px}
+.badge-live{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:3px 12px;font-size:11px;margin-left:auto}
+.container{max-width:1400px;margin:0 auto;padding:24px 20px}
 
-.header { background: #fff; border-bottom: 3px solid #f97316; padding: 8px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 1.05rem; font-weight: 900; color: #f97316; letter-spacing: -.5px; }
-.logo span { color: #1a1a2e; }
-.header-sub { font-size: .78rem; color: #888; border-left: 1px solid #e5e7eb; padding-left: 12px; }
-.updated { font-size: .72rem; color: #aaa; margin-left: auto; }
-.badge-cp { background: #fff7ed; border: 1px solid #fed7aa; color: #ea580c; font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+/* section labels */
+.section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;text-transform:uppercase;margin:28px 0 12px}
+.section-label:first-child{margin-top:0}
 
-.filter-bar { background: #fff; border-bottom: 1px solid #e8eaf0; padding: 7px 20px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-.filter-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-right: 3px; }
-.btn-p { background: #f4f5f7; border: 1px solid #e2e5ea; color: #666; padding: 4px 11px; border-radius: 4px; cursor: pointer; font-size: .78rem; transition: all .12s; }
-.btn-p:hover { background: #fff7ed; border-color: #f97316; color: #f97316; }
-.btn-p.active { background: #f97316; border-color: #f97316; color: #fff; font-weight: 700; }
-.custom-wrap { display: none; align-items: center; gap: 5px; }
-.custom-wrap.show { display: flex; }
-.custom-wrap input { border: 1px solid #dde1e7; border-radius: 4px; padding: 3px 7px; font-size: .75rem; }
-.custom-wrap .apply-btn { background: #f97316; border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; }
-.range-badge { margin-left: auto; background: #fff7ed; border: 1px solid #fed7aa; padding: 3px 10px; border-radius: 20px; font-size: .72rem; color: #ea580c; font-weight: 600; }
+/* KPI cards */
+.kpi-grid{display:grid;gap:14px;margin-bottom:6px}
+.kpi-5{grid-template-columns:repeat(5,1fr)}
+.kpi-6{grid-template-columns:repeat(6,1fr)}
+@media(max-width:900px){.kpi-5,.kpi-6{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-5,.kpi-6{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:#fff;border-radius:14px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06);position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,#667eea)}
+.kpi-card .label{font-size:11px;color:#888;font-weight:600;letter-spacing:.5px;margin-bottom:6px}
+.kpi-card .value{font-size:24px;font-weight:700;color:#1a1a2e;line-height:1.2}
+.kpi-card .sub{font-size:11px;color:#aaa;margin-top:4px}
+.kpi-card.hi{--accent:#667eea}
+.kpi-card.gr{--accent:#11998e}
+.kpi-card.or{--accent:#f7971e}
+.kpi-card.rd{--accent:#e74c3c}
+.kpi-card.pu{--accent:#8e44ad}
+.kpi-card.sky{--accent:#0099cc}
 
-main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
+/* ROAS badge */
+.roas-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:700}
+.roas-good{background:#d4edda;color:#155724}
+.roas-mid{background:#fff3cd;color:#856404}
+.roas-bad{background:#f8d7da;color:#721c24}
 
-/* KPI */
-.kpi-section { margin-bottom: 14px; }
-.kpi-section-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; padding-left: 2px; }
-.kpi-row { display: grid; gap: 10px; }
-.kpi-row-1 { grid-template-columns: repeat(4, 1fr); }
-.kpi-row-2 { grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
-.kpi { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; padding: 13px 16px; border-top: 3px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-.kpi.orange { border-top-color: #f97316; }
-.kpi.blue   { border-top-color: #3b82f6; }
-.kpi.green  { border-top-color: #10b981; }
-.kpi.amber  { border-top-color: #f59e0b; }
-.kpi.red    { border-top-color: #ef4444; }
-.kpi.pink   { border-top-color: #ec4899; }
-.kpi.indigo { border-top-color: #6366f1; }
-.kpi-lbl { font-size: .7rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
-.kpi-val { font-size: 1.45rem; font-weight: 900; color: #1a1a2e; line-height: 1; margin-bottom: 5px; }
-.kpi-val.xl  { font-size: 1.15rem; }
-.kpi-val.xxl { font-size: 1.8rem; }
-.kpi-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.delta { font-size: .73rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; }
-.delta.up   { background: #fee2e2; color: #dc2626; }
-.delta.down { background: #dbeafe; color: #1d4ed8; }
-.delta.same { background: #f3f4f6; color: #9ca3af; }
-.kpi-prev-txt { font-size: .7rem; color: #bbb; }
-.roas-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .78rem; font-weight: 800; }
-.roas-good { background: #dcfce7; color: #15803d; }
-.roas-ok   { background: #fef3c7; color: #b45309; }
-.roas-bad  { background: #fee2e2; color: #b91c1c; }
+/* charts */
+.chart-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:6px}
+.chart-grid.w3{grid-template-columns:repeat(3,1fr)}
+.chart-box{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.chart-box h3{font-size:12px;font-weight:700;color:#555;margin-bottom:14px;letter-spacing:.3px}
+.chart-box canvas{max-height:220px}
+@media(max-width:900px){.chart-grid,.chart-grid.w3{grid-template-columns:1fr}}
 
-/* Cards */
-.row { display: grid; gap: 12px; margin-bottom: 12px; }
-.r-2-1 { grid-template-columns: 2fr 1fr; }
-.r-3   { grid-template-columns: 1fr 1fr 1fr; }
-.r-2   { grid-template-columns: 1fr 1fr; }
-.card  { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; box-shadow: 0 1px 3px rgba(0,0,0,.04); overflow: hidden; }
-.card-hd { padding: 10px 14px 8px; border-bottom: 1px solid #f0f1f5; display: flex; align-items: center; justify-content: space-between; }
-.card-ttl { font-size: .8rem; font-weight: 700; color: #333; }
-.card-sub { font-size: .72rem; color: #bbb; }
-.card-body { padding: 10px 14px; }
+/* tables */
+.tbl-box{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:16px;overflow-x:auto}
+.tbl-box h3{font-size:13px;font-weight:700;color:#333;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f7f8fc;padding:9px 12px;text-align:right;font-weight:700;color:#555;border-bottom:2px solid #e8ecf0;white-space:nowrap;cursor:pointer;user-select:none}
+th:first-child,th:nth-child(2){text-align:left}
+th:hover{background:#eef0ff}
+td{padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;color:#333;white-space:nowrap}
+td:first-child,td:nth-child(2){text-align:left}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafe}
+.tag-code{background:#ede9fe;color:#5b21b6;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700;margin-right:4px}
+.tag-code:empty{display:none}
+.no-data{text-align:center;color:#bbb;padding:40px;font-size:13px}
 
-/* H-bars */
-.hbar-list { padding: 6px 14px 10px; }
-.hbar-item { margin-bottom: 8px; }
-.hbar-hd { font-size: .74rem; color: #444; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.hbar-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hbar-val  { font-weight: 700; color: #f97316; font-size: .74rem; flex-shrink: 0; }
-.hbar-track { background: #f0f1f8; border-radius: 3px; height: 7px; }
-.hbar-fill         { height: 7px; border-radius: 3px; background: linear-gradient(90deg,#f97316,#fb923c); }
-.hbar-fill.blue    { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
-.hbar-fill.green   { background: linear-gradient(90deg,#10b981,#34d399); }
-
-/* Tables */
-.tbl-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-th { font-size: .7rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 7px 10px; border-bottom: 2px solid #f0f1f5; background: #fafafa; text-align: left; white-space: nowrap; }
-td { padding: 8px 10px; font-size: .82rem; border-bottom: 1px solid #f5f5f8; vertical-align: middle; }
-tr:last-child td { border-bottom: none; }
-.tr-hover:hover td { background: #fff8f3; }
-.td-r { text-align: right; font-variant-numeric: tabular-nums; }
-.rb { display:inline-block;width:22px;height:22px;border-radius:50%;background:#fff7ed;color:#ea580c;font-size:.7rem;font-weight:800;text-align:center;line-height:22px; }
-.rb.g1{background:#fef3c7;color:#d97706;} .rb.g2{background:#e5e7eb;color:#6b7280;} .rb.g3{background:#fde8d8;color:#c2410c;}
-
-/* Loading */
-#loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:9999;}
-.sp{width:32px;height:32px;border:3px solid #ffe4cc;border-top-color:#f97316;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.no-data{text-align:center;color:#ccc;font-size:.8rem;padding:20px;}
-
-/* Info box */
-.info-note { background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;padding:8px 12px;font-size:.74rem;color:#c2410c;margin-bottom:12px; }
-
-@media(max-width:1100px){.r-2-1,.r-3{grid-template-columns:1fr;}.kpi-row-1{grid-template-columns:repeat(2,1fr);}.kpi-row-2{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:680px){.kpi-row-1,.kpi-row-2{grid-template-columns:repeat(2,1fr);}.r-2{grid-template-columns:1fr;}main{padding:10px 12px;}}
+/* date range pills */
+.date-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.date-pill{background:#fff;border:1.5px solid #e0e0e0;border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.date-pill.active{background:#667eea;color:#fff;border-color:#667eea}
+.attr-pill{background:#fff;border:1.5px solid #e0e0e0;border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:all .2s;margin-left:auto}
+.attr-pill.active{background:#11998e;color:#fff;border-color:#11998e}
+#last-update{font-size:11px;color:#aaa;margin-left:8px}
+.custom-range{display:none;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.custom-range.show{display:flex}
+.custom-range label{font-size:12px;color:#666;font-weight:600}
+.custom-range input[type=date]{border:1.5px solid #d0d0d0;border-radius:10px;padding:5px 12px;font-size:12px;outline:none;background:#fff;cursor:pointer}
+.custom-range input[type=date]:focus{border-color:#667eea}
+.custom-range button{background:#667eea;color:#fff;border:none;border-radius:20px;padding:5px 16px;font-size:12px;cursor:pointer;font-weight:600}
+.custom-range button:hover{background:#5a6fd6}
+.date-range-info{font-size:11px;color:#aaa;margin-bottom:12px}
 </style>
 </head>
 <body>
-<div id="loading"><div class="sp"></div><p style="color:#888;font-size:.85rem">쿠팡 데이터 로딩 중...</p></div>
+<header>
+  <div>
+    <h1>📦 BBagio 쿠팡 대시보드</h1>
+    <div class="sub">판매 + 광고 통합 성과 리포트</div>
+  </div>
+  <div class="badge-live" id="last-update">데이터 없음</div>
+</header>
 
-<div class="header">
-  <div class="logo">BBagio <span>쿠팡</span></div>
-  <div class="header-sub">Wing 판매 분석 대시보드</div>
-  <span class="badge-cp">COUPANG</span>
-  <div class="updated" id="updated">-</div>
-  <button id="refresh-btn" onclick="refreshData()" style="margin-left:10px;background:#f97316;border:none;color:#fff;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:5px;transition:opacity .15s;" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
-    <span id="refresh-icon">🔄</span> 데이터 갱신
-  </button>
+<div class="container">
+  <!-- 날짜 필터 -->
+  <div class="date-bar">
+    <button class="date-pill" data-mode="today">오늘</button>
+    <button class="date-pill" data-mode="yesterday">어제</button>
+    <button class="date-pill active" data-mode="7d">최근 7일</button>
+    <button class="date-pill" data-mode="30d">최근 30일</button>
+    <button class="date-pill" data-mode="thismonth">이번달</button>
+    <button class="date-pill" data-mode="lastmonth">저번달</button>
+    <button class="date-pill" data-mode="custom">📅 날짜선택</button>
+    <button class="attr-pill active" id="attr-toggle">전환기준: 14일</button>
+  </div>
+  <!-- 커스텀 날짜 선택 -->
+  <div class="custom-range" id="custom-range">
+    <label>시작</label>
+    <input type="date" id="date-from">
+    <label>종료</label>
+    <input type="date" id="date-to">
+    <button id="apply-range">적용</button>
+  </div>
+  <div class="date-range-info" id="range-info"></div>
+
+  <!-- ① 매출 KPI -->
+  <div class="section-label">📈 매출 성과</div>
+  <div class="kpi-grid kpi-5" id="kpi-sales">
+    <div class="kpi-card hi"><div class="label">총 매출</div><div class="value" id="kv-srev">-</div><div class="sub" id="kv-srev-sub"></div></div>
+    <div class="kpi-card gr"><div class="label">주문건수</div><div class="value" id="kv-sord">-</div><div class="sub" id="kv-sord-sub"></div></div>
+    <div class="kpi-card sky"><div class="label">객단가</div><div class="value" id="kv-aov">-</div><div class="sub"></div></div>
+    <div class="kpi-card or"><div class="label">광고비</div><div class="value" id="kv-adcost">-</div><div class="sub" id="kv-adcost-sub"></div></div>
+    <div class="kpi-card pu"><div class="label">실제 ROAS</div><div class="value" id="kv-real-roas">-</div><div class="sub">판매매출 ÷ 광고비</div></div>
+  </div>
+
+  <!-- ② 광고 KPI -->
+  <div class="section-label" style="margin-top:16px">📣 광고 성과</div>
+  <div class="kpi-grid kpi-6" id="kpi-ad">
+    <div class="kpi-card"><div class="label">노출수</div><div class="value" id="kv-imp">-</div><div class="sub" id="kv-imp-sub"></div></div>
+    <div class="kpi-card"><div class="label">클릭수</div><div class="value" id="kv-clk">-</div><div class="sub" id="kv-clk-sub"></div></div>
+    <div class="kpi-card sky"><div class="label">CTR</div><div class="value" id="kv-ctr">-</div><div class="sub"></div></div>
+    <div class="kpi-card or"><div class="label">CPC</div><div class="value" id="kv-cpc">-</div><div class="sub"></div></div>
+    <div class="kpi-card gr"><div class="label">광고 전환수</div><div class="value" id="kv-conv">-</div><div class="sub" id="kv-conv-sub"></div></div>
+    <div class="kpi-card pu"><div class="label">광고 ROAS</div><div class="value" id="kv-adroas">-</div><div class="sub">전환매출 ÷ 광고비</div></div>
+  </div>
+
+  <!-- 차트 -->
+  <div class="section-label">📊 트렌드</div>
+  <div class="chart-grid">
+    <div class="chart-box"><h3>매출 &amp; 주문 추이</h3><canvas id="srevChart"></canvas></div>
+    <div class="chart-box"><h3>실제 ROAS vs 광고 ROAS</h3><canvas id="roasChart"></canvas></div>
+    <div class="chart-box"><h3>광고비 vs 전환매출</h3><canvas id="adRevChart"></canvas></div>
+    <div class="chart-box"><h3>노출 &amp; 클릭 추이</h3><canvas id="impClkChart"></canvas></div>
+  </div>
+
+  <!-- 테이블 ① 상품별 광고성과 -->
+  <div class="section-label">🏷️ 상품별 광고성과</div>
+  <div class="tbl-box">
+    <table id="pad-tbl">
+      <thead><tr>
+        <th data-col="product_name">상품명</th>
+        <th data-col="ad_cost" class="sort-desc">광고비 ▼</th>
+        <th data-col="impressions">노출수</th>
+        <th data-col="clicks">클릭수</th>
+        <th data-col="ctr">CTR</th>
+        <th data-col="cpc">CPC</th>
+        <th data-col="orders_14d">전환수(14일)</th>
+        <th data-col="revenue_14d">전환매출(14일)</th>
+        <th data-col="roas_14d">광고ROAS</th>
+      </tr></thead>
+      <tbody id="pad-tbody"><tr><td colspan="9" class="no-data">데이터 없음</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- 테이블 ② 키워드별 광고성과 -->
+  <div class="section-label">🔑 키워드별 광고성과 (TOP 200)</div>
+  <div class="tbl-box">
+    <table id="kw-tbl">
+      <thead><tr>
+        <th data-col="keyword">키워드</th>
+        <th data-col="ad_cost" class="sort-desc">광고비 ▼</th>
+        <th data-col="impressions">노출수</th>
+        <th data-col="clicks">클릭수</th>
+        <th data-col="ctr">CTR</th>
+        <th data-col="cpc">CPC</th>
+        <th data-col="orders_14d">전환수(14일)</th>
+        <th data-col="revenue_14d">전환매출(14일)</th>
+        <th data-col="roas_14d">광고ROAS</th>
+      </tr></thead>
+      <tbody id="kw-tbody"><tr><td colspan="9" class="no-data">데이터 없음</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- 테이블 ③ 판매 분석 -->
+  <div class="section-label">🛒 상품별 판매 분석</div>
+  <div class="tbl-box">
+    <table id="ps-tbl">
+      <thead><tr>
+        <th data-col="product_name">상품명</th>
+        <th data-col="revenue" class="sort-desc">매출 ▼</th>
+        <th data-col="orders">주문수</th>
+        <th data-col="units">수량</th>
+        <th data-col="avg_price">평균단가</th>
+        <th data-col="return_cnt">반품수</th>
+      </tr></thead>
+      <tbody id="ps-tbody"><tr><td colspan="6" class="no-data">데이터 없음</td></tr></tbody>
+    </table>
+  </div>
 </div>
-
-<div class="filter-bar">
-  <span class="filter-label">기간</span>
-  <button class="btn-p" data-p="today"     onclick="setPeriod('today')">오늘</button>
-  <button class="btn-p" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
-  <button class="btn-p" data-p="7d"        onclick="setPeriod('7d')">최근 7일</button>
-  <button class="btn-p active" data-p="30d" onclick="setPeriod('30d')">최근 30일</button>
-  <button class="btn-p" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
-  <button class="btn-p" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
-  <button class="btn-p" data-p="custom"    onclick="setPeriod('custom')">날짜선택</button>
-  <div class="custom-wrap" id="cw">
-    <input type="date" id="df"><span style="color:#ccc">~</span><input type="date" id="dt">
-    <button class="apply-btn" onclick="applyCustom()">적용</button>
-  </div>
-  <span class="range-badge" id="range-badge">-</span>
-</div>
-
-<main>
-
-  <!-- ═══ KPI 상단 ═══ -->
-  <div class="kpi-section">
-    <div class="kpi-section-label">🛒 쿠팡 판매 실적</div>
-    <div class="kpi-row kpi-row-1">
-      <div class="kpi orange"><div class="kpi-lbl">총 매출</div><div class="kpi-val" id="kv-rev">-</div><div class="kpi-foot"><span class="delta" id="kd-rev">-</span><span class="kpi-prev-txt" id="kp-rev">-</span></div></div>
-      <div class="kpi blue">  <div class="kpi-lbl">주문 건수</div><div class="kpi-val" id="kv-ord">-</div><div class="kpi-foot"><span class="delta" id="kd-ord">-</span><span class="kpi-prev-txt" id="kp-ord">-</span></div></div>
-      <div class="kpi red">   <div class="kpi-lbl">취소 건수</div><div class="kpi-val" id="kv-cnc">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-cnc">-</span></div></div>
-      <div class="kpi green"> <div class="kpi-lbl">평균 주문액 (객단가)</div><div class="kpi-val" id="kv-aov">-</div><div class="kpi-foot"><span class="delta" id="kd-aov">-</span><span class="kpi-prev-txt" id="kp-aov">-</span></div></div>
-    </div>
-    <div class="kpi-row kpi-row-2">
-      <div class="kpi amber">
-        <div class="kpi-lbl">📣 쿠팡 광고비</div>
-        <div class="kpi-val" id="kv-adcost">-</div>
-        <div class="kpi-foot"><span class="delta" id="kd-adcost">-</span><span class="kpi-prev-txt" id="kp-adcost">-</span></div>
-      </div>
-      <div class="kpi indigo">
-        <div class="kpi-lbl">🎯 광고 ROAS <span style="font-size:.62rem;color:#bbb;font-weight:400">(광고매출 ÷ 광고비)</span></div>
-        <div class="kpi-val xxl" id="kv-adroas">-</div>
-        <div class="kpi-foot" id="kp-adroas">-</div>
-      </div>
-      <div class="kpi pink">
-        <div class="kpi-lbl">💡 실제 ROAS <span style="font-size:.62rem;color:#bbb;font-weight:400">(총매출 ÷ 광고비)</span></div>
-        <div class="kpi-val xxl" id="kv-roas">-</div>
-        <div class="kpi-foot" id="kp-roas">-</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ Row1: 일별 매출&주문 + 상품 순위 ═══ -->
-  <div class="row r-2-1">
-    <div class="card">
-      <div class="card-hd"><span class="card-ttl">📈 일별 매출 & 주문 추이</span><span class="card-sub" id="trend-sub">-</span></div>
-      <div class="card-body"><div style="position:relative;height:210px"><canvas id="trendChart"></canvas></div></div>
-    </div>
-    <div class="card">
-      <div class="card-hd"><span class="card-ttl">📦 상품별 매출 순위</span><span class="card-sub">TOP 8</span></div>
-      <div class="hbar-list" id="prod-hbar"></div>
-    </div>
-  </div>
-
-  <!-- ═══ Row2: 광고비vs매출 + ROAS 추이 ═══ -->
-  <div class="row r-2">
-    <div class="card">
-      <div class="card-hd"><span class="card-ttl">📊 광고비 vs 총매출 추이</span><span class="card-sub">일별 비교</span></div>
-      <div class="card-body"><div style="position:relative;height:200px"><canvas id="adVsRevChart"></canvas></div></div>
-    </div>
-    <div class="card">
-      <div class="card-hd"><span class="card-ttl">🎯 ROAS 추이</span><span class="card-sub">광고 ROAS vs 실제 ROAS</span></div>
-      <div class="card-body"><div style="position:relative;height:200px"><canvas id="roasChart"></canvas></div></div>
-    </div>
-  </div>
-
-  <!-- ═══ Row3: 취소율 + 광고 클릭 추이 ═══ -->
-  <div class="row r-2">
-    <div class="card">
-      <div class="card-hd"><span class="card-ttl">❌ 취소 금액 추이</span><span class="card-sub">일별 취소금액</span></div>
-      <div class="card-body"><div style="position:relative;height:180px"><canvas id="cancelChart"></canvas></div></div>
-    </div>
-    <div class="card">
-      <div class="card-hd"><span class="card-ttl">🖱️ 광고 노출 & 클릭 추이</span><span class="card-sub">일별</span></div>
-      <div class="card-body"><div style="position:relative;height:180px"><canvas id="clickChart"></canvas></div></div>
-    </div>
-  </div>
-
-  <!-- ═══ 상품 상세 테이블 ═══ -->
-  <div class="card" style="margin-bottom:20px">
-    <div class="card-hd">
-      <span class="card-ttl">🏆 상품별 판매 현황</span>
-      <span class="card-sub" id="prod-table-sub">전체 수집기간 기준</span>
-    </div>
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:40px">순위</th>
-            <th>상품명</th>
-            <th class="td-r">판매수량</th>
-            <th class="td-r">판매금액</th>
-            <th class="td-r" style="width:130px">비중</th>
-          </tr>
-        </thead>
-        <tbody id="prod-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-</main>
 
 <script>
-// ══════════════════════════════════════════════
-//  설정
-// ══════════════════════════════════════════════
-const JSON_URLS = [
-  'coupang_latest.json',
-  'https://bbagio-bit.github.io/bbagio-dashboard/coupang_latest.json',
-];
+// ── 데이터 ──────────────────────────────────────────────
+const RAW = window.__COUPANG_DATA__ || null;
 
-// ══════════════════════════════════════════════
-//  글로벌
-// ══════════════════════════════════════════════
-let RAW = null;          // 원본 JSON
-let dailyMap = {};       // {date: {orders, revenue, cancel_orders, cancel_amount, ad_cost, ad_sales, impressions, clicks}}
-let allDates = [];       // 정렬된 날짜 배열
-let currentPeriod = '30d';
-let customFrom = '', customTo = '';
-let charts = {};
-
-// ══════════════════════════════════════════════
-//  유틸
-// ══════════════════════════════════════════════
-const fmt  = n => n == null ? '-' : Math.round(n).toLocaleString('ko-KR');
-const fmtW = n => n == null ? '-' : '₩' + Math.round(n).toLocaleString('ko-KR');
-const fmtR = (n,d=2) => n == null ? '-' : n.toFixed(d) + 'x';
-const fmtPct = n => n == null ? '-' : n.toFixed(1) + '%';
-
-// ⚠️ toISOString()은 UTC → KST(+9) 환경에서 자정 이후 하루 밀림
-//    getFullYear/Month/Date 로컬 기준으로 직접 포맷
-function yyyymmdd(d) {
-  const y = d.getFullYear(), m = d.getMonth()+1, day = d.getDate();
-  return `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-}
-function dateRange(period) {
-  const now = new Date();
-  const today = yyyymmdd(now);
-  const yest  = yyyymmdd(new Date(now - 864e5));
-  let from, to;
-  if (period === 'today')     { from = today;  to = today; }
-  else if (period === 'yesterday') { from = yest; to = yest; }
-  else if (period === '7d')   { from = yyyymmdd(new Date(now - 6*864e5)); to = today; }
-  else if (period === '30d')  { from = yyyymmdd(new Date(now - 29*864e5)); to = today; }
-  else if (period === 'thismonth') {
-    const y=now.getFullYear(), m=now.getMonth();
-    from=`${y}-${String(m+1).padStart(2,'0')}-01`; to=today;
-  }
-  else if (period === 'lastmonth') {
-    const d=new Date(now.getFullYear(), now.getMonth(), 0);
-    const y=d.getFullYear(), m=d.getMonth();
-    from=`${y}-${String(m+1).padStart(2,'0')}-01`;
-    to=yyyymmdd(d);
-  }
-  else if (period === 'custom') { from=customFrom; to=customTo; }
-  else { from=yyyymmdd(new Date(now-29*864e5)); to=today; }
-  return {from, to};
-}
-function prevRange(from, to) {
-  const ms = new Date(to) - new Date(from) + 864e5;
-  const pTo = new Date(new Date(from) - 864e5);
-  const pFrom = new Date(pTo - ms + 864e5);
-  return { from: yyyymmdd(pFrom), to: yyyymmdd(pTo) };
-}
-function filterDates(from, to) {
-  return allDates.filter(d => d >= from && d <= to);
-}
-function aggregate(dates) {
-  const s = { orders:0, revenue:0, cancel_orders:0, cancel_amount:0, ad_cost:0, ad_sales:0, impressions:0, clicks:0 };
-  dates.forEach(d => {
-    const r = dailyMap[d] || {};
-    s.orders       += r.orders || 0;
-    s.revenue      += r.revenue || 0;
-    s.cancel_orders+= r.cancel_orders || 0;
-    s.cancel_amount+= r.cancel_amount || 0;
-    s.ad_cost      += r.ad_cost || 0;
-    s.ad_sales     += r.ad_sales || 0;
-    s.impressions  += r.impressions || 0;
-    s.clicks       += r.clicks || 0;
-  });
-  s.aov     = s.orders  > 0 ? s.revenue / s.orders : 0;
-  s.ad_roas = s.ad_cost > 0 ? s.ad_sales / s.ad_cost : null;
-  s.real_roas = s.ad_cost > 0 ? s.revenue / s.ad_cost : null;
-  s.cancel_rate = s.orders > 0 ? (s.cancel_orders / (s.orders + s.cancel_orders)) * 100 : 0;
-  return s;
-}
-
-// ══════════════════════════════════════════════
-//  데이터 로드
-// ══════════════════════════════════════════════
-async function loadData() {
-  let data = null;
-  for (const url of JSON_URLS) {
-    try {
-      const r = await fetch(url + '?t=' + Date.now());
-      if (r.ok) { data = await r.json(); break; }
-    } catch(e) {}
-  }
-  if (!data) throw new Error('JSON 로드 실패');
-  return data;
-}
-
-function buildDailyMap(data) {
-  dailyMap = {};
-  (data.order_stats || []).forEach(r => {
-    const d = r.date; if (!d) return;
-    if (!dailyMap[d]) dailyMap[d] = {orders:0,revenue:0,cancel_orders:0,cancel_amount:0,ad_cost:0,ad_sales:0,impressions:0,clicks:0};
-    dailyMap[d].orders        += (r.orders || 0);
-    dailyMap[d].revenue       += (r.revenue || 0);
-    dailyMap[d].cancel_orders += (r.cancel_orders || 0);
-    dailyMap[d].cancel_amount += (r.cancel_amount || 0);
-  });
-  (data.ad_stats || []).forEach(r => {
-    const d = r.date; if (!d) return;
-    if (!dailyMap[d]) dailyMap[d] = {orders:0,revenue:0,cancel_orders:0,cancel_amount:0,ad_cost:0,ad_sales:0,impressions:0,clicks:0};
-    dailyMap[d].ad_cost    += (r.ad_cost || 0);
-    dailyMap[d].ad_sales   += (r.sales || 0);
-    dailyMap[d].impressions+= (r.impressions || 0);
-    dailyMap[d].clicks     += (r.clicks || 0);
-  });
-  allDates = Object.keys(dailyMap).sort();
-}
-
-// ══════════════════════════════════════════════
-//  KPI 렌더링
-// ══════════════════════════════════════════════
-function setDelta(elId, cur, prev) {
-  const el = document.getElementById(elId);
-  if (!el || !prev) { if(el){el.textContent='-';el.className='delta same';} return; }
-  const diff = prev > 0 ? ((cur - prev) / prev * 100) : 0;
-  const sign = diff >= 0 ? '▲' : '▼';
-  el.textContent = `${sign} ${Math.abs(diff).toFixed(1)}%`;
-  el.className = 'delta ' + (diff >= 0 ? 'up' : 'down');
-}
-function roasClass(v) {
-  if (v == null) return '';
-  if (v >= 3) return 'roas-good';
-  if (v >= 1.5) return 'roas-ok';
-  return 'roas-bad';
-}
-function renderKPI(cur, prev) {
-  document.getElementById('kv-rev').textContent    = fmtW(cur.revenue);
-  document.getElementById('kv-ord').textContent    = fmt(cur.orders) + '건';
-  document.getElementById('kv-cnc').textContent    = fmt(cur.cancel_orders) + '건';
-  document.getElementById('kv-aov').textContent    = fmtW(cur.aov);
-  document.getElementById('kv-adcost').textContent = fmtW(cur.ad_cost);
-
-  setDelta('kd-rev', cur.revenue, prev.revenue);
-  document.getElementById('kp-rev').textContent = prev.revenue > 0 ? '전기 ' + fmtW(prev.revenue) : '';
-  setDelta('kd-ord', cur.orders, prev.orders);
-  document.getElementById('kp-ord').textContent = prev.orders > 0 ? '전기 ' + fmt(prev.orders) + '건' : '';
-  document.getElementById('kp-cnc').textContent = `취소율 ${fmtPct(cur.cancel_rate)}`;
-  setDelta('kd-aov', cur.aov, prev.aov);
-  document.getElementById('kp-aov').textContent = prev.aov > 0 ? '전기 ' + fmtW(prev.aov) : '';
-  setDelta('kd-adcost', cur.ad_cost, prev.ad_cost);
-  document.getElementById('kp-adcost').textContent = prev.ad_cost > 0 ? '전기 ' + fmtW(prev.ad_cost) : '';
-
-  // 광고 ROAS
-  const arEl = document.getElementById('kv-adroas');
-  const arFt = document.getElementById('kp-adroas');
-  if (cur.ad_roas != null) {
-    arEl.textContent = cur.ad_roas.toFixed(2) + 'x';
-    arFt.innerHTML = `<span class="roas-badge ${roasClass(cur.ad_roas)}">${cur.ad_roas >= 3 ? '우수' : cur.ad_roas >= 1.5 ? '보통' : '위험'}</span>
-      <span style="font-size:.7rem;color:#aaa">광고매출 ${fmtW(cur.ad_sales)}</span>`;
-  } else {
-    arEl.textContent = 'N/A'; arFt.textContent = '광고비 없음';
-  }
-
-  // 실 ROAS
-  const rrEl = document.getElementById('kv-roas');
-  const rrFt = document.getElementById('kp-roas');
-  if (cur.real_roas != null) {
-    rrEl.textContent = cur.real_roas.toFixed(2) + 'x';
-    rrFt.innerHTML = `<span class="roas-badge ${roasClass(cur.real_roas)}">${cur.real_roas >= 3 ? '우수' : cur.real_roas >= 1.5 ? '보통' : '위험'}</span>
-      <span style="font-size:.7rem;color:#aaa">총매출 ${fmtW(cur.revenue)}</span>`;
-  } else {
-    rrEl.textContent = 'N/A'; rrFt.textContent = '광고비 없음';
-  }
-}
-
-// ══════════════════════════════════════════════
-//  차트 렌더링
-// ══════════════════════════════════════════════
-const CHART_DEFAULTS = {
-  responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { display: true, labels: { color:'#555', font:{size:10}, boxWidth:10 }}, tooltip:{ mode:'index', intersect:false }},
-  scales: {
-    x: { ticks:{ color:'#aaa', font:{size:9}, maxTicksLimit:12, maxRotation:0 }, grid:{ color:'rgba(0,0,0,.04)' }},
-    y: { ticks:{ color:'#aaa', font:{size:10}, callback:v=> v>=1e6?'₩'+(v/1e6).toFixed(1)+'M': v>=1e3?'₩'+(v/1e3).toFixed(0)+'K': v }, grid:{ color:'rgba(0,0,0,.05)' }}
-  }
+// ── 유틸 ────────────────────────────────────────────────
+const fmt = {
+  krw: v => v == null ? '-' : '₩' + Math.round(v).toLocaleString(),
+  num: v => v == null ? '-' : Math.round(v).toLocaleString(),
+  pct: v => v == null ? '-' : v.toFixed(2) + '%',
+  x:   v => v == null ? '-' : (v/100).toFixed(2) + 'x',
 };
 
-function mkChart(id, cfg) {
-  if (charts[id]) charts[id].destroy();
-  const ctx = document.getElementById(id);
-  if (!ctx) return;
-  charts[id] = new Chart(ctx, cfg);
+function roasClass(v) { // v is percentage (300 = 3x)
+  if (!v) return 'roas-bad';
+  if (v >= 300) return 'roas-good';
+  if (v >= 150) return 'roas-mid';
+  return 'roas-bad';
 }
 
-function renderCharts(dates) {
-  const labels = dates.map(d => d.slice(5));
-  const rows = dates.map(d => dailyMap[d] || {});
+// ── 날짜 필터 상태 ────────────────────────────────────────
+let activeMode = '7d';        // today / yesterday / 7d / 30d / thismonth / lastmonth / custom
+let customFrom = '';           // YYYY-MM-DD
+let customTo   = '';
+let activeAttr = 14;           // 1 or 14
 
-  const revenues    = rows.map(r => r.revenue || 0);
-  const orders      = rows.map(r => r.orders || 0);
-  const ad_costs    = rows.map(r => r.ad_cost || 0);
-  const ad_sales    = rows.map(r => r.ad_sales || 0);
-  const cancels     = rows.map(r => r.cancel_amount || 0);
-  const impressions = rows.map(r => r.impressions || 0);
-  const clicks      = rows.map(r => r.clicks || 0);
-  const ad_roas = rows.map(r => r.ad_cost > 0 ? +(r.ad_sales / r.ad_cost).toFixed(2) : null);
-  const real_roas = rows.map(r => r.ad_cost > 0 ? +(r.revenue / r.ad_cost).toFixed(2) : null);
-
-  document.getElementById('trend-sub').textContent = `${dates.length}일간`;
-
-  // 1. 일별 매출 & 주문
-  mkChart('trendChart', {
-    type:'bar',
-    data: { labels, datasets: [
-      { label:'매출', data: revenues, backgroundColor:'rgba(249,115,22,.7)', borderRadius:3, yAxisID:'y' },
-      { label:'주문건수', data: orders, type:'line', borderColor:'#3b82f6', backgroundColor:'transparent', tension:.4, pointRadius:2, borderWidth:2, yAxisID:'y2' }
-    ]},
-    options: { ...CHART_DEFAULTS, scales: { ...CHART_DEFAULTS.scales,
-      y: { ...CHART_DEFAULTS.scales.y, position:'left' },
-      y2: { position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#9ca3af', font:{size:9} }}
-    }}
-  });
-
-  // 2. 광고비 vs 총매출
-  mkChart('adVsRevChart', {
-    type:'bar',
-    data: { labels, datasets: [
-      { label:'광고비', data: ad_costs, backgroundColor:'rgba(239,68,68,.7)', borderRadius:3 },
-      { label:'총매출', data: revenues, backgroundColor:'rgba(16,185,129,.7)', borderRadius:3 }
-    ]},
-    options: CHART_DEFAULTS
-  });
-
-  // 3. ROAS 추이
-  mkChart('roasChart', {
-    type:'line',
-    data: { labels, datasets: [
-      { label:'광고ROAS', data: ad_roas, borderColor:'#6366f1', backgroundColor:'rgba(99,102,241,.1)', tension:.4, pointRadius:2, fill:true, borderWidth:2 },
-      { label:'실ROAS', data: real_roas, borderColor:'#ec4899', backgroundColor:'transparent', tension:.4, pointRadius:2, borderWidth:2, borderDash:[4,3] }
-    ]},
-    options: { ...CHART_DEFAULTS, scales: {
-      x: CHART_DEFAULTS.scales.x,
-      y: { ticks:{ color:'#aaa', font:{size:10}, callback: v => v != null ? v+'x' : '' }, grid:{ color:'rgba(0,0,0,.05)' }}
-    }}
-  });
-
-  // 4. 취소 금액
-  mkChart('cancelChart', {
-    type:'bar',
-    data: { labels, datasets: [
-      { label:'취소금액', data: cancels, backgroundColor:'rgba(239,68,68,.5)', borderRadius:3 }
-    ]},
-    options: CHART_DEFAULTS
-  });
-
-  // 5. 광고 클릭
-  mkChart('clickChart', {
-    type:'line',
-    data: { labels, datasets: [
-      { label:'노출수', data: impressions, borderColor:'#f59e0b', backgroundColor:'rgba(245,158,11,.08)', tension:.4, pointRadius:1, fill:true, yAxisID:'y' },
-      { label:'클릭수', data: clicks, borderColor:'#10b981', backgroundColor:'transparent', tension:.4, pointRadius:2, borderWidth:2, yAxisID:'y2' }
-    ]},
-    options: { ...CHART_DEFAULTS, scales: {
-      x: CHART_DEFAULTS.scales.x,
-      y: { ticks:{ color:'#aaa', font:{size:9}, callback: v=>v>=1e3?+(v/1e3).toFixed(0)+'K':v }, grid:{ color:'rgba(0,0,0,.04)' } },
-      y2: { position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#9ca3af', font:{size:9} }}
-    }}
-  });
+function todayStr() {
+  return new Date().toISOString().slice(0,10);
+}
+function dateOffset(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0,10);
 }
 
-// ══════════════════════════════════════════════
-//  상품 순위
-// ══════════════════════════════════════════════
-function renderProducts(data) {
-  const prods = (data.product_stats || []).slice(0, 8);
-  const maxRev = Math.max(...prods.map(p => p.revenue || 0), 1);
-  const totalRev = prods.reduce((s, p) => s + (p.revenue || 0), 0);
+function getFilteredDates() {
+  if (!RAW || !RAW.dates) return [];
+  const all = RAW.dates.slice().sort();
+  const today = todayStr();
+  const ym = today.slice(0,7);
+  const lastYm = (() => {
+    const d = new Date(today);
+    d.setDate(1); d.setMonth(d.getMonth()-1);
+    return d.toISOString().slice(0,7);
+  })();
 
-  // H-bar (우측 미니)
-  const hbar = document.getElementById('prod-hbar');
-  hbar.innerHTML = prods.slice(0, 8).map(p => {
-    const pct = ((p.revenue || 0) / maxRev * 100).toFixed(1);
-    const name = (p.product_name || '').length > 22 ? p.product_name.slice(0,22)+'…' : p.product_name;
-    return `<div class="hbar-item">
-      <div class="hbar-hd"><span class="hbar-name">${name}</span><span class="hbar-val">${fmtW(p.revenue)}</span></div>
-      <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%"></div></div>
-    </div>`;
-  }).join('');
+  switch(activeMode) {
+    case 'today':
+      return all.filter(d => d === today);
+    case 'yesterday': {
+      const y = dateOffset(-1);
+      return all.filter(d => d === y);
+    }
+    case '7d': {
+      const from = dateOffset(-6);
+      return all.filter(d => d >= from && d <= today);
+    }
+    case '30d': {
+      const from = dateOffset(-29);
+      return all.filter(d => d >= from && d <= today);
+    }
+    case 'thismonth':
+      return all.filter(d => d.slice(0,7) === ym);
+    case 'lastmonth':
+      return all.filter(d => d.slice(0,7) === lastYm);
+    case 'custom':
+      if (!customFrom && !customTo) return all;
+      return all.filter(d => (!customFrom || d >= customFrom) && (!customTo || d <= customTo));
+    default:
+      return all;
+  }
+}
 
-  // 상세 테이블
-  const tbody = document.getElementById('prod-tbody');
-  const topRev = prods.reduce((s, p) => s + (p.revenue || 0), 0) || 1;
-  tbody.innerHTML = (data.product_stats || []).map((p, i) => {
-    const rank = i + 1;
-    const rbCls = rank === 1 ? 'rb g1' : rank === 2 ? 'rb g2' : rank === 3 ? 'rb g3' : 'rb';
-    const pct = (p.revenue || 0) / topRev * 100;
-    const share = totalRev > 0 ? ((p.revenue||0)/totalRev*100).toFixed(1) + '%' : '-';
-    return `<tr class="tr-hover">
-      <td><span class="${rbCls}">${rank}</span></td>
-      <td>${p.product_name || '-'}</td>
-      <td class="td-r">${fmt(p.sold_qty)}개</td>
-      <td class="td-r">${fmtW(p.revenue)}</td>
-      <td class="td-r">
-        <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
-          <span style="font-size:.72rem;color:#aaa">${share}</span>
-          <div style="width:60px;height:5px;background:#f0f0f8;border-radius:3px;"><div style="width:${Math.min(pct,100).toFixed(1)}%;height:5px;border-radius:3px;background:linear-gradient(90deg,#f97316,#fb923c)"></div></div>
-        </div>
-      </td>
+function setRangeInfo(filtered) {
+  const el = document.getElementById('range-info');
+  if (!filtered.length) { el.textContent = '해당 기간 데이터 없음'; return; }
+  el.textContent = `데이터 기간: ${filtered[0]} ~ ${filtered[filtered.length-1]}  (${filtered.length}일)`;
+}
+
+// ── 차트 인스턴스 ─────────────────────────────────────────
+let charts = {};
+
+function destroyCharts() {
+  Object.values(charts).forEach(c => c && c.destroy());
+  charts = {};
+}
+
+// ── 메인 렌더 ────────────────────────────────────────────
+function render() {
+  if (!RAW || !RAW.dates || RAW.dates.length === 0) {
+    document.getElementById('last-update').textContent = '데이터 없음';
+    return;
+  }
+
+  // 날짜 필터링
+  const allDates = RAW.dates.slice().sort();
+  const filtered = getFilteredDates();
+  const dateSet  = new Set(filtered);
+
+  // 마지막 업데이트 + range info
+  const lastDate = allDates[allDates.length - 1];
+  document.getElementById('last-update').textContent = '최종 데이터: ' + lastDate;
+  setRangeInfo(filtered);
+
+  const attr = activeAttr; // 14 or 1
+  const revKey  = attr === 1 ? 'revenue_1d'  : 'revenue_14d';
+  const ordKey  = attr === 1 ? 'orders_1d'   : 'orders_14d';
+  const roasKey = attr === 1 ? 'roas_1d'     : 'roas_14d';
+
+  // ── 일별 집계 (트렌드용) ──────────────────────────────
+  const byDate = {};
+  filtered.forEach(d => { byDate[d] = {
+    sales_revenue:0, sales_orders:0,
+    ad_cost:0, impressions:0, clicks:0,
+    revenue_ad:0, orders_ad:0,
+  }; });
+
+  // 판매 데이터
+  (RAW.sales_by_date || []).forEach(r => {
+    if (!dateSet.has(r.date)) return;
+    const b = byDate[r.date];
+    b.sales_revenue += r.revenue || 0;
+    b.sales_orders  += r.orders  || 0;
+  });
+
+  // 광고 데이터 (일별)
+  (RAW.ad_daily || []).forEach(r => {
+    if (!dateSet.has(r.date)) return;
+    const b = byDate[r.date];
+    b.ad_cost    += r.ad_cost    || 0;
+    b.impressions+= r.impressions|| 0;
+    b.clicks     += r.clicks     || 0;
+    b.revenue_ad += r[revKey]    || 0;
+    b.orders_ad  += r[ordKey]    || 0;
+  });
+
+  const days = filtered;
+  const dVals = days.map(d => byDate[d]);
+
+  // ── KPI 합계 ─────────────────────────────────────────
+  let sRev=0, sOrd=0, adCost=0, imp=0, clk=0, revAd=0, ordAd=0;
+  dVals.forEach(v => {
+    sRev   += v.sales_revenue;
+    sOrd   += v.sales_orders;
+    adCost += v.ad_cost;
+    imp    += v.impressions;
+    clk    += v.clicks;
+    revAd  += v.revenue_ad;
+    ordAd  += v.orders_ad;
+  });
+
+  const aov      = sOrd  > 0 ? sRev / sOrd : 0;
+  const ctr      = clk   > 0 ? clk / imp * 100 : 0;
+  const cpc      = clk   > 0 ? adCost / clk : 0;
+  const convRate = clk   > 0 ? ordAd / clk * 100 : 0;
+  const realRoas = adCost> 0 ? sRev  / adCost * 100 : 0;
+  const adRoas   = adCost> 0 ? revAd / adCost * 100 : 0;
+
+  // KPI 표시
+  document.getElementById('kv-srev').textContent    = fmt.krw(sRev);
+  document.getElementById('kv-sord').textContent    = fmt.num(sOrd) + '건';
+  document.getElementById('kv-aov').textContent     = fmt.krw(aov);
+  document.getElementById('kv-adcost').textContent  = fmt.krw(adCost);
+  const rrEl = document.getElementById('kv-real-roas');
+  rrEl.innerHTML = `<span class="roas-badge ${roasClass(realRoas)}">${fmt.x(realRoas)}</span>`;
+  document.getElementById('kv-imp').textContent  = imp  >= 10000 ? (imp/10000).toFixed(1)+'만' : fmt.num(imp);
+  document.getElementById('kv-clk').textContent  = fmt.num(clk);
+  document.getElementById('kv-ctr').textContent  = fmt.pct(ctr);
+  document.getElementById('kv-cpc').textContent  = fmt.krw(cpc);
+  document.getElementById('kv-conv').textContent = fmt.num(ordAd) + '건';
+  const arEl = document.getElementById('kv-adroas');
+  arEl.innerHTML = `<span class="roas-badge ${roasClass(adRoas)}">${fmt.x(adRoas)}</span>`;
+
+  // ── 차트 ─────────────────────────────────────────────
+  destroyCharts();
+
+  const COLORS = {
+    blue:'rgba(102,126,234,1)', blueA:'rgba(102,126,234,0.15)',
+    green:'rgba(17,153,142,1)', greenA:'rgba(17,153,142,0.15)',
+    orange:'rgba(247,151,30,1)', orangeA:'rgba(247,151,30,0.15)',
+    red:'rgba(231,76,60,1)', redA:'rgba(231,76,60,0.15)',
+    purple:'rgba(142,68,173,1)', purpleA:'rgba(142,68,173,0.15)',
+  };
+
+  const baseOpt = {
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{position:'top', labels:{boxWidth:12, font:{size:11}}},tooltip:{mode:'index',intersect:false}},
+    scales:{x:{ticks:{font:{size:10},maxRotation:45}}, y:{ticks:{font:{size:10}},beginAtZero:true}},
+  };
+
+  function mkChart(id, cfg) {
+    const ctx = document.getElementById(id);
+    if (!ctx) return;
+    charts[id] = new Chart(ctx, cfg);
+  }
+
+  // 매출 & 주문
+  mkChart('srevChart', {type:'bar', data:{
+    labels: days,
+    datasets:[
+      {type:'bar', label:'매출(₩)', data:dVals.map(v=>v.sales_revenue), backgroundColor:COLORS.blueA, borderColor:COLORS.blue, borderWidth:2, yAxisID:'y'},
+      {type:'line', label:'주문건수', data:dVals.map(v=>v.sales_orders), borderColor:COLORS.green, backgroundColor:COLORS.greenA, tension:.3, yAxisID:'y1', borderWidth:2},
+    ]
+  }, options:{...baseOpt, scales:{
+    x:{ticks:{font:{size:10}}},
+    y:{position:'left', ticks:{font:{size:10}}, beginAtZero:true},
+    y1:{position:'right', ticks:{font:{size:10}}, beginAtZero:true, grid:{drawOnChartArea:false}},
+  }}});
+
+  // ROAS 비교
+  mkChart('roasChart', {type:'line', data:{
+    labels: days,
+    datasets:[
+      {label:'실제ROAS(x)', data:dVals.map(v=>adCost>0 ? v.sales_revenue/v.ad_cost : null), borderColor:COLORS.purple, backgroundColor:COLORS.purpleA, tension:.3, borderWidth:2, fill:true},
+      {label:'광고ROAS(x)', data:dVals.map(v=>v.ad_cost>0 ? v.revenue_ad/v.ad_cost : null), borderColor:COLORS.orange, backgroundColor:COLORS.orangeA, tension:.3, borderWidth:2, fill:false},
+    ]
+  }, options:{...baseOpt}});
+
+  // 광고비 vs 전환매출
+  mkChart('adRevChart', {type:'bar', data:{
+    labels: days,
+    datasets:[
+      {label:'광고비', data:dVals.map(v=>v.ad_cost), backgroundColor:COLORS.orangeA, borderColor:COLORS.orange, borderWidth:2},
+      {label:'전환매출', data:dVals.map(v=>v.revenue_ad), backgroundColor:COLORS.greenA, borderColor:COLORS.green, borderWidth:2},
+    ]
+  }, options:{...baseOpt}});
+
+  // 노출 & 클릭
+  mkChart('impClkChart', {type:'line', data:{
+    labels: days,
+    datasets:[
+      {label:'노출수', data:dVals.map(v=>v.impressions), borderColor:COLORS.blue, backgroundColor:COLORS.blueA, tension:.3, borderWidth:2, fill:true, yAxisID:'y'},
+      {label:'클릭수', data:dVals.map(v=>v.clicks), borderColor:COLORS.red, backgroundColor:COLORS.redA, tension:.3, borderWidth:2, fill:false, yAxisID:'y1'},
+    ]
+  }, options:{...baseOpt, scales:{
+    x:{ticks:{font:{size:10}}},
+    y:{position:'left', ticks:{font:{size:10}}, beginAtZero:true},
+    y1:{position:'right', ticks:{font:{size:10}}, beginAtZero:true, grid:{drawOnChartArea:false}},
+  }}});
+
+  // ── 상품별 광고성과 테이블 ──────────────────────────
+  renderPadTable(dateSet, revKey, ordKey, roasKey);
+
+  // ── 키워드 테이블 ──────────────────────────────────
+  renderKwTable(dateSet, revKey, ordKey, roasKey);
+
+  // ── 판매 분석 테이블 ──────────────────────────────
+  renderSalesTable(dateSet);
+}
+
+// ── 상품별 광고성과 ──────────────────────────────────────
+let padSort = {col:'ad_cost', asc:false};
+
+function renderPadTable(dateSet, revKey, ordKey, roasKey) {
+  const map = {};
+  (RAW.product_ad || []).forEach(r => {
+    if (!dateSet.has(r.date)) return;
+    const key = r.option_id || r.product_name;
+    if (!map[key]) map[key] = {
+      product_name: r.product_name || '-',
+      product_code: r.product_code || '',
+      ad_cost:0, impressions:0, clicks:0,
+      orders_14d:0, revenue_14d:0, orders_1d:0, revenue_1d:0,
+    };
+    const m = map[key];
+    m.ad_cost     += r.ad_cost     || 0;
+    m.impressions += r.impressions || 0;
+    m.clicks      += r.clicks      || 0;
+    m.orders_14d  += r.orders_14d  || 0;
+    m.revenue_14d += r.revenue_14d || 0;
+    m.orders_1d   += r.orders_1d   || 0;
+    m.revenue_1d  += r.revenue_1d  || 0;
+  });
+
+  let rows = Object.values(map).map(m => ({
+    ...m,
+    ctr: m.clicks   > 0 ? m.clicks / m.impressions * 100 : 0,
+    cpc: m.clicks   > 0 ? m.ad_cost / m.clicks : 0,
+    orders_14d_val: m.orders_14d, revenue_14d_val: m.revenue_14d,
+    orders_1d_val:  m.orders_1d,  revenue_1d_val:  m.revenue_1d,
+    roas_14d: m.ad_cost > 0 ? m.revenue_14d / m.ad_cost * 100 : 0,
+    roas_1d:  m.ad_cost > 0 ? m.revenue_1d  / m.ad_cost * 100 : 0,
+  }));
+
+  rows.sort((a,b) => {
+    const v = padSort.asc ? 1 : -1;
+    return (a[padSort.col] > b[padSort.col] ? 1 : -1) * v;
+  });
+
+  const tbody = document.getElementById('pad-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="no-data">광고 상품 데이터 없음</td></tr>';
+    return;
+  }
+
+  const ordField   = activeAttr === 1 ? 'orders_1d' : 'orders_14d';
+  const revField   = activeAttr === 1 ? 'revenue_1d' : 'revenue_14d';
+  const roasField  = activeAttr === 1 ? 'roas_1d' : 'roas_14d';
+
+  tbody.innerHTML = rows.map(r => {
+    const codeTag = r.product_code ? `<span class="tag-code">${r.product_code}</span>` : '';
+    const roasV = r[roasField];
+    return `<tr>
+      <td>${codeTag}${r.product_name}</td>
+      <td>${fmt.krw(r.ad_cost)}</td>
+      <td>${r.impressions >= 10000 ? (r.impressions/10000).toFixed(1)+'만' : fmt.num(r.impressions)}</td>
+      <td>${fmt.num(r.clicks)}</td>
+      <td>${fmt.pct(r.ctr)}</td>
+      <td>${fmt.krw(r.cpc)}</td>
+      <td>${fmt.num(r[ordField])}건</td>
+      <td>${fmt.krw(r[revField])}</td>
+      <td><span class="roas-badge ${roasClass(roasV)}">${fmt.x(roasV)}</span></td>
     </tr>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════════
-//  기간 필터 적용
-// ══════════════════════════════════════════════
-function applyPeriod() {
-  const { from, to } = dateRange(currentPeriod);
-  const { from: pFrom, to: pTo } = prevRange(from, to);
+// ── 키워드 테이블 ────────────────────────────────────────
+let kwSort = {col:'ad_cost', asc:false};
 
-  const dates = filterDates(from, to);
-  const prevDates = filterDates(pFrom, pTo);
-  const cur  = aggregate(dates);
-  const prev = aggregate(prevDates);
+function renderKwTable(dateSet, revKey, ordKey, roasKey) {
+  const map = {};
+  (RAW.keywords || []).forEach(r => {
+    if (!dateSet.has(r.date)) return;
+    const key = r.keyword || '-';
+    if (!map[key]) map[key] = {
+      keyword: key,
+      ad_cost:0, impressions:0, clicks:0,
+      orders_14d:0, revenue_14d:0, orders_1d:0, revenue_1d:0,
+    };
+    const m = map[key];
+    m.ad_cost     += r.ad_cost     || 0;
+    m.impressions += r.impressions || 0;
+    m.clicks      += r.clicks      || 0;
+    m.orders_14d  += r.orders_14d  || 0;
+    m.revenue_14d += r.revenue_14d || 0;
+    m.orders_1d   += r.orders_1d   || 0;
+    m.revenue_1d  += r.revenue_1d  || 0;
+  });
 
-  document.getElementById('range-badge').textContent = `${from} ~ ${to}`;
-  renderKPI(cur, prev);
-  renderCharts(dates);
-}
+  let rows = Object.values(map).map(m => ({
+    ...m,
+    ctr: m.clicks > 0 ? m.clicks / m.impressions * 100 : 0,
+    cpc: m.clicks > 0 ? m.ad_cost / m.clicks : 0,
+    roas_14d: m.ad_cost > 0 ? m.revenue_14d / m.ad_cost * 100 : 0,
+    roas_1d:  m.ad_cost > 0 ? m.revenue_1d  / m.ad_cost * 100 : 0,
+  }));
 
-// ══════════════════════════════════════════════
-//  기간 버튼
-// ══════════════════════════════════════════════
-function setPeriod(p) {
-  currentPeriod = p;
-  document.querySelectorAll('.btn-p').forEach(b => b.classList.remove('active'));
-  const btn = document.querySelector(`.btn-p[data-p="${p}"]`);
-  if (btn) btn.classList.add('active');
-  const cw = document.getElementById('cw');
-  if (p === 'custom') { cw.classList.add('show'); return; }
-  else cw.classList.remove('show');
-  applyPeriod();
-}
-function applyCustom() {
-  customFrom = document.getElementById('df').value;
-  customTo   = document.getElementById('dt').value;
-  if (!customFrom || !customTo) return;
-  document.getElementById('cw').classList.remove('show');
-  applyPeriod();
-}
+  rows.sort((a,b) => {
+    const v = kwSort.asc ? 1 : -1;
+    return (a[kwSort.col] > b[kwSort.col] ? 1 : -1) * v;
+  });
+  rows = rows.slice(0, 200);
 
-// ══════════════════════════════════════════════
-//  데이터 갱신 버튼
-// ══════════════════════════════════════════════
-async function refreshData() {
-  const btn = document.getElementById('refresh-btn');
-  const ic  = document.getElementById('refresh-icon');
-  btn.disabled = true; ic.textContent = '⏳';
-  try {
-    const data = await loadData();
-    RAW = data;
-    buildDailyMap(data);
-    renderProducts(data);
-    applyPeriod();
-    const ts = data.collected_at || data.summary?.collected_at || '';
-    document.getElementById('updated').textContent = ts ? '수집: ' + ts.slice(0,16).replace('T',' ') : '';
-    ic.textContent = '✅'; btn.style.background = '#10b981';
-    setTimeout(() => { ic.textContent = '🔄'; btn.style.background = '#f97316'; btn.disabled = false; }, 2200);
-  } catch(e) {
-    ic.textContent = '❌'; btn.style.background = '#ef4444';
-    setTimeout(() => { ic.textContent = '🔄'; btn.style.background = '#f97316'; btn.disabled = false; }, 2200);
+  const tbody = document.getElementById('kw-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="no-data">키워드 데이터 없음</td></tr>';
+    return;
   }
+
+  const ordField  = activeAttr === 1 ? 'orders_1d' : 'orders_14d';
+  const revField  = activeAttr === 1 ? 'revenue_1d' : 'revenue_14d';
+  const roasField = activeAttr === 1 ? 'roas_1d' : 'roas_14d';
+
+  tbody.innerHTML = rows.map(r => {
+    const roasV = r[roasField];
+    return `<tr>
+      <td>${r.keyword}</td>
+      <td>${fmt.krw(r.ad_cost)}</td>
+      <td>${r.impressions >= 10000 ? (r.impressions/10000).toFixed(1)+'만' : fmt.num(r.impressions)}</td>
+      <td>${fmt.num(r.clicks)}</td>
+      <td>${fmt.pct(r.ctr)}</td>
+      <td>${fmt.krw(r.cpc)}</td>
+      <td>${fmt.num(r[ordField])}건</td>
+      <td>${fmt.krw(r[revField])}</td>
+      <td><span class="roas-badge ${roasClass(roasV)}">${fmt.x(roasV)}</span></td>
+    </tr>`;
+  }).join('');
 }
 
-// ══════════════════════════════════════════════
-//  초기 실행
-// ══════════════════════════════════════════════
-(async () => {
-  try {
-    const data = await loadData();
-    RAW = data;
-    buildDailyMap(data);
-    renderProducts(data);
-    applyPeriod();
+// ── 판매 분석 테이블 ─────────────────────────────────────
+let psSort = {col:'revenue', asc:false};
 
-    const ts = data.collected_at || (data.summary && data.summary.collected_at) || '';
-    document.getElementById('updated').textContent = ts ? '수집: ' + ts.slice(0,16).replace('T',' ') : '';
+function renderSalesTable(dateSet) {
+  const map = {};
+  (RAW.sales_detail || []).forEach(r => {
+    if (!dateSet.has(r.date)) return;
+    const key = r.product_name || '-';
+    if (!map[key]) map[key] = {product_name:key, revenue:0, orders:0, units:0, return_cnt:0, _total_price:0, _ord_cnt:0};
+    const m = map[key];
+    m.revenue    += r.revenue    || 0;
+    m.orders     += r.orders     || 0;
+    m.units      += r.units      || 0;
+    m.return_cnt += r.return_cnt || 0;
+  });
 
-    document.getElementById('loading').style.display = 'none';
-  } catch(e) {
-    document.getElementById('loading').innerHTML =
-      `<p style="color:#ef4444;font-size:.9rem">⚠️ 데이터 로드 실패</p>
-       <p style="color:#aaa;font-size:.78rem;margin-top:6px">coupang_latest.json 을 확인하세요</p>`;
+  let rows = Object.values(map).map(m => ({
+    ...m,
+    avg_price: m.orders > 0 ? m.revenue / m.orders : 0,
+  }));
+
+  rows.sort((a,b) => {
+    const v = psSort.asc ? 1 : -1;
+    return (a[psSort.col] > b[psSort.col] ? 1 : -1) * v;
+  });
+
+  const tbody = document.getElementById('ps-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="no-data">판매 데이터 없음</td></tr>';
+    return;
   }
-})();
+
+  tbody.innerHTML = rows.map(r => `<tr>
+    <td>${r.product_name}</td>
+    <td>${fmt.krw(r.revenue)}</td>
+    <td>${fmt.num(r.orders)}건</td>
+    <td>${fmt.num(r.units)}</td>
+    <td>${fmt.krw(r.avg_price)}</td>
+    <td>${r.return_cnt > 0 ? r.return_cnt : '-'}</td>
+  </tr>`).join('');
+}
+
+// ── 이벤트 ───────────────────────────────────────────────
+document.querySelectorAll('.date-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.date-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeMode = btn.dataset.mode;
+
+    const picker = document.getElementById('custom-range');
+    if (activeMode === 'custom') {
+      picker.classList.add('show');
+      // 기본값: 이번달 1일 ~ 오늘
+      if (!document.getElementById('date-from').value) {
+        const today = todayStr();
+        document.getElementById('date-from').value = today.slice(0,8) + '01';
+        document.getElementById('date-to').value   = today;
+      }
+      return; // 적용 버튼 클릭 시 render
+    } else {
+      picker.classList.remove('show');
+      render();
+    }
+  });
+});
+
+document.getElementById('apply-range').addEventListener('click', () => {
+  customFrom = document.getElementById('date-from').value;
+  customTo   = document.getElementById('date-to').value;
+  render();
+});
+
+document.getElementById('attr-toggle').addEventListener('click', function() {
+  activeAttr = activeAttr === 14 ? 1 : 14;
+  this.textContent = '전환기준: ' + activeAttr + '일';
+  this.classList.toggle('active', activeAttr === 14);
+  render();
+});
+
+// 테이블 정렬
+function addSortListeners(tableId, sortState, renderFn) {
+  document.querySelectorAll(`#${tableId} th[data-col]`).forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortState.col === col) {
+        sortState.asc = !sortState.asc;
+      } else {
+        sortState.col = col;
+        sortState.asc = col === 'keyword' || col === 'product_name';
+      }
+      document.querySelectorAll(`#${tableId} th`).forEach(t => {
+        t.textContent = t.textContent.replace(/ [▲▼]$/,'');
+        if (t.dataset.col === col) t.textContent += (sortState.asc ? ' ▲' : ' ▼');
+      });
+      renderFn();
+    });
+  });
+}
+
+addSortListeners('pad-tbl', padSort, () => {
+  const dateSet = getDateSet();
+  const {revKey, ordKey, roasKey} = getAttrKeys();
+  renderPadTable(dateSet, revKey, ordKey, roasKey);
+});
+
+addSortListeners('kw-tbl', kwSort, () => {
+  const dateSet = getDateSet();
+  const {revKey, ordKey, roasKey} = getAttrKeys();
+  renderKwTable(dateSet, revKey, ordKey, roasKey);
+});
+
+addSortListeners('ps-tbl', psSort, () => {
+  const dateSet = getDateSet();
+  renderSalesTable(dateSet);
+});
+
+function getDateSet() {
+  return new Set(getFilteredDates());
+}
+
+function getAttrKeys() {
+  const attr = activeAttr;
+  return {
+    revKey:  attr === 1 ? 'revenue_1d'  : 'revenue_14d',
+    ordKey:  attr === 1 ? 'orders_1d'   : 'orders_14d',
+    roasKey: attr === 1 ? 'roas_1d'     : 'roas_14d',
+  };
+}
+
+// ── 초기 실행 ─────────────────────────────────────────────
+render();
 </script>
 </body>
 </html>
