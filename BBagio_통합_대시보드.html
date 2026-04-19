@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBagio 통합 매출 대시보드</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo',Pretendard,-apple-system,sans-serif;background:#f4f6fb;color:#1e2235;font-size:14px}
+/* ── 헤더 */
+header{background:#fff;border-bottom:1px solid #e5e9f2;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px}
+.logo-text{font-size:1rem;font-weight:700;color:#1e2235}
+.header-meta{font-size:.75rem;color:#9ca3af}
+/* ── 탭 네비게이션 */
+.tab-nav{background:#fff;border-bottom:2px solid #e5e9f2;display:flex;padding:0 32px;gap:0}
+.tab-btn{padding:14px 24px;font-size:.875rem;font-weight:600;color:#9ca3af;cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;gap:6px}
+.tab-btn:hover{color:#6366f1}
+.tab-btn.active{color:#6366f1;border-bottom-color:#6366f1}
+.tab-btn .badge{background:#f3f4f6;color:#6b7280;font-size:.7rem;padding:2px 7px;border-radius:10px;font-weight:500}
+.tab-btn.active .badge{background:#eef2ff;color:#6366f1}
+/* ── 채널 컬러 배지 */
+.ch-cafe24{background:#e0f2fe;color:#0284c7;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
+.ch-naver{background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
+.ch-coupang{background:#fef3c7;color:#d97706;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
+/* ── 컨텐츠 */
+.tab-content{display:none}.tab-content.active{display:block}
+.container{max-width:1440px;margin:0 auto;padding:24px 20px}
+/* ── 섹션 타이틀 */
+.section-title{font-size:.9rem;font-weight:700;color:#374151;margin:24px 0 12px;padding-left:10px;border-left:3px solid #6366f1;display:flex;align-items:center;gap:8px}
+/* ── KPI 카드 */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:4px}
+.kpi{background:#fff;border:1px solid #e5e9f2;border-radius:14px;padding:18px 16px;box-shadow:0 1px 4px rgba(0,0,0,.04);transition:box-shadow .2s}
+.kpi:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.kpi .label{font-size:.72rem;color:#9ca3af;margin-bottom:6px;font-weight:500}
+.kpi .value{font-size:1.5rem;font-weight:700;color:#1e2235;line-height:1.2}
+.kpi .sub{font-size:.7rem;color:#6366f1;margin-top:4px;font-weight:500}
+.kpi .ch-bar{display:flex;gap:4px;margin-top:8px}
+.kpi .ch-seg{height:4px;border-radius:2px;transition:width .3s}
+/* ── 채널 비교 */
+.channel-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:4px}
+.ch-card{background:#fff;border:1px solid #e5e9f2;border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.ch-card .ch-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ch-card .ch-name{font-size:.85rem;font-weight:700}
+.ch-card .ch-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ch-card .ck{background:#f9fafb;border-radius:8px;padding:10px}
+.ch-card .ck .cl{font-size:.65rem;color:#9ca3af}
+.ch-card .ck .cv{font-size:1rem;font-weight:700;color:#1e2235}
+/* ── 차트 */
+.charts-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.charts-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.chart-card{background:#fff;border:1px solid #e5e9f2;border-radius:14px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.chart-card .chart-title{font-size:.8rem;font-weight:600;color:#374151;margin-bottom:12px}
+.chart-wrap{position:relative;height:220px}
+.chart-wrap.tall{height:280px}
+.chart-wrap.short{height:180px}
+/* ── 상품 테이블 */
+.prod-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.prod-table th{background:#f8fafc;color:#6b7280;font-weight:600;padding:8px 12px;text-align:left;border-bottom:2px solid #e5e9f2;white-space:nowrap}
+.prod-table td{padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#374151;vertical-align:middle}
+.prod-table tr:hover td{background:#f9fafb}
+.rank-badge{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#f3f4f6;color:#6b7280;font-size:.7rem;font-weight:700;align-items:center;justify-content:center}
+.rank-badge.top3{background:#6366f1;color:#fff}
+/* ── 빈 상태 */
+.empty-state{text-align:center;padding:48px;color:#9ca3af;font-size:.85rem}
+.empty-state .emoji{font-size:2.5rem;margin-bottom:12px}
+/* ── 반응형 */
+@media(max-width:900px){
+  .channel-cards{grid-template-columns:1fr}
+  .charts-2,.charts-3{grid-template-columns:1fr}
+  .tab-btn{padding:12px 14px;font-size:.8rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">B</div>
+    <div>
+      <div class="logo-text">BBagio 통합 매출 대시보드</div>
+    </div>
+  </div>
+  <div class="header-meta">📅 2026-03-20 ~ 2026-04-19 &nbsp;|&nbsp; 업데이트: 2026-04-20 08:13</div>
+</header>
+
+<!-- 탭 네비게이션 -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('all')">
+    📊 전체 합산 <span class="badge">3채널</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('cafe24')">
+    🏪 자사몰 <span class="badge ch-cafe24">Cafe24</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('naver')">
+    🟢 스마트스토어 <span class="badge ch-naver">Naver</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('coupang')">
+    🟡 쿠팡 <span class="badge ch-coupang">Coupang</span>
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     탭 1: 전체 합산
+════════════════════════════════════════ -->
+<div class="tab-content active" id="tab-all">
+<div class="container">
+
+  <div class="section-title">📦 통합 핵심 지표</div>
+  <div class="kpis">
+    <div class="kpi">
+      <div class="label">전체 매출</div>
+      <div class="value">₩10,621,812</div>
+      <div class="sub">3채널 합산</div>
+      <div class="ch-bar">
+        <div class="ch-seg" style="background:#0284c7;width:100%"></div>
+        <div class="ch-seg" style="background:#16a34a;width:0%"></div>
+        <div class="ch-seg" style="background:#d97706;width:0%"></div>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="label">전체 주문수</div>
+      <div class="value">241건</div>
+      <div class="sub">자사몰 + 스토어 + 쿠팡</div>
+    </div>
+    <div class="kpi">
+      <div class="label">자사몰 매출</div>
+      <div class="value">₩10,621,812</div>
+      <div class="sub">100% 비중</div>
+    </div>
+    <div class="kpi">
+      <div class="label">스마트스토어 매출</div>
+      <div class="value">₩0</div>
+      <div class="sub">0% 비중</div>
+    </div>
+    <div class="kpi">
+      <div class="label">쿠팡 매출</div>
+      <div class="value">₩0</div>
+      <div class="sub">0% 비중</div>
+    </div>
+    <div class="kpi">
+      <div class="label">총 방문자(UV)</div>
+      <div class="value">0</div>
+      <div class="sub">3채널 합산</div>
+    </div>
+    <div class="kpi">
+      <div class="label">쿠팡 광고비</div>
+      <div class="value">₩0</div>
+      <div class="sub">ROAS 0.0x</div>
+    </div>
+    <div class="kpi">
+      <div class="label">신규 회원</div>
+      <div class="value">0명</div>
+      <div class="sub">자사몰 기준</div>
+    </div>
+  </div>
+
+  <!-- 채널 카드 비교 -->
+  <div class="section-title">📊 채널별 비교</div>
+  <div class="channel-cards">
+    <div class="ch-card">
+      <div class="ch-header">
+        <div class="ch-name">🏪 자사몰</div>
+        <span class="ch-cafe24">Cafe24</span>
+      </div>
+      <div class="ch-kpis">
+        <div class="ck"><div class="cl">매출</div><div class="cv">₩10,621,812</div></div>
+        <div class="ck"><div class="cl">주문수</div><div class="cv">241건</div></div>
+        <div class="ck"><div class="cl">UV</div><div class="cv">0</div></div>
+        <div class="ck"><div class="cl">전환율</div><div class="cv">0.00%</div></div>
+      </div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-header">
+        <div class="ch-name">🟢 스마트스토어</div>
+        <span class="ch-naver">Naver</span>
+      </div>
+      <div class="ch-kpis">
+        <div class="ck"><div class="cl">매출</div><div class="cv">₩0</div></div>
+        <div class="ck"><div class="cl">주문수</div><div class="cv">0건</div></div>
+        <div class="ck"><div class="cl">UV</div><div class="cv">0</div></div>
+        <div class="ck"><div class="cl">전환율</div><div class="cv">0.00%</div></div>
+      </div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-header">
+        <div class="ch-name">🟡 쿠팡</div>
+        <span class="ch-coupang">Coupang</span>
+      </div>
+      <div class="ch-kpis">
+        <div class="ck"><div class="cl">매출</div><div class="cv">₩0</div></div>
+        <div class="ck"><div class="cl">주문수</div><div class="cv">0건</div></div>
+        <div class="ck"><div class="cl">광고비</div><div class="cv">₩0</div></div>
+        <div class="ck"><div class="cl">ROAS</div><div class="cv">0.0x</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 차트 1행: 채널별 매출 비중 + 일별 매출 추이 -->
+  <div class="section-title">📈 매출 추이</div>
+  <div class="charts-2">
+    <div class="chart-card">
+      <div class="chart-title">채널별 매출 비중</div>
+      <div class="chart-wrap short"><canvas id="chartPie"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">일별 전체 매출 합산</div>
+      <div class="chart-wrap"><canvas id="chartTotalRev"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 차트 2행: 채널별 일별 매출 -->
+  <div style="margin-top:18px">
+  <div class="chart-card">
+    <div class="chart-title">채널별 일별 매출 비교</div>
+    <div class="chart-wrap tall"><canvas id="chartChannelRev"></canvas></div>
+  </div>
+  </div>
+
+  <!-- 차트 3행: UV 비교 + 쿠팡 광고 ROAS -->
+  <div class="charts-2" style="margin-top:18px">
+    <div class="chart-card">
+      <div class="chart-title">채널별 일별 UV</div>
+      <div class="chart-wrap"><canvas id="chartUV"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">쿠팡 광고비 vs 매출 (ROAS)</div>
+      <div class="chart-wrap"><canvas id="chartAd"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 통합 상품 Top10 -->
+  <div class="section-title">🏆 전 채널 상품 TOP 10 (매출 기준)</div>
+  <div style="background:#fff;border:1px solid #e5e9f2;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+    <table class="prod-table">
+      <thead><tr><th>순위</th><th>채널</th><th>상품명</th><th style="text-align:right">매출액</th><th style="text-align:right">판매수량</th></tr></thead>
+      <tbody id="allProdTbody"></tbody>
+    </table>
+  </div>
+
+</div><!-- /container -->
+</div><!-- /tab-all -->
+
+<!-- ════════════════════════════════════════
+     탭 2: 자사몰
+════════════════════════════════════════ -->
+<div class="tab-content" id="tab-cafe24">
+<div class="container">
+  <div class="section-title">🏪 자사몰 (Cafe24) 상세</div>
+  <div class="kpis">
+    <div class="kpi"><div class="label">매출</div><div class="value">₩10,621,812</div></div>
+    <div class="kpi"><div class="label">주문수</div><div class="value">241건</div></div>
+    <div class="kpi"><div class="label">평균 주문금액</div><div class="value">₩44,074</div></div>
+    <div class="kpi"><div class="label">UV</div><div class="value">0</div></div>
+    <div class="kpi"><div class="label">PV</div><div class="value">0</div></div>
+    <div class="kpi"><div class="label">전환율</div><div class="value">0.00%</div></div>
+    <div class="kpi"><div class="label">신규회원</div><div class="value">0명</div></div>
+  </div>
+  <div class="charts-2" style="margin-top:18px">
+    <div class="chart-card"><div class="chart-title">일별 매출</div><div class="chart-wrap"><canvas id="c24Rev"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">일별 UV / PV</div><div class="chart-wrap"><canvas id="c24UV"></canvas></div></div>
+  </div>
+  <div class="section-title" style="margin-top:24px">🏆 자사몰 상품 TOP 20</div>
+  <div style="background:#fff;border:1px solid #e5e9f2;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+    <table class="prod-table">
+      <thead><tr><th>순위</th><th>상품명</th><th style="text-align:right">매출액</th><th style="text-align:right">판매수량</th></tr></thead>
+      <tbody id="c24ProdTbody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     탭 3: 스마트스토어
+════════════════════════════════════════ -->
+<div class="tab-content" id="tab-naver">
+<div class="container">
+  <div class="section-title">🟢 스마트스토어 (Naver) 상세</div>
+  <div class="kpis">
+    <div class="kpi"><div class="label">매출</div><div class="value">₩0</div></div>
+    <div class="kpi"><div class="label">주문수</div><div class="value">0건</div></div>
+    <div class="kpi"><div class="label">평균 주문금액</div><div class="value">₩0</div></div>
+    <div class="kpi"><div class="label">UV</div><div class="value">0</div></div>
+    <div class="kpi"><div class="label">PV</div><div class="value">0</div></div>
+    <div class="kpi"><div class="label">전환율</div><div class="value">0.00%</div></div>
+    <div class="kpi"><div class="label">신규회원</div><div class="value">0명</div></div>
+  </div>
+  <div class="charts-2" style="margin-top:18px">
+    <div class="chart-card"><div class="chart-title">일별 매출</div><div class="chart-wrap"><canvas id="naverRev"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">일별 UV</div><div class="chart-wrap"><canvas id="naverUV"></canvas></div></div>
+  </div>
+  <div class="section-title" style="margin-top:24px">🏆 스마트스토어 상품 TOP 20</div>
+  <div style="background:#fff;border:1px solid #e5e9f2;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+    <table class="prod-table">
+      <thead><tr><th>순위</th><th>상품명</th><th style="text-align:right">매출액</th><th style="text-align:right">판매수량</th></tr></thead>
+      <tbody id="naverProdTbody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     탭 4: 쿠팡
+════════════════════════════════════════ -->
+<div class="tab-content" id="tab-coupang">
+<div class="container">
+  <div class="section-title">🟡 쿠팡 (Coupang Wing) 상세</div>
+  <div class="kpis">
+    <div class="kpi"><div class="label">매출</div><div class="value">₩0</div></div>
+    <div class="kpi"><div class="label">주문수</div><div class="value">0건</div></div>
+    <div class="kpi"><div class="label">광고비</div><div class="value">₩0</div></div>
+    <div class="kpi"><div class="label">광고 매출</div><div class="value">₩0</div></div>
+    <div class="kpi"><div class="label">평균 ROAS</div><div class="value">0.0x</div></div>
+    <div class="kpi"><div class="label">UV</div><div class="value">0</div></div>
+    <div class="kpi"><div class="label">전환율</div><div class="value">0.00%</div></div>
+  </div>
+  <div class="charts-2" style="margin-top:18px">
+    <div class="chart-card"><div class="chart-title">일별 매출</div><div class="chart-wrap"><canvas id="coupRev"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">광고비 vs 광고매출</div><div class="chart-wrap"><canvas id="coupAd"></canvas></div></div>
+  </div>
+  <div style="margin-top:18px">
+  <div class="chart-card">
+    <div class="chart-title">일별 ROAS 추이</div>
+    <div class="chart-wrap"><canvas id="coupRoas"></canvas></div>
+  </div>
+  </div>
+  <div class="section-title" style="margin-top:24px">🏆 쿠팡 상품 TOP 20</div>
+  <div style="background:#fff;border:1px solid #e5e9f2;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+    <table class="prod-table">
+      <thead><tr><th>순위</th><th>상품명</th><th style="text-align:right">매출액</th><th style="text-align:right">판매수량</th></tr></thead>
+      <tbody id="coupProdTbody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<script>
+// ── 탭 전환
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  const idx = {'all':0,'cafe24':1,'naver':2,'coupang':3}[tab];
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  drawChannelCharts(tab);
+}
+
+// ── 데이터
+const D = {
+  dateLabels:   [],
+  c24Vals:      [],
+  naverVals:    [],
+  coupVals:     [],
+  totalVals:    [],
+  uvLabels:     [],
+  c24UV:        [],
+  naverUV:      [],
+  coupUV:       [],
+  adLabels:     [],
+  adCost:       [],
+  adRoas:       [],
+  adRevenue:    [],
+  top10Names:   [],
+  top10Rev:     [],
+  top10Qty:     [],
+  chRev:        [10621812.0, 0, 0],
+  c24Prods:     [],
+  naverProds:   [],
+  coupProds:    [],
+  c24OrderStats: [],
+  c24VisitStats: [],
+  naverOrderStats: [],
+  naverVisitStats: [],
+  coupOrderStats:  [],
+  adStats:     [],
+};
+
+// ── 차트 기본 옵션
+const DEF = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: {
+    legend: { position:'top', labels: { boxWidth:12, font:{size:11} } },
+    tooltip: { backgroundColor:'#fff', titleColor:'#1e2235', bodyColor:'#374151', borderColor:'#e5e9f2', borderWidth:1 }
+  },
+  scales: {
+    x: { grid:{ color:'rgba(0,0,0,.03)' }, ticks:{ color:'#9ca3af', font:{size:10}, maxRotation:45 } },
+    y: { grid:{ color:'rgba(0,0,0,.03)' }, ticks:{ color:'#9ca3af', font:{size:10} } }
+  }
+};
+const NOLEGEND = JSON.parse(JSON.stringify(DEF));
+NOLEGEND.plugins.legend.display = false;
+
+function krw(n) { return '₩' + Number(n).toLocaleString('ko-KR'); }
+
+// ── 공통 채널 매출 차트 그리기
+let chartsDrawn = {};
+function drawAllCharts() {
+  // 파이 차트
+  new Chart(document.getElementById('chartPie'), {
+    type: 'doughnut',
+    data: { labels:['자사몰','스마트스토어','쿠팡'], datasets:[{ data: D.chRev, backgroundColor:['#0284c7','#16a34a','#d97706'], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ font:{size:11} } }, tooltip:{ callbacks:{ label: ctx => ' ₩' + ctx.raw.toLocaleString() } } } }
+  });
+
+  // 전체 매출 합산
+  new Chart(document.getElementById('chartTotalRev'), {
+    type:'bar',
+    data:{ labels:D.dateLabels, datasets:[{ label:'전체 매출', data:D.totalVals, backgroundColor:'rgba(99,102,241,.75)', borderRadius:4 }] },
+    options:{...DEF}
+  });
+
+  // 채널별 매출
+  new Chart(document.getElementById('chartChannelRev'), {
+    type:'bar',
+    data:{ labels:D.dateLabels, datasets:[
+      { label:'자사몰', data:D.c24Vals, backgroundColor:'rgba(2,132,199,.65)', borderRadius:3 },
+      { label:'스마트스토어', data:D.naverVals, backgroundColor:'rgba(22,163,74,.65)', borderRadius:3 },
+      { label:'쿠팡', data:D.coupVals, backgroundColor:'rgba(217,119,6,.65)', borderRadius:3 }
+    ]},
+    options:{...DEF}
+  });
+
+  // UV
+  new Chart(document.getElementById('chartUV'), {
+    type:'line',
+    data:{ labels:D.uvLabels, datasets:[
+      { label:'자사몰', data:D.c24UV, borderColor:'#0284c7', backgroundColor:'transparent', tension:.4, pointRadius:2 },
+      { label:'스마트스토어', data:D.naverUV, borderColor:'#16a34a', backgroundColor:'transparent', tension:.4, pointRadius:2 },
+      { label:'쿠팡', data:D.coupUV, borderColor:'#d97706', backgroundColor:'transparent', tension:.4, pointRadius:2 }
+    ]},
+    options:{...DEF}
+  });
+
+  // 광고
+  if (D.adLabels.length > 0) {
+    new Chart(document.getElementById('chartAd'), {
+      type:'bar',
+      data:{ labels:D.adLabels, datasets:[
+        { label:'광고비', data:D.adCost, backgroundColor:'rgba(239,68,68,.7)', borderRadius:3 },
+        { label:'광고매출', data:D.adRevenue, backgroundColor:'rgba(34,197,94,.7)', borderRadius:3 }
+      ]},
+      options:{...DEF}
+    });
+  }
+
+  // 상품 Top10 테이블
+  const tbody = document.getElementById('allProdTbody');
+  D.top10Names.forEach((name, i) => {
+    const tr = document.createElement('tr');
+    const rankClass = i < 3 ? 'rank-badge top3' : 'rank-badge';
+    const chColor = name.startsWith('[자사몰]') ? 'ch-cafe24' : name.startsWith('[스마트') ? 'ch-naver' : 'ch-coupang';
+    const chName  = name.startsWith('[자사몰]') ? '자사몰' : name.startsWith('[스마트') ? '스마트스토어' : '쿠팡';
+    const prodName = name.replace(/^\[.*?\]\s*/, '');
+    tr.innerHTML = `<td><span class="${rankClass}">${i+1}</span></td>
+      <td><span class="${chColor}">${chName}</span></td>
+      <td>${prodName}</td>
+      <td style="text-align:right;font-weight:600">${krw(D.top10Rev[i])}</td>
+      <td style="text-align:right;color:#6b7280">${Number(D.top10Qty[i]).toLocaleString()}개</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── 채널별 상세 차트 (탭 전환시)
+function drawChannelCharts(tab) {
+  if (chartsDrawn[tab]) return;
+  chartsDrawn[tab] = true;
+
+  if (tab === 'cafe24') {
+    const oLabels = D.c24OrderStats.map(r=>r.date ? r.date.slice(-5) : '');
+    const oRev    = D.c24OrderStats.map(r=>r.revenue||0);
+    const vLabels = D.c24VisitStats.map(r=>r.date ? r.date.slice(-5) : '');
+    const vUV     = D.c24VisitStats.map(r=>r.uv||0);
+    const vPV     = D.c24VisitStats.map(r=>r.pv||0);
+    new Chart(document.getElementById('c24Rev'), { type:'bar', data:{ labels:oLabels, datasets:[{ label:'매출', data:oRev, backgroundColor:'rgba(2,132,199,.7)', borderRadius:4 }] }, options:{...DEF} });
+    new Chart(document.getElementById('c24UV'), { type:'line', data:{ labels:vLabels, datasets:[
+      { label:'UV', data:vUV, borderColor:'#0284c7', backgroundColor:'rgba(2,132,199,.08)', tension:.4, pointRadius:2, fill:true },
+      { label:'PV', data:vPV, borderColor:'#7dd3fc', backgroundColor:'transparent', tension:.4, pointRadius:2 }
+    ]}, options:{...DEF} });
+    buildProdTable('c24ProdTbody', D.c24Prods);
+  }
+
+  if (tab === 'naver') {
+    const oLabels = D.naverOrderStats.map(r=>r.date ? r.date.slice(-5) : '');
+    const oRev    = D.naverOrderStats.map(r=>r.revenue||0);
+    const vLabels = D.naverVisitStats.map(r=>r.date ? r.date.slice(-5) : '');
+    const vUV     = D.naverVisitStats.map(r=>r.uv||0);
+    new Chart(document.getElementById('naverRev'), { type:'bar', data:{ labels:oLabels, datasets:[{ label:'매출', data:oRev, backgroundColor:'rgba(22,163,74,.7)', borderRadius:4 }] }, options:{...DEF} });
+    new Chart(document.getElementById('naverUV'), { type:'line', data:{ labels:vLabels, datasets:[{ label:'UV', data:vUV, borderColor:'#16a34a', backgroundColor:'rgba(22,163,74,.08)', tension:.4, pointRadius:2, fill:true }] }, options:{...DEF} });
+    buildProdTable('naverProdTbody', D.naverProds);
+  }
+
+  if (tab === 'coupang') {
+    const oLabels = D.coupOrderStats.map(r=>r.date ? r.date.slice(-5) : '');
+    const oRev    = D.coupOrderStats.map(r=>r.revenue||0);
+    const adL     = D.adStats.map(r=>r.date ? r.date.slice(-5) : '');
+    const adC     = D.adStats.map(r=>r.ad_cost||0);
+    const adRev   = D.adStats.map(r=>r.ad_revenue||0);
+    const adRoas  = D.adStats.map(r=>r.roas||0);
+    new Chart(document.getElementById('coupRev'), { type:'bar', data:{ labels:oLabels, datasets:[{ label:'매출', data:oRev, backgroundColor:'rgba(217,119,6,.7)', borderRadius:4 }] }, options:{...DEF} });
+    new Chart(document.getElementById('coupAd'), { type:'bar', data:{ labels:adL, datasets:[
+      { label:'광고비', data:adC, backgroundColor:'rgba(239,68,68,.7)', borderRadius:3 },
+      { label:'광고매출', data:adRev, backgroundColor:'rgba(34,197,94,.7)', borderRadius:3 }
+    ]}, options:{...DEF} });
+    new Chart(document.getElementById('coupRoas'), { type:'line', data:{ labels:adL, datasets:[{ label:'ROAS', data:adRoas, borderColor:'#f59e0b', backgroundColor:'rgba(245,158,11,.08)', tension:.4, pointRadius:3, fill:true }] }, options:{...DEF} });
+    buildProdTable('coupProdTbody', D.coupProds);
+  }
+}
+
+function buildProdTable(tbodyId, prods) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  if (!prods || prods.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:#9ca3af">데이터 없음</td></tr>';
+    return;
+  }
+  prods.forEach((p, i) => {
+    const tr = document.createElement('tr');
+    const rankClass = i < 3 ? 'rank-badge top3' : 'rank-badge';
+    tr.innerHTML = `<td><span class="${rankClass}">${i+1}</span></td>
+      <td style="max-width:300px">${p.product_name||p.name||'-'}</td>
+      <td style="text-align:right;font-weight:600">${krw(p.revenue||0)}</td>
+      <td style="text-align:right;color:#6b7280">${Number(p.sold_qty||p.qty||0).toLocaleString()}개</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// 초기 로드
+drawAllCharts();
+</script>
+</body>
+</html>
