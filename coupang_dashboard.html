@@ -105,6 +105,7 @@ tr.daily-row.open td:first-child::before{content:'▼ ';color:#6c63ff}
   <div class="chart-box"><h2>유입수 &amp; 전환율</h2><canvas id="chartVisConv"></canvas></div>
   <div class="chart-box"><h2>실제 ROAS vs 광고 ROAS</h2><canvas id="chartRoas"></canvas></div>
   <div class="chart-box"><h2>광고비 vs 광고전환매출(14일)</h2><canvas id="chartAdRev"></canvas></div>
+  <div class="chart-box"><h2>광고 게재지면</h2><canvas id="chartArea" style="max-height:200px"></canvas></div>
 </div>
 <div class="section">
   <h2>📦 상품별 광고성과</h2>
@@ -142,12 +143,10 @@ tr.daily-row.open td:first-child::before{content:'▼ ';color:#6c63ff}
   <h2>📊 상품별 판매분석 <span style="font-weight:400;font-size:12px;color:#aaa">매출 있는 상품만</span></h2>
   <div class="tbl-wrap"><table id="tblPs">
     <thead><tr>
-      <th onclick="sortTable('ps','product_code')">상품코드 <span class="sort-icon">↕</span></th>
       <th onclick="sortTable('ps','product_name')">상품명 <span class="sort-icon">↕</span></th>
       <th onclick="sortTable('ps','revenue')">매출 <span class="sort-icon">↕</span></th>
       <th onclick="sortTable('ps','orders')">주문 <span class="sort-icon">↕</span></th>
       <th onclick="sortTable('ps','units')">판매량 <span class="sort-icon">↕</span></th>
-      <th onclick="sortTable('ps','return_cnt')">취소 <span class="sort-icon">↕</span></th>
     </tr></thead><tbody id="tbodyPs"></tbody>
   </table></div>
 </div>
@@ -235,6 +234,16 @@ function renderCharts(ds){
   mkChart('chartVisConv',{type:'bar',data:{labels:lbl,datasets:[{label:'유입수',data:dates.map(d=>gv(sbdMap,d,'visitors')),backgroundColor:'rgba(67,206,162,.7)',yAxisID:'y'},{label:'전환율%',data:dates.map(d=>{const v=gv(sbdMap,d,'visitors'),o=gv(sbdMap,d,'orders');return v>0?+(o/v*100).toFixed(2):0;}),type:'line',borderColor:'#ff9f43',backgroundColor:'rgba(255,159,67,.1)',tension:.3,yAxisID:'y2',pointRadius:3}]},options:{...bo,scales:{y:{beginAtZero:true},y2:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>v+'%'}}}}});
   mkChart('chartRoas',{type:'line',data:{labels:lbl,datasets:[{label:'실제ROAS',data:dates.map(d=>{const c=gv(adyMap,d,'ad_cost'),r=gv(sbdMap,d,'revenue');return c>0?+(r/c*100).toFixed(0):0;}),borderColor:'#6c63ff',tension:.3,fill:false,pointRadius:3},{label:'광고ROAS',data:dates.map(d=>{const c=gv(adyMap,d,'ad_cost'),r=gv(adyMap,d,'revenue_1d');return c>0?+(r/c*100).toFixed(0):0;}),borderColor:'#ff6b6b',tension:.3,fill:false,pointRadius:3}]},options:{...bo,scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}}});
   mkChart('chartAdRev',{type:'bar',data:{labels:lbl,datasets:[{label:'광고비',data:dates.map(d=>gv(adyMap,d,'ad_cost')),backgroundColor:'rgba(255,107,107,.7)',yAxisID:'y'},{label:'전환매출(14일)',data:dates.map(d=>gv(adyMap,d,'revenue_14d')),backgroundColor:'rgba(108,99,255,.6)',yAxisID:'y'}]},options:{...bo,scales:{y:{beginAtZero:true,ticks:{callback:v=>v>=10000?Math.round(v/10000)+'만':v}}}}});
+  // 게재지면 도넛
+  const areaAgg={};
+  (RAW.product_ad||[]).filter(r=>ds.has(r.date)).forEach(r=>{
+    const a=r.area||'기타';areaAgg[a]=(areaAgg[a]||0)+(r.ad_cost||0);
+  });
+  const areaLabels=Object.keys(areaAgg).sort((a,b)=>areaAgg[b]-areaAgg[a]);
+  const areaColors=['rgba(108,99,255,.8)','rgba(255,107,107,.8)','rgba(67,206,162,.8)','rgba(255,159,67,.8)','rgba(52,152,219,.8)','rgba(155,89,182,.8)','rgba(230,126,34,.8)','rgba(149,165,166,.8)'];
+  if(areaLabels.length){
+    mkChart('chartArea',{type:'doughnut',data:{labels:areaLabels,datasets:[{data:areaLabels.map(a=>areaAgg[a]),backgroundColor:areaColors.slice(0,areaLabels.length),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>{const v=ctx.raw,t=areaLabels.reduce((s,a)=>s+areaAgg[a],0);return` ${ctx.label}: ${fmtW(v)} (${t>0?(v/t*100).toFixed(1):'0'}%)`;}}}}}});
+  }
 }
 function renderKPIs(ds){
   const sbd=(RAW.sales_by_date||[]).filter(r=>ds.has(r.date));
@@ -305,8 +314,8 @@ function renderKw(ds){
 function renderPs(ds){
   const rows=sortRows(aggPs(ds),sortState.ps.col,sortState.ps.asc);
   const tb=document.getElementById('tbodyPs');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="no-data">데이터 없음</td></tr>';return;}
-  tb.innerHTML=rows.map(r=>`<tr class="clickable" onclick="showPopupPs(${JSON.stringify(r.option_id)})"><td style="color:#888;font-size:12px">${r.product_code||'-'}</td><td><span class="tag-name">${r.product_name||'-'}</span></td><td>${fmtW(r.revenue)}</td><td>${fmt(r.orders)}</td><td>${fmt(r.units)}</td><td>${fmt(r.return_cnt)}</td></tr>`).join('');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="4" class="no-data">데이터 없음</td></tr>';return;}
+  tb.innerHTML=rows.map(r=>`<tr class="clickable" onclick="showPopupPs(${JSON.stringify(r.option_id)})"><td><span class="tag-name">${r.product_name||'-'}</span></td><td>${fmtW(r.revenue)}</td><td>${fmt(r.orders)}</td><td>${fmt(r.units)}</td></tr>`).join('');
   applySortHeader('tblPs','ps');
 }
 let openDays=new Set();
