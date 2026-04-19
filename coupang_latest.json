@@ -25052,5 +25052,126 @@
       }
     ]
   },
-  "updated_at": "2026-04-20T00:07:12.682898"
+  "updated_at": "2026-04-20T00:15:22.467110",
+  "area_ad": {
+    "2026-04-06": {
+      "검색 영역": {
+        "ad_cost": 148298,
+        "clicks": 213,
+        "impressions": 18045
+      },
+      "비검색 영역": {
+        "ad_cost": 150661,
+        "clicks": 297,
+        "impressions": 213290
+      },
+      "오디언스 플러스(외부 채널) - Product Ad": {
+        "ad_cost": 12404,
+        "clicks": 174,
+        "impressions": 8681
+      }
+    },
+    "2026-04-07": {
+      "오디언스 플러스(외부 채널) - Product Ad": {
+        "ad_cost": 10887,
+        "clicks": 124,
+        "impressions": 7677
+      },
+      "비검색 영역": {
+        "ad_cost": 132146,
+        "clicks": 316,
+        "impressions": 173541
+      },
+      "검색 영역": {
+        "ad_cost": 128142,
+        "clicks": 165,
+        "impressions": 15852
+      }
+    },
+    "2026-04-08": {
+      "검색 영역": {
+        "ad_cost": 121751,
+        "clicks": 179,
+        "impressions": 16652
+      },
+      "오디언스 플러스(외부 채널) - Product Ad": {
+        "ad_cost": 11274,
+        "clicks": 145,
+        "impressions": 11162
+      },
+      "비검색 영역": {
+        "ad_cost": 173743,
+        "clicks": 421,
+        "impressions": 197389
+      }
+    },
+    "2026-04-09": {
+      "비검색 영역": {
+        "ad_cost": 218079,
+        "clicks": 490,
+        "impressions": 275942
+      },
+      "오디언스 플러스(외부 채널) - Product Ad": {
+        "ad_cost": 10650,
+        "clicks": 167,
+        "impressions": 11130
+      },
+      "검색 영역": {
+        "ad_cost": 188136,
+        "clicks": 218,
+        "impressions": 18752
+      }
+    },
+    "2026-04-10": {
+      "비검색 영역": {
+        "ad_cost": 230746,
+        "clicks": 580,
+        "impressions": 269124
+      },
+      "오디언스 플러스(외부 채널) - Product Ad": {
+        "ad_cost": 17461,
+        "clicks": 188,
+        "impressions": 8827
+      },
+      "검색 영역": {
+        "ad_cost": 141331,
+        "clicks": 163,
+        "impressions": 15133
+      }
+    },
+    "2026-04-11": {
+      "검색 영역": {
+        "ad_cost": 94645,
+        "clicks": 139,
+        "impressions": 14241
+      },
+      "오디언스 플러스(외부 채널) - Product Ad": {
+        "ad_cost": 8784,
+        "clicks": 178,
+        "impressions": 8349
+      },
+      "비검색 영역": {
+        "ad_cost": 228658,
+        "clicks": 451,
+        "impressions": 206346
+      }
+    },
+    "2026-04-12": {
+      "오디언스 플러스(외부 채널) - Product Ad": {
+        "ad_cost": 8227,
+        "clicks": 134,
+        "impressions": 6477
+      },
+      "비검색 영역": {
+        "ad_cost": 125636,
+        "clicks": 416,
+        "impressions": 190311
+      },
+      "검색 영역": {
+        "ad_cost": 174330,
+        "clicks": 219,
+        "impressions": 19446
+      }
+    }
+  }
 }
