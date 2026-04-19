@@ -142,6 +142,7 @@ tr.daily-row.open td:first-child::before{content:'▼ ';color:#6c63ff}
   <h2>📊 상품별 판매분석 <span style="font-weight:400;font-size:12px;color:#aaa">매출 있는 상품만</span></h2>
   <div class="tbl-wrap"><table id="tblPs">
     <thead><tr>
+      <th onclick="sortTable('ps','product_code')">상품코드 <span class="sort-icon">↕</span></th>
       <th onclick="sortTable('ps','product_name')">상품명 <span class="sort-icon">↕</span></th>
       <th onclick="sortTable('ps','revenue')">매출 <span class="sort-icon">↕</span></th>
       <th onclick="sortTable('ps','orders')">주문 <span class="sort-icon">↕</span></th>
@@ -277,9 +278,12 @@ function aggKw(ds){
 function aggPs(ds){
   const agg={};
   (RAW.sales_detail||[]).filter(r=>ds.has(r.date)).forEach(r=>{
-    const k=r.product_name;
-    if(!agg[k])agg[k]={product_name:k,revenue:0,orders:0,units:0,return_cnt:0};
-    const d=agg[k];d.revenue+=r.revenue;d.orders+=r.orders;d.units+=r.units;d.return_cnt+=r.return_cnt;
+    const k=r.option_id||r.product_name;
+    if(!agg[k])agg[k]={option_id:k,product_code:r.product_code||'',product_name:r.product_name||'-',revenue:0,orders:0,units:0,return_cnt:0};
+    const d=agg[k];
+    if(!d.product_name||d.product_name==='-')d.product_name=r.product_name||'-';
+    if(!d.product_code&&r.product_code)d.product_code=r.product_code;
+    d.revenue+=r.revenue;d.orders+=r.orders;d.units+=r.units;d.return_cnt+=r.return_cnt;
   });
   return Object.values(agg).filter(d=>d.revenue>0);
 }
@@ -301,8 +305,8 @@ function renderKw(ds){
 function renderPs(ds){
   const rows=sortRows(aggPs(ds),sortState.ps.col,sortState.ps.asc);
   const tb=document.getElementById('tbodyPs');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="5" class="no-data">데이터 없음</td></tr>';return;}
-  tb.innerHTML=rows.map(r=>`<tr class="clickable" onclick="showPopupPs(${JSON.stringify(r.product_name)})"><td><span class="tag-name">${r.product_name||'-'}</span></td><td>${fmtW(r.revenue)}</td><td>${fmt(r.orders)}</td><td>${fmt(r.units)}</td><td>${fmt(r.return_cnt)}</td></tr>`).join('');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="no-data">데이터 없음</td></tr>';return;}
+  tb.innerHTML=rows.map(r=>`<tr class="clickable" onclick="showPopupPs(${JSON.stringify(r.option_id)})"><td style="color:#888;font-size:12px">${r.product_code||'-'}</td><td><span class="tag-name">${r.product_name||'-'}</span></td><td>${fmtW(r.revenue)}</td><td>${fmt(r.orders)}</td><td>${fmt(r.units)}</td><td>${fmt(r.return_cnt)}</td></tr>`).join('');
   applySortHeader('tblPs','ps');
 }
 let openDays=new Set();
@@ -369,13 +373,14 @@ function showPopupKw(kw){
     popupChart(dates.map(d=>d.slice(5)),dates.map(d=>byd[d].ad_cost),'광고비',dates.map(d=>byd[d].revenue_14d),'전환매출(14일)'),
     '<table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:#f7f7fb"><th style="padding:6px 8px;text-align:left">날짜</th><th style="text-align:right;padding:6px 8px">광고비</th><th style="text-align:right;padding:6px 8px">노출</th><th style="text-align:right;padding:6px 8px">클릭</th><th style="text-align:right;padding:6px 8px">전환매출</th></tr>'+dates.map(d=>`<tr><td style="padding:5px 8px">${d}</td><td style="text-align:right;padding:5px 8px">${fmtW(byd[d].ad_cost)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].impressions)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].clicks)}</td><td style="text-align:right;padding:5px 8px">${fmtW(byd[d].revenue_14d)}</td></tr>`).join('')+'</table>');
 }
-function showPopupPs(pname){
+function showPopupPs(oid){
   const ds=getFilteredDates();
-  const rows=(RAW.sales_detail||[]).filter(r=>ds.has(r.date)&&r.product_name===pname);
+  const rows=(RAW.sales_detail||[]).filter(r=>ds.has(r.date)&&(r.option_id===oid||r.product_name===oid));
   if(!rows.length){alert('데이터 없음');return;}
   const byd={};rows.forEach(r=>{byd[r.date]=byd[r.date]||{revenue:0,orders:0,units:0};byd[r.date].revenue+=r.revenue;byd[r.date].orders+=r.orders;byd[r.date].units+=r.units;});
   const dates=Object.keys(byd).sort();
   const totRev=sum(rows,'revenue'),totOrd=sum(rows,'orders');
+  const pname=rows[0].product_name||oid;
   openModal('📊 '+pname,[{label:'매출 합계',val:fmtW(totRev)},{label:'주문건수',val:fmt(totOrd)+'건'},{label:'판매량',val:fmt(sum(rows,'units'))+'개'},{label:'평균 객단가',val:fmtW(totOrd>0?Math.round(totRev/totOrd):0)}],
     {type:'bar',data:{labels:dates.map(d=>d.slice(5)),datasets:[{label:'매출',data:dates.map(d=>byd[d].revenue),backgroundColor:'rgba(67,206,162,.7)',yAxisID:'y'},{label:'주문',data:dates.map(d=>byd[d].orders),type:'line',borderColor:'#6c63ff',tension:.3,yAxisID:'y2',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true},y2:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false}}}}},
     '<table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:#f7f7fb"><th style="padding:6px 8px;text-align:left">날짜</th><th style="text-align:right;padding:6px 8px">매출</th><th style="text-align:right;padding:6px 8px">주문</th><th style="text-align:right;padding:6px 8px">판매량</th></tr>'+dates.map(d=>`<tr><td style="padding:5px 8px">${d}</td><td style="text-align:right;padding:5px 8px">${fmtW(byd[d].revenue)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].orders)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].units)}</td></tr>`).join('')+'</table>');
