@@ -659,58 +659,95 @@ function toggleDailyDrill(rowId, dt) {
 }
 
 // ── GA4 ───────────────────────────────────────────────────────────
+// ga4_latest.json 실제 구조:
+//   today_metrics / yesterday_metrics: {sessions, uv, pageviews, bounce_rate}
+//   trend_7day:      [{date, uv, sessions, pageviews}]
+//   traffic_sources: [{channel, sessions, uv}]
+//   top_pages:       [{page, pageviews, uv}]
+//   device_breakdown:[{device, sessions, uv}]
 function renderGA4() {
-  if (!GA4 || !Object.keys(GA4).length) {
+  const hasTodayMetrics = GA4 && GA4.today_metrics;
+  const hasTrend        = GA4 && (GA4.trend_7day||GA4.trend_7d||[]).length;
+  if (!hasTodayMetrics && !hasTrend) {
     document.getElementById('ga4-section').style.display='none';
     document.getElementById('ga4-placeholder').style.display='block';
     return;
   }
   document.getElementById('ga4-section').style.display='block';
   document.getElementById('ga4-placeholder').style.display='none';
-  const td=GA4.today||{}, yd=GA4.yesterday||{};
-  setText('g4-uv-today', (td.users||0).toLocaleString());
-  setText('g4-ss-today', (td.sessions||0).toLocaleString());
-  setText('g4-pv-today', (td.page_views||0).toLocaleString());
-  setText('g4-br-today', td.bounce_rate?td.bounce_rate.toFixed(1)+'%':'-');
-  setHtml('g4-uv-d', deltaHtml(td.users||0,yd.users||0));
-  setHtml('g4-ss-d', deltaHtml(td.sessions||0,yd.sessions||0));
-  setHtml('g4-pv-d', deltaHtml(td.page_views||0,yd.page_views||0));
-  setText('g4-uv-p', yd.users?'어제 '+yd.users:'-');
-  setText('g4-ss-p', yd.sessions?'어제 '+yd.sessions:'-');
-  setText('g4-pv-p', yd.page_views?'어제 '+yd.page_views:'-');
-  setText('g4-br-p', yd.bounce_rate?yd.bounce_rate.toFixed(1)+'%':'-');
-  if(GA4.collected_at) setText('ga4-updated-badge', GA4.collected_at+' 기준');
 
-  const t7=GA4.trend_7d||[];
-  if(t7.length){ dc('ga4TrendChart');
-    CHARTS.ga4TrendChart=new Chart(document.getElementById('ga4TrendChart').getContext('2d'),{
-      type:'line', data:{labels:t7.map(r=>r.date?.slice(5)||r.date),datasets:[
-        {label:'UV',data:t7.map(r=>r.users||0),borderColor:'#7c5cfc',backgroundColor:'rgba(124,92,252,.1)',fill:true,tension:.3,pointRadius:2},
-        {label:'세션',data:t7.map(r=>r.sessions||0),borderColor:'#3b82f6',backgroundColor:'transparent',tension:.3,pointRadius:2}
-      ]}, options:baseOpts(true)
+  // 오늘/어제 지표 (필드명 정규화)
+  const td = GA4.today_metrics || {};
+  const yd = GA4.yesterday_metrics || {};
+  const tdUv  = td.uv   || td.users  || 0;
+  const tdSs  = td.sessions || 0;
+  const tdPv  = td.pageviews || td.page_views || 0;
+  const tdBr  = td.bounce_rate || 0;
+  const ydUv  = yd.uv   || yd.users  || 0;
+  const ydSs  = yd.sessions || 0;
+  const ydPv  = yd.pageviews || yd.page_views || 0;
+  const ydBr  = yd.bounce_rate || 0;
+
+  setText('g4-uv-today', tdUv.toLocaleString());
+  setText('g4-ss-today', tdSs.toLocaleString());
+  setText('g4-pv-today', tdPv.toLocaleString());
+  setText('g4-br-today', tdBr ? tdBr.toFixed(1)+'%' : '-');
+  setHtml('g4-uv-d', deltaHtml(tdUv, ydUv));
+  setHtml('g4-ss-d', deltaHtml(tdSs, ydSs));
+  setHtml('g4-pv-d', deltaHtml(tdPv, ydPv));
+  setText('g4-uv-p', ydUv ? '어제 '+ydUv.toLocaleString() : '-');
+  setText('g4-ss-p', ydSs ? '어제 '+ydSs.toLocaleString() : '-');
+  setText('g4-pv-p', ydPv ? '어제 '+ydPv.toLocaleString() : '-');
+  setText('g4-br-p', ydBr ? ydBr.toFixed(1)+'%' : '-');
+  if (GA4.updated_at) setText('ga4-updated-badge', GA4.updated_at+' 기준');
+
+  // 7일 트렌드 (trend_7day 또는 trend_7d)
+  const t7 = GA4.trend_7day || GA4.trend_7d || [];
+  if (t7.length) {
+    dc('ga4TrendChart');
+    CHARTS.ga4TrendChart = new Chart(document.getElementById('ga4TrendChart').getContext('2d'), {
+      type:'line',
+      data:{
+        labels: t7.map(r => r.date?.slice(5) || r.date),
+        datasets: [
+          {label:'UV',   data:t7.map(r=>r.uv||r.users||0),       borderColor:'#7c5cfc', backgroundColor:'rgba(124,92,252,.1)', fill:true, tension:.3, pointRadius:2},
+          {label:'세션', data:t7.map(r=>r.sessions||0),           borderColor:'#3b82f6', backgroundColor:'transparent',         tension:.3, pointRadius:2}
+        ]
+      }, options:baseOpts(true)
     });
   }
-  const devData=GA4.device_breakdown||[];
-  if(devData.length){ dc('ga4DeviceChart');
-    const total=devData.reduce((s,r)=>s+(r.sessions||0),0);
-    CHARTS.ga4DeviceChart=new Chart(document.getElementById('ga4DeviceChart').getContext('2d'),{
-      type:'doughnut', data:{labels:devData.map(r=>r.device_category||r.device),datasets:[{data:devData.map(r=>r.sessions||0),backgroundColor:PALETTE,borderWidth:0}]},
-      options:{cutout:'65%',plugins:{legend:{display:false}}}
+
+  // 기기별 (device_breakdown)
+  const devData = GA4.device_breakdown || [];
+  if (devData.length) {
+    dc('ga4DeviceChart');
+    const total = devData.reduce((s,r)=>s+(r.sessions||0), 0);
+    CHARTS.ga4DeviceChart = new Chart(document.getElementById('ga4DeviceChart').getContext('2d'), {
+      type:'doughnut',
+      data:{labels:devData.map(r=>r.device_category||r.device||'-'), datasets:[{data:devData.map(r=>r.sessions||0), backgroundColor:PALETTE, borderWidth:0}]},
+      options:{cutout:'65%', plugins:{legend:{display:false}}}
     });
-    document.getElementById('ga4-device-legend').innerHTML=devData.slice(0,4).map((r,i)=>{
-      const n=r.device_category||r.device,v=r.sessions||0;
+    document.getElementById('ga4-device-legend').innerHTML = devData.slice(0,4).map((r,i) => {
+      const n=r.device_category||r.device||'-', v=r.sessions||0;
       return `<div class="donut-leg-item"><div class="donut-dot" style="background:${PALETTE[i]}"></div><div><div class="donut-leg-txt">${n}</div><div class="donut-leg-val">${v.toLocaleString()}</div><div class="donut-leg-sub">${pct(v,total)}</div></div></div>`;
     }).join('');
   }
-  const ch=GA4.channel_breakdown||[], maxSess=Math.max(...ch.map(r=>r.sessions||0),1);
-  document.getElementById('ga4-channel-bars').innerHTML=ch.slice(0,8).map(r=>
+
+  // 유입 채널 (traffic_sources 또는 channel_breakdown)
+  const ch = GA4.traffic_sources || GA4.channel_breakdown || [];
+  const maxSess = Math.max(...ch.map(r=>r.sessions||0), 1);
+  document.getElementById('ga4-channel-bars').innerHTML = ch.slice(0,8).map(r =>
     `<div class="hbar-item"><div class="hbar-hd"><span class="hbar-name">${esc(r.channel||r.source||'-')}</span><span class="hbar-val">${(r.sessions||0).toLocaleString()}</span></div><div class="hbar-track"><div class="hbar-fill green" style="width:${((r.sessions||0)/maxSess*100).toFixed(1)}%"></div></div></div>`
-  ).join('')||'<div class="no-data">데이터 없음</div>';
-  const pg=GA4.top_pages||[], maxPv=Math.max(...pg.map(r=>r.page_views||r.screenPageViews||0),1);
-  document.getElementById('ga4-page-bars').innerHTML=pg.slice(0,10).map(r=>{
-    const pv=r.page_views||r.screenPageViews||0;
-    return `<div class="hbar-item"><div class="hbar-hd"><span class="hbar-name" title="${esc(r.page_path||r.path||'-')}">${esc(shortStr(r.page_path||r.path||'-',35))}</span><span class="hbar-val">${pv.toLocaleString()}</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${(pv/maxPv*100).toFixed(1)}%"></div></div></div>`;
-  }).join('')||'<div class="no-data">데이터 없음</div>';
+  ).join('') || '<div class="no-data">데이터 없음</div>';
+
+  // 상위 페이지 (top_pages — page/pageviews 필드)
+  const pg = GA4.top_pages || [];
+  const maxPv = Math.max(...pg.map(r=>r.pageviews||r.page_views||r.screenPageViews||0), 1);
+  document.getElementById('ga4-page-bars').innerHTML = pg.slice(0,10).map(r => {
+    const pv   = r.pageviews || r.page_views || r.screenPageViews || 0;
+    const path = r.page || r.page_path || r.path || '-';
+    return `<div class="hbar-item"><div class="hbar-hd"><span class="hbar-name" title="${esc(path)}">${esc(shortStr(path,35))}</span><span class="hbar-val">${pv.toLocaleString()}</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${(pv/maxPv*100).toFixed(1)}%"></div></div></div>`;
+  }).join('') || '<div class="no-data">데이터 없음</div>';
 }
 
 // ── 기간 버튼 ─────────────────────────────────────────────────────
