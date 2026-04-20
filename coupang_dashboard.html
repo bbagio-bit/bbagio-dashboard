@@ -405,25 +405,18 @@ function renderGoalBanner(){
   document.getElementById('goalRate').textContent='달성률 '+rate+'%';
   document.getElementById('goalRemain').textContent=remain.toLocaleString('ko-KR')+'원';
   document.getElementById('goalRemainDays').textContent='잔여 '+daysLeft+'일';
-  // 전월 데이터 존재 여부는 매출 금액이 아닌 날짜 존재 여부로 판단
-  const hasLastMth=(RAW.sales_by_date||[]).some(r=>r.date.startsWith(lastYM));
-  if(hasLastMth){
+  const el=document.getElementById('goalVsLast');
+  if(lastMthRev>0){
     const diff=thisMthRev-lastMthRev;
-    const el=document.getElementById('goalVsLast');
-    if(lastMthRev>0){
-      const diffPct=(diff/lastMthRev*100).toFixed(1);
-      const isUp=diff>=0;
-      el.textContent=(isUp?'▲ +':'▼ ')+diffPct+'%';
-      el.className='goal-stat-val '+(isUp?'trend-up':'trend-down');
-      document.getElementById('goalVsLastAmt').textContent='전월 동기간 '+(isUp?'+':'')+diff.toLocaleString('ko-KR')+'원';
-    } else {
-      el.textContent=thisMthRev.toLocaleString('ko-KR')+'원';
-      el.className='goal-stat-val trend-up';
-      document.getElementById('goalVsLastAmt').textContent='전월 동기간 매출 0원 → 신규';
-    }
+    const diffPct=(diff/lastMthRev*100).toFixed(1);
+    const isUp=diff>=0;
+    el.textContent=(isUp?'▲ +':'▼ ')+diffPct+'%';
+    el.className='goal-stat-val '+(isUp?'trend-up':'trend-down');
+    document.getElementById('goalVsLastAmt').textContent='전월 동기간 '+(isUp?'+':'')+diff.toLocaleString('ko-KR')+'원';
   } else {
-    document.getElementById('goalVsLast').textContent='데이터 없음';
-    document.getElementById('goalVsLastAmt').textContent='전월('+lastYM+') 미수집';
+    el.textContent='0%';
+    el.className='goal-stat-val';
+    document.getElementById('goalVsLastAmt').textContent='전월('+lastYM+') 데이터 수집 필요';
   }
 }
 
