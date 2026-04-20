@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-04-20 08:12:23",
+  "collected_at": "2026-04-20 09:49:18",
   "mall_id": "bionex",
   "period": {
     "start": "2026-03-21",
@@ -7,9 +7,9 @@
     "days": 30
   },
   "summary": {
-    "total_revenue": 10603522.0,
+    "total_revenue": 10686222.0,
     "total_orders": 240,
-    "avg_order_value": 44181.0,
+    "avg_order_value": 44526.0,
     "new_customers": 159,
     "canceled_orders": 20,
     "top_product": "[공구_비밀링크] 바지오 × 뷰티팡팡밍빵 역대급 공동구매 특가 (3/31~4/4) 단 5일간!"
@@ -1637,7 +1637,7 @@
     },
     "2026-04-17": {
       "orders": 2,
-      "revenue": 47290.0,
+      "revenue": 93090.0,
       "new_customers": 2,
       "canceled": 0,
       "member_orders": 2,
@@ -1689,7 +1689,7 @@
         "17": 0.0,
         "18": 0.0,
         "19": 0.0,
-        "20": 0.0,
+        "20": 45800.0,
         "21": 0.0,
         "22": 0.0,
         "23": 0.0
@@ -1697,7 +1697,7 @@
     },
     "2026-04-18": {
       "orders": 9,
-      "revenue": 335170.0,
+      "revenue": 372070.0,
       "new_customers": 6,
       "canceled": 0,
       "member_orders": 6,
@@ -1746,7 +1746,7 @@
         "14": 0.0,
         "15": 47290.0,
         "16": 0.0,
-        "17": 28500.0,
+        "17": 65400.0,
         "18": 0.0,
         "19": 96090.0,
         "20": 0.0,
@@ -4926,7 +4926,7 @@
     },
     "17": {
       "orders": 8,
-      "revenue": 304990.0
+      "revenue": 341890.0
     },
     "18": {
       "orders": 6,
@@ -4938,7 +4938,7 @@
     },
     "20": {
       "orders": 18,
-      "revenue": 809670.0
+      "revenue": 855470.0
     },
     "21": {
       "orders": 20,
@@ -4956,7 +4956,7 @@
   "member_stats": {
     "member": {
       "orders": 168,
-      "revenue": 7594910.0
+      "revenue": 7677610.0
     },
     "nonmember": {
       "orders": 72,
