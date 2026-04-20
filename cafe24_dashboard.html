@@ -206,19 +206,6 @@ tr:last-child td { border-bottom: none; }
         <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-group" style="color:#bbb">-</span></div>
       </div>
     </div>
-    <!-- 쿠폰/적립금 서브 행 -->
-    <div class="kpi-row" style="grid-template-columns:1fr 1fr;margin-top:8px">
-      <div class="kpi" style="border-top-color:#f59e0b;background:#fffbeb">
-        <div class="kpi-lbl" style="color:#b45309">🎟 쿠폰 할인액</div>
-        <div class="kpi-val" id="kv-cpn" style="color:#b45309;font-size:1.2rem">-</div>
-        <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-cpn" style="color:#bbb">-</span></div>
-      </div>
-      <div class="kpi" style="border-top-color:#10b981;background:#f0fdf4">
-        <div class="kpi-lbl" style="color:#065f46">💰 적립금 사용액</div>
-        <div class="kpi-val" id="kv-mlg" style="color:#065f46;font-size:1.2rem">-</div>
-        <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-mlg" style="color:#bbb">-</span></div>
-      </div>
-    </div>
   </div>
 
   <div class="row r-2-1">
@@ -308,6 +295,20 @@ tr:last-child td { border-bottom: none; }
         </tr></thead>
         <tbody id="daily-tbody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- 쿠폰/적립금 (참고용) -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+    <div class="kpi" style="border-top-color:#f59e0b;padding:10px 14px">
+      <div class="kpi-lbl" style="color:#b45309">🎟 쿠폰 할인액</div>
+      <div class="kpi-val" id="kv-cpn" style="color:#b45309;font-size:1.1rem">-</div>
+      <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-cpn" style="color:#bbb">-</span></div>
+    </div>
+    <div class="kpi" style="border-top-color:#10b981;padding:10px 14px">
+      <div class="kpi-lbl" style="color:#065f46">💰 적립금 사용액</div>
+      <div class="kpi-val" id="kv-mlg" style="color:#065f46;font-size:1.1rem">-</div>
+      <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-mlg" style="color:#bbb">-</span></div>
     </div>
   </div>
 
