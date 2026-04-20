@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-04-20 10:12:07",
+  "collected_at": "2026-04-20 19:22:05",
   "daily": {
     "2026-02-02": {
       "spend": 29915.0,
@@ -662,58 +662,58 @@
       "real_roas": 0.28
     },
     "2026-04-20": {
-      "spend": 16238.0,
+      "spend": 52676.0,
       "revenue": 82700.0,
-      "impressions": 791,
-      "clicks": 16,
+      "impressions": 2257,
+      "clicks": 43,
       "purchases": 2,
-      "roas": 5.09,
+      "roas": 1.57,
       "cafe24_revenue": 0,
       "real_roas": 0.0
     }
   },
   "periods": {
     "1d": {
-      "spend": 16238.0,
-      "impressions": 791,
-      "clicks": 16,
-      "ctr": 2.02,
-      "cpc": 1014.88,
-      "reach": 619,
+      "spend": 52676.0,
+      "impressions": 2257,
+      "clicks": 43,
+      "ctr": 1.91,
+      "cpc": 1225.02,
+      "reach": 1693,
       "purchases": 2,
       "revenue": 82700.0,
-      "roas": 5.09,
-      "cpa": 8119.0,
+      "roas": 1.57,
+      "cpa": 26338.0,
       "cafe24_revenue": 0,
       "real_roas": 0.0
     },
     "7d": {
-      "spend": 1657820.0,
-      "impressions": 43618,
-      "clicks": 1077,
-      "ctr": 2.47,
-      "cpc": 1539.29,
-      "reach": 24487,
+      "spend": 1694258.0,
+      "impressions": 45084,
+      "clicks": 1104,
+      "ctr": 2.45,
+      "cpc": 1534.65,
+      "reach": 24958,
       "purchases": 24,
       "revenue": 935010.0,
-      "roas": 0.56,
-      "cpa": 69076.0,
+      "roas": 0.55,
+      "cpa": 70594.0,
       "cafe24_revenue": 1044990.0,
-      "real_roas": 0.63
+      "real_roas": 0.62
     },
     "30d": {
-      "spend": 7653624.0,
-      "impressions": 274828,
-      "clicks": 8256,
+      "spend": 7690062.0,
+      "impressions": 276294,
+      "clicks": 8283,
       "ctr": 3.0,
-      "cpc": 927.04,
-      "reach": 90187,
+      "cpc": 928.42,
+      "reach": 90313,
       "purchases": 175,
       "revenue": 11581320.0,
       "roas": 1.51,
-      "cpa": 43735.0,
+      "cpa": 43943.0,
       "cafe24_revenue": 10471152.0,
-      "real_roas": 1.37
+      "real_roas": 1.36
     }
   }
 }
