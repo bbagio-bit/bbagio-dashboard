@@ -8,29 +8,28 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #f0f2f5; color: #1a1a2e; font-family: 'Segoe UI', -apple-system, sans-serif; font-size: 14px; }
-.header { background: #fff; border-bottom: 3px solid #7c5cfc; padding: 8px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 1.05rem; font-weight: 900; color: #7c5cfc; letter-spacing: -.5px; }
+.header { background: #fff; border-bottom: 3px solid #1a3c6b; padding: 8px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.05rem; font-weight: 900; color: #1a3c6b; letter-spacing: -.5px; }
 .logo span { color: #1a1a2e; }
 .header-sub { font-size: .78rem; color: #888; border-left: 1px solid #e5e7eb; padding-left: 12px; }
 .updated { font-size: .72rem; color: #aaa; margin-left: auto; }
 .filter-bar { background: #fff; border-bottom: 1px solid #e8eaf0; padding: 7px 20px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
 .filter-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-right: 3px; }
 .btn-p { background: #f4f5f7; border: 1px solid #e2e5ea; color: #666; padding: 4px 11px; border-radius: 4px; cursor: pointer; font-size: .78rem; transition: all .12s; }
-.btn-p:hover { background: #ede9ff; border-color: #7c5cfc; color: #7c5cfc; }
-.btn-p.active { background: #7c5cfc; border-color: #7c5cfc; color: #fff; font-weight: 700; }
+.btn-p:hover { background: #dbeafe; border-color: #1a3c6b; color: #1a3c6b; }
+.btn-p.active { background: #1a3c6b; border-color: #1a3c6b; color: #fff; font-weight: 700; }
 .custom-wrap { display: none; align-items: center; gap: 5px; }
 .custom-wrap.show { display: flex; }
 .custom-wrap input { border: 1px solid #dde1e7; border-radius: 4px; padding: 3px 7px; font-size: .75rem; }
-.custom-wrap .apply-btn { background: #7c5cfc; border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; }
-.range-badge { margin-left: auto; background: #f3f0ff; border: 1px solid #ddd6fe; padding: 3px 10px; border-radius: 20px; font-size: .72rem; color: #7c5cfc; font-weight: 600; }
+.custom-wrap .apply-btn { background: #1a3c6b; border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; }
+.range-badge { margin-left: auto; background: #eff6ff; border: 1px solid #bfdbfe; padding: 3px 10px; border-radius: 20px; font-size: .72rem; color: #1a3c6b; font-weight: 600; }
 main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
 .kpi-section { margin-bottom: 14px; }
 .kpi-section-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; padding-left: 2px; }
-.kpi-row { display: grid; gap: 10px; }
-.kpi-row-1 { grid-template-columns: repeat(4, 1fr); }
-.kpi-row-2 { grid-template-columns: 1fr 1fr; margin-top: 10px; }
+.kpi-row { display: grid; gap: 8px; }
+.kpi-row-1 { grid-template-columns: repeat(7, 1fr); }
 .kpi { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; padding: 13px 16px; border-top: 3px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-.kpi.purple { border-top-color: #7c5cfc; } .kpi.blue { border-top-color: #3b82f6; } .kpi.green { border-top-color: #10b981; } .kpi.amber { border-top-color: #f59e0b; } .kpi.red { border-top-color: #ef4444; } .kpi.pink { border-top-color: #ec4899; }
+.kpi.purple { border-top-color: #1a3c6b; } .kpi.blue { border-top-color: #3b82f6; } .kpi.green { border-top-color: #10b981; } .kpi.amber { border-top-color: #f59e0b; } .kpi.red { border-top-color: #ef4444; } .kpi.pink { border-top-color: #ec4899; }
 .kpi-lbl { font-size: .7rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
 .kpi-val { font-size: 1.45rem; font-weight: 900; color: #1a1a2e; line-height: 1; margin-bottom: 5px; }
 .kpi-val.xxl { font-size: 1.8rem; }
@@ -51,9 +50,9 @@ main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
 .hbar-item { margin-bottom: 8px; }
 .hbar-hd { font-size: .74rem; color: #444; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .hbar-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hbar-val { font-weight: 700; color: #7c5cfc; font-size: .74rem; flex-shrink: 0; }
+.hbar-val { font-weight: 700; color: #1a3c6b; font-size: .74rem; flex-shrink: 0; }
 .hbar-track { background: #f0f1f8; border-radius: 3px; height: 7px; }
-.hbar-fill { height: 7px; border-radius: 3px; background: linear-gradient(90deg,#7c5cfc,#a78bfa); }
+.hbar-fill { height: 7px; border-radius: 3px; background: linear-gradient(90deg,#1a3c6b,#2563eb); }
 .hbar-fill.blue { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
 .hbar-fill.green { background: linear-gradient(90deg,#10b981,#34d399); }
 .tbl-wrap { overflow-x: auto; }
@@ -63,12 +62,12 @@ td { padding: 8px 10px; font-size: .82rem; border-bottom: 1px solid #f5f5f8; ver
 tr:last-child td { border-bottom: none; }
 .tr-hover:hover td { background: #faf8ff; }
 .td-r { text-align: right; font-variant-numeric: tabular-nums; }
-.rb { display:inline-block;width:22px;height:22px;border-radius:50%;background:#ede9ff;color:#7c5cfc;font-size:.7rem;font-weight:800;text-align:center;line-height:22px; }
+.rb { display:inline-block;width:22px;height:22px;border-radius:50%;background:#dbeafe;color:#1a3c6b;font-size:.7rem;font-weight:800;text-align:center;line-height:22px; }
 .rb.g1{background:#fef3c7;color:#d97706;} .rb.g2{background:#e5e7eb;color:#6b7280;} .rb.g3{background:#fde8d8;color:#c2410c;}
 .pname { font-weight: 600; color: #222; cursor: pointer; }
-.pname:hover { color: #7c5cfc; }
+.pname:hover { color: #1a3c6b; }
 .rev-bar-wrap { background: #f0f0f8; border-radius: 2px; height: 4px; margin-top: 4px; }
-.rev-bar { height: 4px; border-radius: 2px; background: linear-gradient(90deg,#7c5cfc,#a78bfa); }
+.rev-bar { height: 4px; border-radius: 2px; background: linear-gradient(90deg,#1a3c6b,#2563eb); }
 .expand-ic { float:right;color:#ccc;font-size:.75rem; }
 .drill-row { display: none; }
 .drill-row.open { display: table-row; }
@@ -78,7 +77,7 @@ tr:last-child td { border-bottom: none; }
 .drill-item:last-child{border-bottom:none;}
 .di-pname{flex:1;color:#444;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .di-opt{flex:1;color:#888;font-size:.72rem;margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.di-q{width:44px;text-align:right;font-weight:700;color:#7c5cfc;}
+.di-q{width:44px;text-align:right;font-weight:700;color:#1a3c6b;}
 .di-r{width:78px;text-align:right;font-weight:700;color:#10b981;}
 .donut-wrap { display:flex; align-items:center; gap:14px; padding:10px 14px; }
 .donut-chart-area { position:relative; width:140px; height:140px; flex-shrink:0; }
@@ -96,11 +95,11 @@ tr:last-child td { border-bottom: none; }
 .modal-cls{background:none;border:none;font-size:1.2rem;cursor:pointer;color:#aaa;padding:0 3px;}
 .modal-body{padding:14px 18px;}
 #loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:9999;}
-.sp{width:32px;height:32px;border:3px solid #e0deff;border-top-color:#7c5cfc;border-radius:50%;animation:spin .7s linear infinite;}
+.sp{width:32px;height:32px;border:3px solid #bfdbfe;border-top-color:#1a3c6b;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .no-data{text-align:center;color:#ccc;font-size:.8rem;padding:20px;}
 /* ── 목표 달성 배너 ── */
-.goal-banner{background:linear-gradient(135deg,#7c5cfc 0%,#a78bfa 100%);padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}
+.goal-banner{background:linear-gradient(135deg,#1a3c6b 0%,#2563eb 100%);padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}
 .goal-left{color:#fff}
 .goal-title{font-size:.78rem;font-weight:700;opacity:.85;margin-bottom:6px}
 .goal-rev{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:6px}
@@ -117,8 +116,9 @@ tr:last-child td { border-bottom: none; }
 .g-trend-down{color:#fecaca}
 /* ── 월별 테이블 ── */
 .monthly-tbl-wrap{overflow-x:auto}
-@media(max-width:1100px){.r-2-1,.r-3{grid-template-columns:1fr;}.kpi-row-1{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:680px){.kpi-row-1,.kpi-row-2{grid-template-columns:repeat(2,1fr);}.r-2{grid-template-columns:1fr;}main{padding:10px 12px;}}
+@media(max-width:1300px){.kpi-row-1{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:1100px){.r-2-1,.r-3{grid-template-columns:1fr;}.kpi-row-1{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:680px){.kpi-row-1{grid-template-columns:repeat(2,1fr);}.r-2{grid-template-columns:1fr;}main{padding:10px 12px;}}
 </style>
 </head>
 <body>
@@ -135,26 +135,12 @@ tr:last-child td { border-bottom: none; }
 </div>
 
 <div class="header">
-  <div class="logo">BBagio <span>자사몰</span></div>
-  <div class="header-sub">커머스 분석 대시보드</div>
+  <div class="logo">🛍 BBagio <span>자사몰 대시보드</span></div>
+  <div class="header-sub">카페24 매출 분석</div>
   <div class="updated" id="updated">-</div>
-  <button id="refresh-btn" onclick="refreshData()" style="margin-left:10px;background:#7c5cfc;border:none;color:#fff;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:5px;" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
+  <button id="refresh-btn" onclick="refreshData()" style="margin-left:10px;background:#1a3c6b;border:none;color:#fff;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:5px;letter-spacing:-.2px" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
     <span id="refresh-icon">🔄</span> 데이터 갱신
   </button>
-</div>
-
-<div class="filter-bar">
-  <span class="filter-label">기간</span>
-  <button class="btn-p active" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
-  <button class="btn-p" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
-  <button class="btn-p" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
-  <button class="btn-p" data-p="thisyear"  onclick="setPeriod('thisyear')">2026년</button>
-  <button class="btn-p" data-p="custom"    onclick="setPeriod('custom')">날짜선택</button>
-  <div class="custom-wrap" id="cw">
-    <input type="date" id="df"><span style="color:#ccc">~</span><input type="date" id="dt">
-    <button class="apply-btn" onclick="applyCustom()">적용</button>
-  </div>
-  <span class="range-badge" id="range-badge">-</span>
 </div>
 
 <!-- 목표 달성 배너 -->
@@ -190,31 +176,33 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
+<div class="filter-bar">
+  <span class="filter-label">기간</span>
+  <button class="btn-p active" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
+  <button class="btn-p" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
+  <button class="btn-p" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
+  <button class="btn-p" data-p="thisyear"  onclick="setPeriod('thisyear')">2026년</button>
+  <button class="btn-p" data-p="custom"    onclick="setPeriod('custom')">날짜선택</button>
+  <div class="custom-wrap" id="cw">
+    <input type="date" id="df"><span style="color:#ccc">~</span><input type="date" id="dt">
+    <button class="apply-btn" onclick="applyCustom()">적용</button>
+  </div>
+  <span class="range-badge" id="range-badge">-</span>
+</div>
+
 <main>
   <div class="kpi-section">
     <div class="kpi-section-label">🛒 자사몰 실적</div>
     <div class="kpi-row kpi-row-1">
-      <div class="kpi purple"><div class="kpi-lbl">총 매출</div><div class="kpi-val" id="kv-rev">-</div><div class="kpi-foot"><span class="delta" id="kd-rev">-</span><span class="kpi-prev-txt" id="kp-rev">-</span></div></div>
+      <div class="kpi purple"><div class="kpi-lbl">순 매출 <span style="font-size:.6rem;color:#bbb;font-weight:400">공구제외</span></div><div class="kpi-val" id="kv-rev">-</div><div class="kpi-foot"><span class="delta" id="kd-rev">-</span><span class="kpi-prev-txt" id="kp-rev">-</span></div></div>
       <div class="kpi blue">  <div class="kpi-lbl">주문 건수</div><div class="kpi-val" id="kv-ord">-</div><div class="kpi-foot"><span class="delta" id="kd-ord">-</span><span class="kpi-prev-txt" id="kp-ord">-</span></div></div>
       <div class="kpi green"> <div class="kpi-lbl">객단가</div><div class="kpi-val" id="kv-aov">-</div><div class="kpi-foot"><span class="delta" id="kd-aov">-</span><span class="kpi-prev-txt" id="kp-aov">-</span></div></div>
       <div class="kpi amber"> <div class="kpi-lbl">신규 고객</div><div class="kpi-val" id="kv-nc">-</div><div class="kpi-foot"><span class="delta" id="kd-nc">-</span><span class="kpi-prev-txt" id="kp-nc">-</span></div></div>
-    </div>
-    <div class="kpi-row kpi-row-2">
-      <div class="kpi red">
-        <div class="kpi-lbl">📣 Meta 광고비</div>
-        <div class="kpi-val" id="kv-sp">-</div>
-        <div class="kpi-foot"><span class="delta" id="kd-sp">-</span><span class="kpi-prev-txt" id="kp-sp">-</span></div>
-      </div>
-      <div class="kpi pink">
-        <div class="kpi-lbl">🎯 실제 ROAS <span style="font-size:.62rem;color:#bbb;font-weight:400">(자사몰 매출 ÷ 광고비)</span></div>
-        <div class="kpi-val xxl" id="kv-roas">-</div>
-        <div class="kpi-foot" id="kv-roas-detail">-</div>
-      </div>
-    </div>
-    <div class="kpi-row" style="grid-template-columns:1fr;margin-top:10px">
+      <div class="kpi red">   <div class="kpi-lbl">📣 Meta 광고비</div><div class="kpi-val" id="kv-sp">-</div><div class="kpi-foot"><span class="delta" id="kd-sp">-</span><span class="kpi-prev-txt" id="kp-sp">-</span></div></div>
+      <div class="kpi pink">  <div class="kpi-lbl">🎯 실제 ROAS</div><div class="kpi-val" id="kv-roas">-</div><div class="kpi-foot" id="kv-roas-detail">-</div></div>
       <div class="kpi" style="border-top-color:#ef4444;background:#fff7f7">
-        <div class="kpi-lbl" style="color:#ef4444">🏷 공구 매출 <span style="font-size:.62rem;color:#bbb;font-weight:400">(공동구매 — 실제 매출에서 제외됨)</span></div>
-        <div class="kpi-val" id="kv-group" style="color:#ef4444">-</div>
+        <div class="kpi-lbl" style="color:#ef4444">🏷 공구 매출</div>
+        <div class="kpi-val" id="kv-group" style="color:#ef4444;font-size:1.2rem">-</div>
         <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-group" style="color:#bbb">-</span></div>
       </div>
     </div>
@@ -367,8 +355,8 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
-  <div id="ga4-placeholder" style="margin-bottom:12px;background:#fff;border-radius:6px;border:1px dashed #e0deff;padding:18px 20px;display:none">
-    <div style="font-size:.82rem;font-weight:700;color:#7c5cfc;margin-bottom:6px">🌐 GA4 트래픽 연동 준비 중</div>
+  <div id="ga4-placeholder" style="margin-bottom:12px;background:#fff;border-radius:6px;border:1px dashed #bfdbfe;padding:18px 20px;display:none">
+    <div style="font-size:.82rem;font-weight:700;color:#1a3c6b;margin-bottom:6px">🌐 GA4 트래픽 연동 준비 중</div>
     <div style="font-size:.78rem;color:#999"><code>ga4_latest.json</code> 파일이 없습니다.<br><code>ga4_collector.py</code>를 실행하면 웹사이트 UV·세션·유입 채널 데이터가 여기에 표시됩니다.</div>
   </div>
 </main>
@@ -544,7 +532,7 @@ function renderCmpGrid(ds, prevDs) {
 }
 
 // ── 차트 헬퍼 ────────────────────────────────────────────────────
-const PALETTE = ['#7c5cfc','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#8b5cf6','#06b6d4'];
+const PALETTE = ['#1a3c6b','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#8b5cf6','#06b6d4'];
 function dc(id) { if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];} }
 function baseOpts(twoAxis) {
   const o = { responsive:true, maintainAspectRatio:false,
@@ -565,7 +553,7 @@ function renderTrendChart(dates) {
     data:{
       labels:dates.map(d=>d.slice(5)),
       datasets:[
-        {type:'bar', label:'매출', data:dates.map(dt=>(d[dt]||{}).revenue||0), backgroundColor:'rgba(124,92,252,.7)', yAxisID:'y', order:2},
+        {type:'bar', label:'순매출', data:dates.map(dt=>{ const v=d[dt]||{}; return (v.revenue||0)-(v.group_revenue||0); }), backgroundColor:'rgba(26,60,107,.7)', yAxisID:'y', order:2},
         {type:'line', label:'주문', data:dates.map(dt=>(d[dt]||{}).orders||0), borderColor:'#3b82f6', backgroundColor:'transparent', tension:.3, pointRadius:2, yAxisID:'y2', order:1}
       ]
     }, options:baseOpts(true)
@@ -581,9 +569,9 @@ function renderRoasChart(dates) {
     data:{
       labels:dates.map(d=>d.slice(5)),
       datasets:[
-        {type:'bar', label:'자사몰매출', data:dates.map(dt=>(d[dt]||{}).revenue||0), backgroundColor:'rgba(124,92,252,.6)', yAxisID:'y', order:3},
+        {type:'bar', label:'순매출',     data:dates.map(dt=>{ const v=d[dt]||{}; return (v.revenue||0)-(v.group_revenue||0); }), backgroundColor:'rgba(26,60,107,.6)', yAxisID:'y', order:3},
         {type:'bar', label:'광고비',     data:dates.map(dt=>(mb[dt]||{}).spend||0),   backgroundColor:'rgba(239,68,68,.5)',  yAxisID:'y', order:2},
-        {type:'line',label:'ROAS',       data:dates.map(dt=>{ const s=(mb[dt]||{}).spend||0,r=(d[dt]||{}).revenue||0; return s>0?+(r/s).toFixed(2):null; }),
+        {type:'line',label:'ROAS',       data:dates.map(dt=>{ const v=d[dt]||{}, s=(mb[dt]||{}).spend||0, r=(v.revenue||0)-(v.group_revenue||0); return s>0?+(r/s).toFixed(2):null; }),
           borderColor:'#f59e0b', backgroundColor:'transparent', tension:.3, pointRadius:2, yAxisID:'y2', order:1, spanGaps:true}
       ]
     }, options:baseOpts(true)
@@ -596,7 +584,7 @@ function renderHourlyChart(ds) {
   [...ds].forEach(dt => { const ho=(d[dt]||{}).hourly_orders||{}; Object.entries(ho).forEach(([h,v])=>{hAgg[+h]+=v;}); });
   const ctx=document.getElementById('hourlyChart').getContext('2d');
   CHARTS.hourlyChart = new Chart(ctx, {
-    type:'bar', data:{labels:Array.from({length:24},(_,i)=>i+'시'), datasets:[{data:hAgg,backgroundColor:'rgba(124,92,252,.7)',label:'주문'}]},
+    type:'bar', data:{labels:Array.from({length:24},(_,i)=>i+'시'), datasets:[{data:hAgg,backgroundColor:'rgba(26,60,107,.7)',label:'주문'}]},
     options:baseOpts(false)
   });
 }
@@ -608,10 +596,10 @@ function renderMemberChart(ds) {
   const total=mem+non; if(!total) return;
   const ctx=document.getElementById('memberChart').getContext('2d');
   CHARTS.memberChart = new Chart(ctx, {
-    type:'doughnut', data:{labels:['회원','비회원'],datasets:[{data:[mem,non],backgroundColor:['#7c5cfc','#3b82f6'],borderWidth:0}]},
+    type:'doughnut', data:{labels:['회원','비회원'],datasets:[{data:[mem,non],backgroundColor:['#1a3c6b','#3b82f6'],borderWidth:0}]},
     options:{cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+c.raw+'건 ('+pct(c.raw,total)+')' }}}}
   });
-  document.getElementById('member-legend').innerHTML = [['회원','#7c5cfc',mem],['비회원','#3b82f6',non]].map(([n,c,v])=>
+  document.getElementById('member-legend').innerHTML = [['회원','#1a3c6b',mem],['비회원','#3b82f6',non]].map(([n,c,v])=>
     `<div class="donut-leg-item"><div class="donut-dot" style="background:${c}"></div><div><div class="donut-leg-txt">${n}</div><div class="donut-leg-val">${v}건</div><div class="donut-leg-sub">${pct(v,total)}</div></div></div>`
   ).join('');
 }
@@ -798,7 +786,7 @@ function renderGA4() {
       data:{
         labels: t7.map(r => r.date?.slice(5) || r.date),
         datasets: [
-          {label:'UV',   data:t7.map(r=>r.uv||r.users||0),       borderColor:'#7c5cfc', backgroundColor:'rgba(124,92,252,.1)', fill:true, tension:.3, pointRadius:2},
+          {label:'UV',   data:t7.map(r=>r.uv||r.users||0),       borderColor:'#1a3c6b', backgroundColor:'rgba(26,60,107,.1)', fill:true, tension:.3, pointRadius:2},
           {label:'세션', data:t7.map(r=>r.sessions||0),           borderColor:'#3b82f6', backgroundColor:'transparent',         tension:.3, pointRadius:2}
         ]
       }, options:baseOpts(true)
@@ -947,7 +935,7 @@ function renderMonthlyTable() {
       <td class="td-r" style="font-weight:700">${krwFull(m.net)}</td>
       <td class="td-r">${tgt>0?krwFull(tgt):'-'}</td>
       <td class="td-r">${ratePct!=null?ratePct+'%':'-'}</td>
-      <td style="min-width:80px"><div style="background:#f0f1f8;border-radius:3px;height:6px"><div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#7c5cfc,#a78bfa);width:${barW}%"></div></div></td>
+      <td style="min-width:80px"><div style="background:#f0f1f8;border-radius:3px;height:6px"><div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#1a3c6b,#2563eb);width:${barW}%"></div></div></td>
       <td class="td-r">${vsHtml}</td>
     </tr>`;
   }).join('');
