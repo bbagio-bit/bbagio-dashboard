@@ -395,7 +395,10 @@ function renderGoalBanner(){
   const target=RAW.monthly_target||MONTHLY_TARGET;
   document.getElementById('goalTargetLabel').textContent='목표: '+target.toLocaleString('ko-KR')+'원';
   const thisMthRev=(RAW.sales_by_date||[]).filter(r=>r.date.startsWith(thisYM)&&r.date<=today).reduce((s,r)=>s+(r.revenue-(fakeMap[r.date]||0)),0);
+  // 전월 동기간 (1일~오늘 같은 날짜까지)
   const lastMthRev=(RAW.sales_by_date||[]).filter(r=>r.date.startsWith(lastYM)&&parseInt(r.date.slice(8),10)<=todayDay).reduce((s,r)=>s+(r.revenue-(fakeMap[r.date]||0)),0);
+  // 전월 전체 합산 (동기간 없을 때 폴백)
+  const lastMthTotal=(RAW.sales_by_date||[]).filter(r=>r.date.startsWith(lastYM)).reduce((s,r)=>s+(r.revenue-(fakeMap[r.date]||0)),0);
   const rate=Math.min(Math.round(thisMthRev/target*100),100);
   const remain=Math.max(target-thisMthRev,0);
   const lastDay=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
@@ -406,17 +409,22 @@ function renderGoalBanner(){
   document.getElementById('goalRemain').textContent=remain.toLocaleString('ko-KR')+'원';
   document.getElementById('goalRemainDays').textContent='잔여 '+daysLeft+'일';
   const el=document.getElementById('goalVsLast');
-  if(lastMthRev>0){
-    const diff=thisMthRev-lastMthRev;
-    const diffPct=(diff/lastMthRev*100).toFixed(1);
+  // ① 동기간 데이터 있으면 동기간 비교
+  // ② 없으면 전월 전체 합산으로 비교
+  // ③ 그것도 없으면 0%
+  const baseRev=lastMthRev>0?lastMthRev:(lastMthTotal>0?lastMthTotal:0);
+  const baseLabel=lastMthRev>0?'전월 동기간':'전월 합산';
+  if(baseRev>0){
+    const diff=thisMthRev-baseRev;
+    const diffPct=(diff/baseRev*100).toFixed(1);
     const isUp=diff>=0;
     el.textContent=(isUp?'▲ +':'▼ ')+diffPct+'%';
     el.className='goal-stat-val '+(isUp?'trend-up':'trend-down');
-    document.getElementById('goalVsLastAmt').textContent='전월 동기간 '+(isUp?'+':'')+diff.toLocaleString('ko-KR')+'원';
+    document.getElementById('goalVsLastAmt').textContent=baseLabel+' '+(isUp?'+':'')+diff.toLocaleString('ko-KR')+'원';
   } else {
     el.textContent='0%';
     el.className='goal-stat-val';
-    document.getElementById('goalVsLastAmt').textContent='전월('+lastYM+') 데이터 수집 필요';
+    document.getElementById('goalVsLastAmt').textContent='전월('+lastYM+') 데이터 없음';
   }
 }
 
