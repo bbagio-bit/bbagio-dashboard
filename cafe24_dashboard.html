@@ -206,6 +206,19 @@ tr:last-child td { border-bottom: none; }
         <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-group" style="color:#bbb">-</span></div>
       </div>
     </div>
+    <!-- 쿠폰/적립금 서브 행 -->
+    <div class="kpi-row" style="grid-template-columns:1fr 1fr;margin-top:8px">
+      <div class="kpi" style="border-top-color:#f59e0b;background:#fffbeb">
+        <div class="kpi-lbl" style="color:#b45309">🎟 쿠폰 할인액</div>
+        <div class="kpi-val" id="kv-cpn" style="color:#b45309;font-size:1.2rem">-</div>
+        <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-cpn" style="color:#bbb">-</span></div>
+      </div>
+      <div class="kpi" style="border-top-color:#10b981;background:#f0fdf4">
+        <div class="kpi-lbl" style="color:#065f46">💰 적립금 사용액</div>
+        <div class="kpi-val" id="kv-mlg" style="color:#065f46;font-size:1.2rem">-</div>
+        <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-mlg" style="color:#bbb">-</span></div>
+      </div>
+    </div>
   </div>
 
   <div class="row r-2-1">
@@ -284,12 +297,14 @@ tr:last-child td { border-bottom: none; }
       <table>
         <thead><tr>
           <th style="width:105px">날짜</th>
-          <th class="td-r" style="width:75px">주문</th>
-          <th class="td-r" style="width:115px">자사몰 매출</th>
-          <th class="td-r" style="width:95px">객단가</th>
-          <th class="td-r" style="width:100px">광고비</th>
-          <th class="td-r" style="width:80px">ROAS</th>
-          <th class="td-r" style="width:75px">신규고객</th>
+          <th class="td-r" style="width:65px">주문</th>
+          <th class="td-r" style="width:110px">순 매출</th>
+          <th class="td-r" style="width:85px">객단가</th>
+          <th class="td-r" style="width:90px">쿠폰 할인</th>
+          <th class="td-r" style="width:90px">적립금</th>
+          <th class="td-r" style="width:90px">광고비</th>
+          <th class="td-r" style="width:70px">ROAS</th>
+          <th class="td-r" style="width:65px">신규고객</th>
         </tr></thead>
         <tbody id="daily-tbody"></tbody>
       </table>
@@ -473,16 +488,18 @@ function render() {
 function calcPeriod(set) {
   const d = C24.daily || {};
   const mb = metaByDate();
-  let rev=0,ord=0,nc=0,sp=0,mem=0,non=0,grp=0;
+  let rev=0,ord=0,nc=0,sp=0,mem=0,non=0,grp=0,cpn=0,mlg=0;
   [...set].forEach(dt => {
     const v=d[dt]||{};
     rev+=v.revenue||0; ord+=v.orders||0; nc+=v.new_customers||0;
     mem+=v.member_orders||0; non+=v.nonmember_orders||0;
     grp+=v.group_revenue||0;
+    cpn+=v.coupon_discount||0;
+    mlg+=v.mileage_used||0;
     sp+=(mb[dt]||{}).spend||0;
   });
   const net=rev-grp;
-  return {rev,net,grp,ord,nc,sp,mem,non,aov:ord?net/ord:0,roas:sp?net/sp:0};
+  return {rev,net,grp,ord,nc,sp,mem,non,cpn,mlg,aov:ord?net/ord:0,roas:sp?net/sp:0};
 }
 
 function renderKPI(ds, prevDs) {
@@ -496,6 +513,11 @@ function renderKPI(ds, prevDs) {
   // 공구 매출 카드
   setText('kv-group', c.grp>0 ? krwFull(c.grp) : '없음');
   setText('kp-group', c.grp>0 ? '직전 ₩'+krw(p.grp) : '해당 기간 없음');
+  // 쿠폰/적립금
+  setText('kv-cpn', c.cpn>0 ? krwFull(c.cpn) : '없음');
+  setText('kp-cpn', c.cpn>0 ? '직전 ₩'+krw(p.cpn) : '-');
+  setText('kv-mlg', c.mlg>0 ? krwFull(c.mlg) : '없음');
+  setText('kp-mlg', c.mlg>0 ? '직전 ₩'+krw(p.mlg) : '-');
   setHtml('kd-rev', deltaHtml(c.net,p.net)); setText('kp-rev', p.net?'직전 ₩'+krw(p.net):'비교 없음');
   setHtml('kd-ord', deltaHtml(c.ord,p.ord)); setText('kp-ord', p.ord?'직전 '+p.ord+'건':'-');
   setHtml('kd-aov', deltaHtml(c.aov,p.aov)); setText('kp-aov', p.aov?'직전 ₩'+krw(p.aov):'-');
@@ -708,16 +730,19 @@ function renderDailyTable(dates) {
     const sp=m.spend||0, roas=sp>0?(net/sp).toFixed(2):'-';
     const aov=v.orders?net/v.orders:0;
     const grpMark=v.group_revenue>0?` <span style="font-size:.67rem;color:#ef4444">(-₩${krw(v.group_revenue)})</span>`:'';
+    const cpn=v.coupon_discount||0, mlg=v.mileage_used||0;
     return `<tr class="tr-hover" onclick="toggleDailyDrill('dd${i}','${dt}')">
       <td><strong>${dt}</strong></td>
       <td class="td-r">${v.orders||0}</td>
       <td class="td-r">${krwFull(net)}${grpMark}</td>
       <td class="td-r">₩${krw(aov)}</td>
+      <td class="td-r" style="color:${cpn>0?'#b45309':'#ccc'}">${cpn>0?'₩'+krw(cpn):'-'}</td>
+      <td class="td-r" style="color:${mlg>0?'#065f46':'#ccc'}">${mlg>0?'₩'+krw(mlg):'-'}</td>
       <td class="td-r">${sp?'₩'+krw(sp):'-'}</td>
       <td class="td-r">${roas!=='-'?roas+'x':'-'}</td>
       <td class="td-r">${v.new_customers||0}</td>
     </tr>
-    <tr class="drill-row" id="dd${i}"><td class="drill-cell" colspan="7"><div class="drill-inner" id="ddi${i}"></div></td></tr>`;
+    <tr class="drill-row" id="dd${i}"><td class="drill-cell" colspan="9"><div class="drill-inner" id="ddi${i}"></div></td></tr>`;
   }).join('');
 }
 
@@ -727,9 +752,10 @@ function toggleDailyDrill(rowId, dt) {
     const idx=rowId.replace('dd',''), ddi=document.getElementById('ddi'+idx);
     if(!ddi.innerHTML){
       const dp=(C24.daily_products||{})[dt]||[];
-      ddi.innerHTML=dp.length?dp.map(i=>
-        `<div class="drill-item"><div class="di-pname">${esc(shortStr(i.product_name||'-',22))}</div><div class="di-opt">${esc(shortStr(i.option_name||'-',30))}</div><div class="di-q">${i.quantity}</div><div class="di-r">₩${krw(i.revenue||0)}</div></div>`
-      ).join(''):'<div style="color:#ccc;font-size:.78rem;padding:6px 0">상품 내역 없음</div>';
+      ddi.innerHTML=dp.length?dp.map(i=>{
+        const isGrp=i.product_name&&i.product_name.includes(C24.group_purchase_keyword||'공동구매');
+        return `<div class="drill-item"><div class="di-pname" style="${isGrp?'color:#ef4444':''}">${esc(shortStr(i.product_name||'-',22))}${isGrp?' 🏷':''}</div><div class="di-opt">${esc(shortStr(i.option_name||'-',30))}</div><div class="di-q">${i.quantity}</div><div class="di-r">₩${krw(i.revenue||0)}</div></div>`;
+      }).join(''):'<div style="color:#ccc;font-size:.78rem;padding:6px 0">상품 내역 없음</div>';
     }
   }
 }
