@@ -13,7 +13,6 @@ h1{font-size:22px;font-weight:700;color:#1a1a2e}
 h2{font-size:15px;font-weight:700;margin-bottom:12px;color:#1a1a2e}
 .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
 .header-left{display:flex;flex-direction:column;gap:4px}
-.month-subtitle{font-size:18px;font-weight:700;color:#6c63ff;margin-top:2px}
 .updated{font-size:12px;color:#999}
 
 /* 달성 배너 */
@@ -24,7 +23,7 @@ h2{font-size:15px;font-weight:700;margin-bottom:12px;color:#1a1a2e}
 .goal-bar-wrap{margin-top:10px}
 .goal-bar{background:rgba(255,255,255,.25);border-radius:99px;height:10px;overflow:hidden}
 .goal-bar-fill{height:100%;background:#fff;border-radius:99px;transition:width .6s ease;max-width:100%}
-.goal-rate{font-size:13px;font-weight:600;margin-top:6px;opacity:.9}
+.goal-rate{font-size:28px;font-weight:800;margin-top:8px;letter-spacing:-0.5px}
 .goal-right{display:flex;flex-direction:column;gap:12px}
 .goal-stat{background:rgba(255,255,255,.15);border-radius:10px;padding:12px 16px}
 .goal-stat-label{font-size:11px;opacity:.75;margin-bottom:4px}
@@ -100,7 +99,6 @@ tr.daily-row.open td:first-child::before{content:'▼ ';color:#6c63ff}
 <div class="header">
   <div class="header-left">
     <h1>🛒 BBagio 쿠팡 대시보드</h1>
-    <div class="month-subtitle" id="monthSubtitle"></div>
   </div>
   <div class="updated" id="updatedAt"></div>
 </div>
@@ -394,7 +392,6 @@ function renderGoalBanner(){
   const todayDay=now.getDate();
   const mo=now.getMonth()+1;
   document.getElementById('goalTitle').textContent=mo+'월 목표 달성 현황';
-  document.getElementById('monthSubtitle').textContent=mo+'월 쿠팡 성과';
   const target=RAW.monthly_target||MONTHLY_TARGET;
   document.getElementById('goalTargetLabel').textContent='목표: '+target.toLocaleString('ko-KR')+'원';
   const thisMthRev=(RAW.sales_by_date||[]).filter(r=>r.date.startsWith(thisYM)&&r.date<=today).reduce((s,r)=>s+(r.revenue-(fakeMap[r.date]||0)),0);
@@ -408,17 +405,25 @@ function renderGoalBanner(){
   document.getElementById('goalRate').textContent='달성률 '+rate+'%';
   document.getElementById('goalRemain').textContent=remain.toLocaleString('ko-KR')+'원';
   document.getElementById('goalRemainDays').textContent='잔여 '+daysLeft+'일';
-  if(lastMthRev>0){
+  // 전월 데이터 존재 여부는 매출 금액이 아닌 날짜 존재 여부로 판단
+  const hasLastMth=(RAW.sales_by_date||[]).some(r=>r.date.startsWith(lastYM));
+  if(hasLastMth){
     const diff=thisMthRev-lastMthRev;
-    const diffPct=(diff/lastMthRev*100).toFixed(1);
-    const isUp=diff>=0;
     const el=document.getElementById('goalVsLast');
-    el.textContent=(isUp?'▲ +':'▼ ')+diffPct+'%';
-    el.className='goal-stat-val '+(isUp?'trend-up':'trend-down');
-    document.getElementById('goalVsLastAmt').textContent=(isUp?'+':'')+diff.toLocaleString('ko-KR')+'원';
+    if(lastMthRev>0){
+      const diffPct=(diff/lastMthRev*100).toFixed(1);
+      const isUp=diff>=0;
+      el.textContent=(isUp?'▲ +':'▼ ')+diffPct+'%';
+      el.className='goal-stat-val '+(isUp?'trend-up':'trend-down');
+      document.getElementById('goalVsLastAmt').textContent='전월 동기간 '+(isUp?'+':'')+diff.toLocaleString('ko-KR')+'원';
+    } else {
+      el.textContent=thisMthRev.toLocaleString('ko-KR')+'원';
+      el.className='goal-stat-val trend-up';
+      document.getElementById('goalVsLastAmt').textContent='전월 동기간 매출 0원 → 신규';
+    }
   } else {
-    document.getElementById('goalVsLast').textContent='전월 데이터 없음';
-    document.getElementById('goalVsLastAmt').textContent='';
+    document.getElementById('goalVsLast').textContent='데이터 없음';
+    document.getElementById('goalVsLastAmt').textContent='전월('+lastYM+') 미수집';
   }
 }
 
