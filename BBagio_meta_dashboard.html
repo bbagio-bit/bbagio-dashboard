@@ -132,7 +132,7 @@ tr.drill-row:hover td{background:#eef3fd}
 <body>
 
 <div class="header">
-  <div><h1>📊 BBagio Meta 광고 대시보드</h1><div class="sub">최종 업데이트: 2026-04-21 02:37</div></div>
+  <div><h1>📊 BBagio Meta 광고 대시보드</h1><div class="sub">최종 업데이트: 2026-04-21 14:58</div></div>
   <div style="display:flex;align-items:center;gap:16px">
     <div class="sub">광고계정: act_1061409671992044</div>
     <div style="text-align:right">
@@ -219,7 +219,7 @@ tr.drill-row:hover td{background:#eef3fd}
 </div>
 
 <script>
-const DATA = {"collected_at": "2026-04-21 02:37:04", "ad_account_id": "act_1061409671992044", "daily": [], "breakdown": {"1d": {"summary": {"cafe24_revenue": 0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "7d": {"summary": {"cafe24_revenue": 0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "30d": {"summary": {"cafe24_revenue": 0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "90d": {"summary": {"cafe24_revenue": 0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "180d": {"summary": {"cafe24_revenue": 0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}}, "summary": {"cafe24_revenue": 0, "real_roas": 0.0, "total_revenue": 0, "total_orders": 0, "total_uv": 0}, "period": {"since": "2026-03-23", "until": "2026-04-21"}};
+const DATA = {"collected_at": "2026-04-21 14:58:25", "ad_account_id": "act_1061409671992044", "daily": [], "breakdown": {"1d": {"summary": {"cafe24_revenue": 0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "7d": {"summary": {"cafe24_revenue": 1113780.0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "30d": {"summary": {"cafe24_revenue": 10594562.0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "90d": {"summary": {"cafe24_revenue": 10649642.0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}, "180d": {"summary": {"cafe24_revenue": 10649642.0, "real_roas": 0.0}, "campaigns": [], "adsets": [], "ads": []}}, "summary": {"cafe24_revenue": 10594562.0, "real_roas": 0.0, "total_revenue": 0, "total_orders": 0, "total_uv": 0}, "period": {"since": "2026-03-23", "until": "2026-04-21"}};
 // 모달용 API 프리셋 (5종)
 const PERIOD_KEYS   = ['1d','7d','30d','90d','180d'];
 const PERIOD_LABELS = ['오늘','7일','30일','3개월','6개월'];
@@ -253,22 +253,29 @@ function dateRange(start,stop) {
   return `<span class="date-range">${start}<br>~ ${stop||'무기한'}</span>`;
 }
 
+// ── 날짜 유틸 (로컬 KST 기준 — toISOString은 UTC라 오전 9시 전 하루 밀림)
+function localDate(d) {
+  const y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate();
+  return y+'-'+String(m).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+}
+function addDays(d, n) { const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+
 // ── 기간 범위 계산 ───────────────────────────────────────
 function getPeriodRange(p) {
-  const today = new Date().toISOString().slice(0,10);
-  const td = new Date();
+  const td = new Date(); td.setHours(0,0,0,0);
+  const today = localDate(td);
   if(p==='1d')        return {from:today, to:today};
-  if(p==='yesterday') { const y=new Date(Date.now()-86400000).toISOString().slice(0,10); return {from:y,to:y}; }
-  if(p==='7d')        return {from:new Date(Date.now()-6*86400000).toISOString().slice(0,10), to:today};
-  if(p==='30d')       return {from:new Date(Date.now()-29*86400000).toISOString().slice(0,10), to:today};
-  if(p==='thismonth') { const f=new Date(td.getFullYear(),td.getMonth(),1).toISOString().slice(0,10); return {from:f,to:today}; }
+  if(p==='yesterday') { const y=localDate(addDays(td,-1)); return {from:y,to:y}; }
+  if(p==='7d')        return {from:localDate(addDays(td,-6)), to:today};
+  if(p==='30d')       return {from:localDate(addDays(td,-29)), to:today};
+  if(p==='thismonth') { const f=new Date(td.getFullYear(),td.getMonth(),1); return {from:localDate(f),to:today}; }
   if(p==='lastmonth') {
-    const f=new Date(td.getFullYear(),td.getMonth()-1,1).toISOString().slice(0,10);
-    const e=new Date(td.getFullYear(),td.getMonth(),0).toISOString().slice(0,10);
-    return {from:f,to:e};
+    const f=new Date(td.getFullYear(),td.getMonth()-1,1);
+    const e=new Date(td.getFullYear(),td.getMonth(),0);
+    return {from:localDate(f),to:localDate(e)};
   }
-  if(p==='90d')  return {from:new Date(Date.now()-89*86400000).toISOString().slice(0,10), to:today};
-  if(p==='180d') return {from:new Date(Date.now()-179*86400000).toISOString().slice(0,10), to:today};
+  if(p==='90d')  return {from:localDate(addDays(td,-89)), to:today};
+  if(p==='180d') return {from:localDate(addDays(td,-179)), to:today};
   return {from:today, to:today};
 }
 function getTablePeriod(p) {
@@ -319,14 +326,15 @@ function getDailyRange(from,to) {
   return(DATA.daily||[]).filter(r=>r.date>=from&&r.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
 }
 function aggregateDaily(rows) {
-  const s={spend:0,impressions:0,clicks:0,purchases:0,revenue:0,reach:0};
+  const s={spend:0,impressions:0,clicks:0,purchases:0,revenue:0,reach:0,cafe24_revenue:0};
   rows.forEach(r=>{s.spend+=r.spend||0;s.impressions+=r.impressions||0;s.clicks+=r.clicks||0;
-    s.purchases+=r.purchases||0;s.revenue+=r.revenue||0;s.reach+=r.reach||0;});
+    s.purchases+=r.purchases||0;s.revenue+=r.revenue||0;s.reach+=r.reach||0;
+    s.cafe24_revenue+=r.cafe24_revenue||0;});
   s.ctr=s.impressions>0?s.clicks/s.impressions*100:0;
   s.cpc=s.clicks>0?s.spend/s.clicks:0;
   s.roas=s.spend>0?s.revenue/s.spend:0;
   s.cpa=s.purchases>0?s.spend/s.purchases:0;
-  s.cafe24_revenue=0;s.real_roas=0;
+  s.real_roas=s.spend>0?s.cafe24_revenue/s.spend:0;
   return s;
 }
 
@@ -656,16 +664,15 @@ function handleOverlayClick(e){ if(e.target===e.currentTarget)closeModal(); }
 
 // ── 초기화 ───────────────────────────────────────────────
 (function init(){
-  const today=new Date().toISOString().slice(0,10);
-  const d7=new Date(Date.now()-6*86400000).toISOString().slice(0,10);
-  document.getElementById('date-from').value=d7;
-  document.getElementById('date-to').value=today;
+  const td=new Date(); td.setHours(0,0,0,0);
+  document.getElementById('date-from').value=localDate(addDays(td,-6));
+  document.getElementById('date-to').value=localDate(td);
   switchPeriod('1d');
 })();
 
 // ── 자동 버전 체크: CDN 캐시 우회 ────────────────────────
 (function checkVersion(){
-  const MY_VER = '2026-04-21 02:37';
+  const MY_VER = '2026-04-21 14:58';
   const BASE = location.origin + location.pathname;
   // 이미 ?t= 파라미터가 있으면 체크 불필요
   if(new URLSearchParams(location.search).has('t')) return;
