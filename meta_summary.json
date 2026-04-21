@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-04-21 19:01:29",
+  "collected_at": "2026-04-21 19:13:04",
   "daily": {
     "2026-02-02": {
       "spend": 29915.0,
@@ -458,8 +458,8 @@
       "clicks": 328,
       "purchases": 14,
       "roas": 1.62,
-      "cafe24_revenue": 606257.0,
-      "real_roas": 1.77
+      "cafe24_revenue": 470657.0,
+      "real_roas": 1.37
     },
     "2026-03-31": {
       "spend": 396724.0,
@@ -468,8 +468,8 @@
       "clicks": 382,
       "purchases": 15,
       "roas": 9.26,
-      "cafe24_revenue": 1386949.0,
-      "real_roas": 3.5
+      "cafe24_revenue": 539449.0,
+      "real_roas": 1.36
     },
     "2026-04-01": {
       "spend": 358430.0,
@@ -478,8 +478,8 @@
       "clicks": 340,
       "purchases": 11,
       "roas": 1.82,
-      "cafe24_revenue": 936778.0,
-      "real_roas": 2.61
+      "cafe24_revenue": 529978.0,
+      "real_roas": 1.48
     },
     "2026-04-02": {
       "spend": 340537.0,
@@ -488,8 +488,8 @@
       "clicks": 337,
       "purchases": 8,
       "roas": 1.01,
-      "cafe24_revenue": 767240.0,
-      "real_roas": 2.25
+      "cafe24_revenue": 431540.0,
+      "real_roas": 1.27
     },
     "2026-04-03": {
       "spend": 295966.0,
@@ -498,8 +498,8 @@
       "clicks": 298,
       "purchases": 11,
       "roas": 1.92,
-      "cafe24_revenue": 716760.0,
-      "real_roas": 2.42
+      "cafe24_revenue": 347160.0,
+      "real_roas": 1.17
     },
     "2026-04-04": {
       "spend": 298875.0,
@@ -508,8 +508,8 @@
       "clicks": 317,
       "purchases": 4,
       "roas": 0.47,
-      "cafe24_revenue": 1317452.0,
-      "real_roas": 4.41
+      "cafe24_revenue": 484652.0,
+      "real_roas": 1.62
     },
     "2026-04-05": {
       "spend": 363884.0,
@@ -518,8 +518,8 @@
       "clicks": 377,
       "purchases": 7,
       "roas": 1.12,
-      "cafe24_revenue": 412780.0,
-      "real_roas": 1.13
+      "cafe24_revenue": 344980.0,
+      "real_roas": 0.95
     },
     "2026-04-06": {
       "spend": 281794.0,
@@ -672,58 +672,58 @@
       "real_roas": 2.2
     },
     "2026-04-21": {
-      "spend": 79755.0,
+      "spend": 81735.0,
       "revenue": 39800.0,
-      "impressions": 3435,
-      "clicks": 76,
+      "impressions": 3508,
+      "clicks": 77,
       "purchases": 1,
-      "roas": 0.5,
+      "roas": 0.49,
       "cafe24_revenue": 39800.0,
-      "real_roas": 0.5
+      "real_roas": 0.49
     }
   },
   "periods": {
     "1d": {
-      "spend": 79755.0,
-      "impressions": 3435,
-      "clicks": 76,
-      "ctr": 2.21,
-      "cpc": 1049.41,
-      "reach": 2414,
+      "spend": 81735.0,
+      "impressions": 3508,
+      "clicks": 77,
+      "ctr": 2.19,
+      "cpc": 1061.49,
+      "reach": 2481,
       "purchases": 1,
       "revenue": 39800.0,
-      "roas": 0.5,
-      "cpa": 79755.0,
+      "roas": 0.49,
+      "cpa": 81735.0,
       "cafe24_revenue": 39800.0,
-      "real_roas": 0.5
+      "real_roas": 0.49
     },
     "7d": {
-      "spend": 1584410.0,
-      "impressions": 43604,
-      "clicks": 1041,
+      "spend": 1586390.0,
+      "impressions": 43677,
+      "clicks": 1042,
       "ctr": 2.39,
-      "cpc": 1522.01,
-      "reach": 24612,
+      "cpc": 1522.45,
+      "reach": 24638,
       "purchases": 22,
       "revenue": 858910.0,
       "roas": 0.54,
-      "cpa": 72019.0,
+      "cpa": 72109.0,
       "cafe24_revenue": 1153580.0,
       "real_roas": 0.73
     },
     "30d": {
-      "spend": 7646847.0,
-      "impressions": 274925,
-      "clicks": 8041,
+      "spend": 7648827.0,
+      "impressions": 274998,
+      "clicks": 8042,
       "ctr": 2.92,
-      "cpc": 950.98,
+      "cpc": 951.11,
       "reach": 90339,
       "purchases": 174,
       "revenue": 11566040.0,
       "roas": 1.51,
-      "cpa": 43947.0,
-      "cafe24_revenue": 10634362.0,
-      "real_roas": 1.39
+      "cpa": 43959.0,
+      "cafe24_revenue": 7638562.0,
+      "real_roas": 1.0
     }
   }
 }
