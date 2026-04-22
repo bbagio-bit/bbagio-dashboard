@@ -7,45 +7,42 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #f0f2f5; color: #1a1a2e; font-family: 'Segoe UI', -apple-system, sans-serif; font-size: 14px; }
-.header { background: #fff; border-bottom: 3px solid #1a3c6b; padding: 8px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 1.05rem; font-weight: 900; color: #1a3c6b; letter-spacing: -.5px; }
-.logo span { color: #1a1a2e; }
-.header-sub { font-size: .78rem; color: #888; border-left: 1px solid #e5e7eb; padding-left: 12px; }
-.updated { font-size: .72rem; color: #aaa; margin-left: auto; }
-.filter-bar { background: #fff; border-bottom: 1px solid #e8eaf0; padding: 7px 20px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-.filter-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-right: 3px; }
-.btn-p { background: #f4f5f7; border: 1px solid #e2e5ea; color: #666; padding: 4px 11px; border-radius: 4px; cursor: pointer; font-size: .78rem; transition: all .12s; }
-.btn-p:hover { background: #dbeafe; border-color: #1a3c6b; color: #1a3c6b; }
-.btn-p.active { background: #1a3c6b; border-color: #1a3c6b; color: #fff; font-weight: 700; }
-.custom-wrap { display: none; align-items: center; gap: 5px; }
+body { background: #f0f2f5; color: #1a1a2e; font-family: 'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif; font-size: 14px; }
+.header { display: flex; align-items: flex-start; justify-content: space-between; padding: 20px 20px 4px; max-width: 1600px; margin: 0 auto; flex-wrap: wrap; gap: 10px; }
+.header-left { display: flex; flex-direction: column; gap: 4px; }
+.header-left h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+.updated { font-size: 12px; color: #999; }
+.filter-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 20px 16px; background: #fff; padding: 12px 16px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); max-width: 1560px; }
+.btn-p { padding: 6px 14px; border: 1.5px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-size: 13px; color: #555; transition: .15s; }
+.btn-p:hover { background: #ede9fe; border-color: #6c63ff; color: #6c63ff; }
+.btn-p.active { background: #6c63ff; color: #fff; border-color: #6c63ff; font-weight: 600; }
+.custom-wrap { display: none; align-items: center; gap: 6px; }
 .custom-wrap.show { display: flex; }
-.custom-wrap input { border: 1px solid #dde1e7; border-radius: 4px; padding: 3px 7px; font-size: .75rem; }
-.custom-wrap .apply-btn { background: #1a3c6b; border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; }
-.range-badge { margin-left: auto; background: #eff6ff; border: 1px solid #bfdbfe; padding: 3px 10px; border-radius: 20px; font-size: .72rem; color: #1a3c6b; font-weight: 600; }
-main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
-.kpi-section { margin-bottom: 14px; }
-.kpi-section-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; padding-left: 2px; }
-.kpi-row { display: grid; gap: 8px; }
+.custom-wrap input { border: 1.5px solid #ddd; border-radius: 6px; padding: 5px 8px; font-size: 13px; }
+.custom-wrap .apply-btn { background: #6c63ff; border: none; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+main { padding: 0 20px 20px; max-width: 1600px; margin: 0 auto; }
+.kpi-section { margin-bottom: 12px; }
+.kpi-section-label { font-size: 12px; color: #888; font-weight: 500; margin-bottom: 10px; padding-left: 2px; }
+.kpi-row { display: grid; gap: 12px; }
 .kpi-row-1 { grid-template-columns: repeat(7, 1fr); }
-.kpi { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; padding: 13px 16px; border-top: 3px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-.kpi.purple { border-top-color: #1a3c6b; } .kpi.blue { border-top-color: #3b82f6; } .kpi.green { border-top-color: #10b981; } .kpi.amber { border-top-color: #f59e0b; } .kpi.red { border-top-color: #ef4444; } .kpi.pink { border-top-color: #ec4899; }
-.kpi-lbl { font-size: .7rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
-.kpi-val { font-size: 1.45rem; font-weight: 900; color: #1a1a2e; line-height: 1; margin-bottom: 5px; }
-.kpi-val.xxl { font-size: 1.8rem; }
-.kpi-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.delta { font-size: .73rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; }
+.kpi { background: #fff; border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); border: none; }
+.kpi.fake { background: #fff5f5; border: 1.5px solid #fecaca; }
+.kpi-lbl { font-size: 11px; color: #888; margin-bottom: 6px; font-weight: 500; }
+.kpi-val { font-size: 22px; font-weight: 700; color: #1a1a2e; line-height: 1; }
+.kpi-val.fake { color: #ef4444; }
+.kpi-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.delta { font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 3px; }
 .delta.up { background: #fee2e2; color: #dc2626; } .delta.down { background: #dbeafe; color: #1d4ed8; } .delta.same { background: #f3f4f6; color: #9ca3af; }
-.kpi-prev-txt { font-size: .7rem; color: #bbb; }
-.roas-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .78rem; font-weight: 800; }
+.kpi-prev-txt { font-size: 11px; color: #aaa; }
+.roas-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 700; }
 .roas-good { background: #dcfce7; color: #15803d; } .roas-ok { background: #fef3c7; color: #b45309; } .roas-bad { background: #fee2e2; color: #b91c1c; }
-.row { display: grid; gap: 12px; margin-bottom: 12px; }
+.row { display: grid; gap: 16px; margin-bottom: 16px; }
 .r-2-1 { grid-template-columns: 2fr 1fr; } .r-3 { grid-template-columns: 1fr 1fr 1fr; } .r-2 { grid-template-columns: 1fr 1fr; }
-.card { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; box-shadow: 0 1px 3px rgba(0,0,0,.04); overflow: hidden; }
-.card-hd { padding: 10px 14px 8px; border-bottom: 1px solid #f0f1f5; display: flex; align-items: center; justify-content: space-between; }
-.card-ttl { font-size: .8rem; font-weight: 700; color: #333; }
-.card-sub { font-size: .72rem; color: #bbb; }
-.card-body { padding: 10px 14px; }
+.card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); overflow: hidden; }
+.card-hd { padding: 16px 20px 12px; border-bottom: 1px solid #f0f1f5; display: flex; align-items: center; justify-content: space-between; }
+.card-ttl { font-size: 15px; font-weight: 700; color: #1a1a2e; }
+.card-sub { font-size: 12px; color: #bbb; }
+.card-body { padding: 16px 20px; }
 .hbar-list { padding: 6px 14px 10px; }
 .hbar-item { margin-bottom: 8px; }
 .hbar-hd { font-size: .74rem; color: #444; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -99,26 +96,26 @@ tr:last-child td { border-bottom: none; }
 @keyframes spin{to{transform:rotate(360deg);}}
 .no-data{text-align:center;color:#ccc;font-size:.8rem;padding:20px;}
 /* ── 목표 달성 배너 ── */
-.goal-banner{background:linear-gradient(135deg,#1a3c6b 0%,#2563eb 100%);padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}
+.goal-banner{background:linear-gradient(135deg,#6c63ff 0%,#a78bfa 100%);border-radius:16px;padding:20px 28px;color:#fff;margin:0 20px 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;max-width:1560px}
 .goal-left{color:#fff}
-.goal-title{font-size:.78rem;font-weight:700;opacity:.85;margin-bottom:6px}
-.goal-rev{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:6px}
-.goal-target-lbl{font-size:.72rem;opacity:.7;margin-bottom:8px}
-.goal-bar-track{background:rgba(255,255,255,.25);border-radius:99px;height:8px;margin-bottom:6px}
-.goal-bar-fill{height:8px;background:#fff;border-radius:99px;transition:width .6s ease;max-width:100%}
-.goal-rate{font-size:2rem;font-weight:900;color:#fff;margin-top:4px}
-.goal-right{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.goal-stat{background:rgba(255,255,255,.15);border-radius:8px;padding:10px 14px;color:#fff}
-.goal-stat-lbl{font-size:.68rem;opacity:.75;margin-bottom:4px}
-.goal-stat-val{font-size:1.05rem;font-weight:800}
-.goal-stat-sub{font-size:.68rem;opacity:.7;margin-top:2px}
-.g-trend-up{color:#bbf7d0}
-.g-trend-down{color:#fecaca}
+.goal-title{font-size:15px;font-weight:600;opacity:.85;margin-bottom:8px}
+.goal-rev{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px}
+.goal-target-lbl{font-size:12px;opacity:.7;margin-bottom:10px}
+.goal-bar-track{background:rgba(255,255,255,.25);border-radius:99px;height:10px;overflow:hidden;margin-bottom:8px}
+.goal-bar-fill{height:100%;background:#fff;border-radius:99px;transition:width .6s ease;max-width:100%}
+.goal-rate{font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+.goal-right{display:flex;flex-direction:column;gap:12px}
+.goal-stat{background:rgba(255,255,255,.15);border-radius:10px;padding:12px 16px;color:#fff}
+.goal-stat-lbl{font-size:11px;opacity:.75;margin-bottom:4px}
+.goal-stat-val{font-size:20px;font-weight:700}
+.goal-stat-sub{font-size:11px;opacity:.65;margin-top:2px}
+.g-trend-up{color:#86efac}
+.g-trend-down{color:#fca5a5}
 /* ── 월별 테이블 ── */
 .monthly-tbl-wrap{overflow-x:auto}
-@media(max-width:1300px){.kpi-row-1{grid-template-columns:repeat(4,1fr);}}
-@media(max-width:1100px){.r-2-1,.r-3{grid-template-columns:1fr;}.kpi-row-1{grid-template-columns:repeat(4,1fr);}}
-@media(max-width:680px){.kpi-row-1{grid-template-columns:repeat(2,1fr);}.r-2{grid-template-columns:1fr;}main{padding:10px 12px;}}
+@media(max-width:1300px){.kpi-row-1{grid-template-columns:repeat(4,1fr);}.goal-banner{grid-template-columns:1fr;}}
+@media(max-width:900px){.r-2-1,.r-3{grid-template-columns:1fr;}.kpi-row-1{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:600px){.kpi-row-1{grid-template-columns:repeat(2,1fr);}.r-2{grid-template-columns:1fr;}main{padding:0 12px 12px;}}
 </style>
 </head>
 <body>
@@ -135,12 +132,15 @@ tr:last-child td { border-bottom: none; }
 </div>
 
 <div class="header">
-  <div class="logo">🛍 BBagio <span>자사몰 대시보드</span></div>
-  <div class="header-sub">카페24 매출 분석</div>
-  <div class="updated" id="updated">-</div>
-  <button id="refresh-btn" onclick="refreshData()" style="margin-left:10px;background:#1a3c6b;border:none;color:#fff;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:5px;letter-spacing:-.2px" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
-    <span id="refresh-icon">🔄</span> 데이터 갱신
-  </button>
+  <div class="header-left">
+    <h1>🛍 BBagio 자사몰 대시보드</h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="updated" id="updated">최종 업데이트: -</div>
+    <button onclick="refreshData()" style="background:#6c63ff;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px">
+      <span id="refresh-icon">🔄</span> 갱신
+    </button>
+  </div>
 </div>
 
 <!-- 목표 달성 배너 -->
@@ -159,25 +159,14 @@ tr:last-child td { border-bottom: none; }
       <div class="goal-stat-sub" id="goal-remain-days">-</div>
     </div>
     <div class="goal-stat">
-      <div class="goal-stat-lbl">전월 대비</div>
+      <div class="goal-stat-lbl">전월 동기간 대비</div>
       <div class="goal-stat-val" id="goal-vs-last">0%</div>
       <div class="goal-stat-sub" id="goal-vs-last-amt"></div>
-    </div>
-    <div class="goal-stat">
-      <div class="goal-stat-lbl">공구 매출 제외</div>
-      <div class="goal-stat-val" id="goal-group-rev">-</div>
-      <div class="goal-stat-sub">공동구매 차감액</div>
-    </div>
-    <div class="goal-stat">
-      <div class="goal-stat-lbl">잔여 일수</div>
-      <div class="goal-stat-val" id="goal-days-left">-</div>
-      <div class="goal-stat-sub">일 평균 필요</div>
     </div>
   </div>
 </div>
 
 <div class="filter-bar">
-  <span class="filter-label">기간</span>
   <button class="btn-p active" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
   <button class="btn-p" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
   <button class="btn-p" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
@@ -187,24 +176,19 @@ tr:last-child td { border-bottom: none; }
     <input type="date" id="df"><span style="color:#ccc">~</span><input type="date" id="dt">
     <button class="apply-btn" onclick="applyCustom()">적용</button>
   </div>
-  <span class="range-badge" id="range-badge">-</span>
+  <span id="range-badge" style="display:none"></span>
 </div>
 
 <main>
   <div class="kpi-section">
-    <div class="kpi-section-label">🛒 자사몰 실적</div>
     <div class="kpi-row kpi-row-1">
-      <div class="kpi purple"><div class="kpi-lbl">순 매출 <span style="font-size:.6rem;color:#bbb;font-weight:400">공구제외</span></div><div class="kpi-val" id="kv-rev">-</div><div class="kpi-foot"><span class="delta" id="kd-rev">-</span><span class="kpi-prev-txt" id="kp-rev">-</span></div></div>
-      <div class="kpi blue">  <div class="kpi-lbl">주문 건수</div><div class="kpi-val" id="kv-ord">-</div><div class="kpi-foot"><span class="delta" id="kd-ord">-</span><span class="kpi-prev-txt" id="kp-ord">-</span></div></div>
-      <div class="kpi green"> <div class="kpi-lbl">객단가</div><div class="kpi-val" id="kv-aov">-</div><div class="kpi-foot"><span class="delta" id="kd-aov">-</span><span class="kpi-prev-txt" id="kp-aov">-</span></div></div>
-      <div class="kpi amber"> <div class="kpi-lbl">신규 고객</div><div class="kpi-val" id="kv-nc">-</div><div class="kpi-foot"><span class="delta" id="kd-nc">-</span><span class="kpi-prev-txt" id="kp-nc">-</span></div></div>
-      <div class="kpi red">   <div class="kpi-lbl">📣 Meta 광고비</div><div class="kpi-val" id="kv-sp">-</div><div class="kpi-foot"><span class="delta" id="kd-sp">-</span><span class="kpi-prev-txt" id="kp-sp">-</span></div></div>
-      <div class="kpi pink">  <div class="kpi-lbl">🎯 실제 ROAS</div><div class="kpi-val" id="kv-roas">-</div><div class="kpi-foot" id="kv-roas-detail">-</div></div>
-      <div class="kpi" style="border-top-color:#ef4444;background:#fff7f7">
-        <div class="kpi-lbl" style="color:#ef4444">🏷 공구 매출</div>
-        <div class="kpi-val" id="kv-group" style="color:#ef4444;font-size:1.2rem">-</div>
-        <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-group" style="color:#bbb">-</span></div>
-      </div>
+      <div class="kpi"><div class="kpi-lbl">순 매출</div><div class="kpi-val" id="kv-rev">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-rev">-</span></div></div>
+      <div class="kpi"><div class="kpi-lbl">주문건수</div><div class="kpi-val" id="kv-ord">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-ord">-</span></div></div>
+      <div class="kpi"><div class="kpi-lbl">객단가</div><div class="kpi-val" id="kv-aov">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-aov">-</span></div></div>
+      <div class="kpi"><div class="kpi-lbl">신규 고객</div><div class="kpi-val" id="kv-nc">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-nc">-</span></div></div>
+      <div class="kpi"><div class="kpi-lbl">광고비 (Meta)</div><div class="kpi-val" id="kv-sp">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-sp">-</span></div></div>
+      <div class="kpi"><div class="kpi-lbl">실제 ROAS</div><div class="kpi-val" id="kv-roas">-</div><div class="kpi-foot" id="kv-roas-detail">-</div></div>
+      <div class="kpi fake"><div class="kpi-lbl">공구 매출</div><div class="kpi-val fake" id="kv-group">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-group">-</span></div></div>
     </div>
   </div>
 
@@ -299,17 +283,14 @@ tr:last-child td { border-bottom: none; }
   </div>
 
   <!-- 쿠폰/적립금 (참고용) -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-    <div class="kpi" style="border-top-color:#f59e0b;padding:10px 14px">
-      <div class="kpi-lbl" style="color:#b45309">🎟 쿠폰 할인액</div>
-      <div class="kpi-val" id="kv-cpn" style="color:#b45309;font-size:1.1rem">-</div>
-      <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-cpn" style="color:#bbb">-</span></div>
-    </div>
-    <div class="kpi" style="border-top-color:#10b981;padding:10px 14px">
-      <div class="kpi-lbl" style="color:#065f46">💰 적립금 사용액</div>
-      <div class="kpi-val" id="kv-mlg" style="color:#065f46;font-size:1.1rem">-</div>
-      <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-mlg" style="color:#bbb">-</span></div>
-    </div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px">
+    <div class="kpi"><div class="kpi-lbl">쿠폰 할인액</div><div class="kpi-val" id="kv-cpn">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-cpn">-</span></div></div>
+    <div class="kpi"><div class="kpi-lbl">적립금 사용액</div><div class="kpi-val" id="kv-mlg">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-mlg">-</span></div></div>
+    <span id="kd-rev" style="display:none"></span>
+    <span id="kd-ord" style="display:none"></span>
+    <span id="kd-aov" style="display:none"></span>
+    <span id="kd-nc" style="display:none"></span>
+    <span id="kd-sp" style="display:none"></span>
   </div>
 
   <!-- 월별 매출 테이블 -->
@@ -488,7 +469,8 @@ function render() {
   renderGA4();
   const badge = dates.length ? dates[0]+' ~ '+dates[dates.length-1]+' ('+dates.length+'일)' : '-';
   setText('range-badge', badge);
-  setText('updated', C24.collected_at || '-');
+  const ts = C24.collected_at ? '최종 업데이트: ' + new Date(C24.collected_at).toLocaleString('ko-KR') : '최종 업데이트: -';
+  setText('updated', ts);
   document.getElementById('loading').style.display = 'none';
 }
 
@@ -909,12 +891,7 @@ function renderGoalBanner() {
   document.getElementById('goal-bar-fill').style.width = rate+'%';
   document.getElementById('goal-rate').textContent = '달성률 '+rate+'%';
   document.getElementById('goal-remain').textContent = '₩'+remain.toLocaleString('ko-KR');
-  document.getElementById('goal-remain-days').textContent = '잔여 '+daysLeft+'일';
-  document.getElementById('goal-group-rev').textContent = thisMthGrp>0?'₩'+thisMthGrp.toLocaleString('ko-KR'):'없음';
-  document.getElementById('goal-days-left').textContent = daysLeft+'일 남음';
-  const sub2 = document.getElementById('goal-days-left').nextElementSibling||document.getElementById('goal-days-left').parentElement.querySelector('.goal-stat-sub');
-  // 일 평균 필요 업데이트
-  document.getElementById('goal-days-left').parentElement.querySelector('.goal-stat-sub').textContent = dailyNeed>0?'일 평균 ₩'+Math.round(dailyNeed/10000)+'만':'목표 달성!';
+  document.getElementById('goal-remain-days').textContent = '잔여 '+daysLeft+'일 · 일 평균 '+(dailyNeed>0?'₩'+Math.round(dailyNeed/10000)+'만 필요':'목표 달성!');
 
   // 전월 대비 (동기간 → 전월 합산 → 0%)
   const el = document.getElementById('goal-vs-last');
