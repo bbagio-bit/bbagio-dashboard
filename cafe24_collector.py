@@ -540,7 +540,16 @@ def main():
             html = html_path.read_bytes().decode("utf-8", errors="replace")
             m = re.search(r'const DATA\s*=\s*(\{[\s\S]*?\});\s*\n', html)
             if m:
-                return json.loads(m.group(1))
+                data = json.loads(m.group(1))
+                # daily가 dict 형식({날짜: {...}})이면 list로 정규화
+                if isinstance(data.get("daily"), dict):
+                    daily_list = []
+                    for date, row in sorted(data["daily"].items()):
+                        entry = dict(row) if isinstance(row, dict) else {}
+                        entry["date"] = date
+                        daily_list.append(entry)
+                    data["daily"] = daily_list
+                return data
         except Exception:
             pass
         return None
