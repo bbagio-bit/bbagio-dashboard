@@ -14,12 +14,12 @@ body { background: #f0f2f5; color: #1a1a2e; font-family: 'Apple SD Gothic Neo','
 .updated { font-size: 12px; color: #999; }
 .filter-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 20px 16px; background: #fff; padding: 12px 16px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); max-width: 1560px; }
 .btn-p { padding: 6px 14px; border: 1.5px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-size: 13px; color: #555; transition: .15s; }
-.btn-p:hover { background: #ede9fe; border-color: #6c63ff; color: #6c63ff; }
-.btn-p.active { background: #6c63ff; color: #fff; border-color: #6c63ff; font-weight: 600; }
+.btn-p:hover { background: #dbeafe; border-color: #1a3c6b; color: #1a3c6b; }
+.btn-p.active { background: #1a3c6b; color: #fff; border-color: #1a3c6b; font-weight: 600; }
 .custom-wrap { display: none; align-items: center; gap: 6px; }
 .custom-wrap.show { display: flex; }
 .custom-wrap input { border: 1.5px solid #ddd; border-radius: 6px; padding: 5px 8px; font-size: 13px; }
-.custom-wrap .apply-btn { background: #6c63ff; border: none; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.custom-wrap .apply-btn { background: #1a3c6b; border: none; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 main { padding: 0 20px 20px; max-width: 1600px; margin: 0 auto; }
 .kpi-section { margin-bottom: 12px; }
 .kpi-section-label { font-size: 12px; color: #888; font-weight: 500; margin-bottom: 10px; padding-left: 2px; }
@@ -96,7 +96,7 @@ tr:last-child td { border-bottom: none; }
 @keyframes spin{to{transform:rotate(360deg);}}
 .no-data{text-align:center;color:#ccc;font-size:.8rem;padding:20px;}
 /* ── 목표 달성 배너 ── */
-.goal-banner{background:linear-gradient(135deg,#6c63ff 0%,#a78bfa 100%);border-radius:16px;padding:20px 28px;color:#fff;margin:0 20px 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;max-width:1560px}
+.goal-banner{background:linear-gradient(135deg,#1a3c6b 0%,#2563eb 100%);border-radius:16px;padding:20px 28px;color:#fff;margin:0 20px 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;max-width:1560px}
 .goal-left{color:#fff}
 .goal-title{font-size:15px;font-weight:600;opacity:.85;margin-bottom:8px}
 .goal-rev{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px}
@@ -137,7 +137,7 @@ tr:last-child td { border-bottom: none; }
   </div>
   <div style="display:flex;align-items:center;gap:12px">
     <div class="updated" id="updated">최종 업데이트: -</div>
-    <button onclick="refreshData()" style="background:#6c63ff;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px">
+    <button onclick="refreshData()" style="background:#1a3c6b;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px">
       <span id="refresh-icon">🔄</span> 갱신
     </button>
   </div>
