@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-04-22 10:51:55",
+  "collected_at": "2026-04-22 11:31:34",
   "daily": {
     "2026-02-02": {
       "spend": 29915.0,
@@ -682,58 +682,58 @@
       "real_roas": 1.21
     },
     "2026-04-22": {
-      "spend": 87400.0,
+      "spend": 92805.0,
       "revenue": 27790.0,
-      "impressions": 2131,
-      "clicks": 58,
+      "impressions": 2316,
+      "clicks": 62,
       "purchases": 1,
-      "roas": 0.32,
+      "roas": 0.3,
       "cafe24_revenue": 58990.0,
-      "real_roas": 0.67
+      "real_roas": 0.64
     }
   },
   "periods": {
     "1d": {
-      "spend": 87400.0,
-      "impressions": 2131,
-      "clicks": 58,
-      "ctr": 2.72,
-      "cpc": 1506.9,
-      "reach": 1643,
+      "spend": 92805.0,
+      "impressions": 2316,
+      "clicks": 62,
+      "ctr": 2.68,
+      "cpc": 1496.85,
+      "reach": 1758,
       "purchases": 1,
       "revenue": 27790.0,
-      "roas": 0.32,
-      "cpa": 87400.0,
+      "roas": 0.3,
+      "cpa": 92805.0,
       "cafe24_revenue": 58990.0,
-      "real_roas": 0.67
+      "real_roas": 0.64
     },
     "7d": {
-      "spend": 1592592.0,
-      "impressions": 43149,
-      "clicks": 1001,
+      "spend": 1597997.0,
+      "impressions": 43334,
+      "clicks": 1005,
       "ctr": 2.32,
-      "cpc": 1591.0,
-      "reach": 24677,
+      "cpc": 1590.05,
+      "reach": 24690,
       "purchases": 20,
       "revenue": 807750.0,
       "roas": 0.51,
-      "cpa": 79630.0,
+      "cpa": 79900.0,
       "cafe24_revenue": 1087610.0,
       "real_roas": 0.68
     },
     "30d": {
-      "spend": 7620020.0,
-      "impressions": 270111,
-      "clicks": 7672,
+      "spend": 7625425.0,
+      "impressions": 270296,
+      "clicks": 7676,
       "ctr": 2.84,
-      "cpc": 993.22,
+      "cpc": 993.41,
       "reach": 89985,
       "purchases": 171,
       "revenue": 11506080.0,
       "roas": 1.51,
-      "cpa": 44562.0,
+      "cpa": 44593.0,
       "cafe24_revenue": 7661692.0,
-      "real_roas": 1.01
+      "real_roas": 1.0
     }
   }
 }
