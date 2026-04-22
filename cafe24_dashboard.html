@@ -456,7 +456,14 @@ function deltaHtml(cur, prev) {
 // ── 메타 일별 인덱스 ─────────────────────────────────────────────
 function metaByDate() {
   const idx = {};
-  ((META_D.daily)||[]).forEach(r => { idx[r.date] = r; });
+  const daily = META_D.daily || [];
+  if (Array.isArray(daily)) {
+    // 리스트 형식: [{date:'2026-04-01', ...}, ...]
+    daily.forEach(r => { idx[r.date] = r; });
+  } else if (typeof daily === 'object') {
+    // 딕셔너리 형식: {'2026-04-01': {...}, ...}
+    Object.assign(idx, daily);
+  }
   return idx;
 }
 
