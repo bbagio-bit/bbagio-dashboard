@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-04-22 11:31:34",
+  "collected_at": "2026-04-22 15:04:04",
   "daily": {
     "2026-02-02": {
       "spend": 29915.0,
@@ -672,9 +672,9 @@
       "real_roas": 2.2
     },
     "2026-04-21": {
-      "spend": 145731.0,
+      "spend": 145736.0,
       "revenue": 175800.0,
-      "impressions": 6318,
+      "impressions": 6319,
       "clicks": 134,
       "purchases": 4,
       "roas": 1.21,
@@ -682,56 +682,56 @@
       "real_roas": 1.21
     },
     "2026-04-22": {
-      "spend": 92805.0,
+      "spend": 137224.0,
       "revenue": 27790.0,
-      "impressions": 2316,
-      "clicks": 62,
+      "impressions": 3569,
+      "clicks": 89,
       "purchases": 1,
-      "roas": 0.3,
+      "roas": 0.2,
       "cafe24_revenue": 58990.0,
-      "real_roas": 0.64
+      "real_roas": 0.43
     }
   },
   "periods": {
     "1d": {
-      "spend": 92805.0,
-      "impressions": 2316,
-      "clicks": 62,
-      "ctr": 2.68,
-      "cpc": 1496.85,
-      "reach": 1758,
+      "spend": 137224.0,
+      "impressions": 3569,
+      "clicks": 89,
+      "ctr": 2.49,
+      "cpc": 1541.84,
+      "reach": 2604,
       "purchases": 1,
       "revenue": 27790.0,
-      "roas": 0.3,
-      "cpa": 92805.0,
+      "roas": 0.2,
+      "cpa": 137224.0,
       "cafe24_revenue": 58990.0,
-      "real_roas": 0.64
+      "real_roas": 0.43
     },
     "7d": {
-      "spend": 1597997.0,
-      "impressions": 43334,
-      "clicks": 1005,
-      "ctr": 2.32,
-      "cpc": 1590.05,
-      "reach": 24690,
+      "spend": 1642421.0,
+      "impressions": 44588,
+      "clicks": 1032,
+      "ctr": 2.31,
+      "cpc": 1591.49,
+      "reach": 25127,
       "purchases": 20,
       "revenue": 807750.0,
-      "roas": 0.51,
-      "cpa": 79900.0,
+      "roas": 0.49,
+      "cpa": 82121.0,
       "cafe24_revenue": 1087610.0,
-      "real_roas": 0.68
+      "real_roas": 0.66
     },
     "30d": {
-      "spend": 7625425.0,
-      "impressions": 270296,
-      "clicks": 7676,
+      "spend": 7669849.0,
+      "impressions": 271550,
+      "clicks": 7703,
       "ctr": 2.84,
-      "cpc": 993.41,
-      "reach": 89985,
+      "cpc": 995.7,
+      "reach": 90437,
       "purchases": 171,
       "revenue": 11506080.0,
-      "roas": 1.51,
-      "cpa": 44593.0,
+      "roas": 1.5,
+      "cpa": 44853.0,
       "cafe24_revenue": 7661692.0,
       "real_roas": 1.0
     }
