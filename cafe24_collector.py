@@ -8,7 +8,9 @@ BBagio Cafe24 자사몰 데이터 수집기
 """
 
 import os as _os
+import re
 import json
+import shutil
 import base64
 import urllib.request
 import urllib.parse
@@ -55,14 +57,10 @@ TOKEN_FILE = _dir / "cafe24_tokens.json"
 # 토큰 저장/로드
 # ──────────────────────────────────────────────
 def _save_tokens(access, refresh):
+    # 토큰은 cafe24_tokens.json에만 저장 (config.json은 건드리지 않음)
     data = {"access_token": access, "refresh_token": refresh, "saved_at": datetime.now().isoformat()}
     with open(TOKEN_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    if cfg_path.exists():
-        cfg["cafe24_access_token"] = access
-        cfg["cafe24_refresh_token"] = refresh
-        with open(cfg_path, "w", encoding="utf-8") as f:
-            json.dump(cfg, f, ensure_ascii=False, indent=4)
     print("  토큰 저장 완료")
 
 
@@ -155,8 +153,12 @@ def _get_valid_token():
         new_access, _ = _refresh_access_token(refresh)
         if new_access:
             return new_access
+        # refresh_token도 만료 → 재인증 필요
+        print("  ⚠️  Refresh token 만료. 브라우저 재인증을 시작합니다...")
+        _do_oauth()
+        return _load_tokens()[0]
     if access:
-        print("  (refresh 실패, 기존 access_token 사용)")
+        print("  (refresh token 없음, 기존 access_token 사용)")
         return access
     _do_oauth()
     return _load_tokens()[0]
@@ -242,6 +244,8 @@ def collect_all(token, start_date, end_date):
                     "orders": 0, "revenue": 0.0,
                     "new_customers": 0, "canceled": 0,
                     "member_orders": 0, "nonmember_orders": 0,
+                    "coupon_discount": 0.0,
+                    "mileage_used": 0.0,
                     "hourly_orders":  {str(h): 0   for h in range(24)},
                     "hourly_revenue": {str(h): 0.0 for h in range(24)},
                 }
@@ -253,11 +257,15 @@ def collect_all(token, start_date, end_date):
                 daily[date]["canceled"] += 1
                 continue
 
-            # ── 매출
+            # ── 매출 + 할인
             amt     = o.get("actual_order_amount") or o.get("initial_order_amount") or {}
             revenue = float(amt.get("payment_amount", 0) or 0)
-            daily[date]["orders"]  += 1
-            daily[date]["revenue"] += revenue
+            coupon  = float(amt.get("coupon_discount_price", 0) or 0)
+            mileage = float(amt.get("point_amount_to_pay", 0) or 0)
+            daily[date]["orders"]          += 1
+            daily[date]["revenue"]         += revenue
+            daily[date]["coupon_discount"] += coupon
+            daily[date]["mileage_used"]    += mileage
             if o.get("first_order") == "T":
                 daily[date]["new_customers"] += 1
 
@@ -453,6 +461,8 @@ def main():
                 "canceled":         d["canceled"],
                 "member_orders":    d.get("member_orders", 0),
                 "nonmember_orders": d.get("nonmember_orders", 0),
+                "coupon_discount":  round(d.get("coupon_discount", 0), 0),
+                "mileage_used":     round(d.get("mileage_used", 0), 0),
                 "hourly_orders":    {h: round(v,0) for h,v in d.get("hourly_orders",{}).items()},
                 "hourly_revenue":   {h: round(v,0) for h,v in d.get("hourly_revenue",{}).items()},
             }
@@ -471,6 +481,46 @@ def main():
         },
     }
 
+    # ── 공구매출(group_revenue) 계산 ────────────────────────────────
+    # config.json의 group_purchase_keyword로 상품명 필터링
+    _grp_kw = cfg.get("group_purchase_keyword", "공동구매")
+    for _date, _prods in daily_products.items():
+        _grp = sum(p.get("revenue", 0) for p in _prods
+                   if _grp_kw in (p.get("product_name") or ""))
+        if _date in result["daily"]:
+            result["daily"][_date]["group_revenue"] = int(_grp)
+    if any(result["daily"][d].get("group_revenue", 0) > 0 for d in result["daily"]):
+        print(f"  ✅ 공구매출 집계 완료 (키워드: '{_grp_kw}')")
+    else:
+        print(f"  ⚠️  공구매출 0원 — 상품명에 '{_grp_kw}' 포함 항목 없음 (config.json의 group_purchase_keyword 확인)")
+
+    # ── 월별 목표매출 로드 ───────────────────────────────────────────
+    # 우선순위: BBagio_자사몰_월별목표.xlsx > config.json의 cafe24_monthly_targets
+    def _load_monthly_targets() -> dict:
+        targets = dict(cfg.get("cafe24_monthly_targets", {}))
+        target_file = _dir / "BBagio_자사몰_월별목표.xlsx"
+        if not target_file.exists():
+            return targets
+        try:
+            import openpyxl
+            wb = openpyxl.load_workbook(str(target_file), data_only=True)
+            ws = wb.active
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                if not row or row[0] is None or row[1] is None or row[2] is None:
+                    continue
+                try:
+                    year  = int(str(row[0]).split('.')[0].strip())
+                    month = int(row[1])
+                    tgt   = int(float(str(row[2]).replace(',', '')))
+                    targets[f"{year:04d}-{month:02d}"] = tgt
+                except Exception:
+                    pass
+        except Exception as e:
+            print(f"  ⚠️  월별목표 엑셀 로드 실패: {e}")
+        return targets
+
+    result["monthly_targets"] = _load_monthly_targets()
+
     out_path = OUTPUT_DIR / "cafe24_latest.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2, default=str)
@@ -481,10 +531,104 @@ def main():
     print(f"   신규고객: {total_new_customers}명")
     print(f"   상품:     {len(products)}개 | 옵션: {len(options)}개")
 
+    # ── cafe24_data.json 생성 (HTML은 fetch로 로드하는 구조) ─────────
+    def _extract_meta_from_html(html_path):
+        """BBagio_meta_dashboard.html 의 const DATA = {...}; 에서 메타 데이터 추출"""
+        if not html_path.exists():
+            return None
+        try:
+            html = html_path.read_bytes().decode("utf-8", errors="replace")
+            m = re.search(r'const DATA\s*=\s*(\{[\s\S]*?\});\s*\n', html)
+            if m:
+                return json.loads(m.group(1))
+        except Exception:
+            pass
+        return None
+
+    # 메타 광고 데이터 로드 (4단계 fallback)
+    # ★ output/ 먼저 확인: meta_collector.py가 run_all.bat에서 먼저 실행되어
+    #   output/meta_summary.json을 최신화한 경우 그 파일을 우선 사용.
+    #   root의 meta_summary.json은 이전 실행 때 복사된 오래된 파일일 수 있음.
+    meta_summary = None
+    for mp in [_dir/"output"/"meta_summary.json", OUTPUT_DIR/"meta_summary.json", _dir/"meta_summary.json"]:
+        if mp.exists():
+            try:
+                meta_summary = json.loads(mp.read_text(encoding="utf-8"))
+                print(f"  ✅ meta_summary.json 로드: {mp}")
+                break
+            except Exception:
+                pass
+    if not meta_summary:
+        for hp in [_dir/"output"/"BBagio_meta_dashboard.html", OUTPUT_DIR/"BBagio_meta_dashboard.html", _dir/"BBagio_meta_dashboard.html"]:
+            meta_summary = _extract_meta_from_html(hp)
+            if meta_summary:
+                # 정상 추출 시 meta_summary.json 재건
+                try:
+                    clean = OUTPUT_DIR/"meta_summary.json"
+                    clean.write_text(json.dumps(meta_summary, ensure_ascii=False), encoding="utf-8")
+                    shutil.copy2(clean, _dir/"meta_summary.json")
+                except Exception:
+                    pass
+                break
+    if not meta_summary:
+        for cp in [OUTPUT_DIR/"meta_daily_cache.json", _dir/"meta_daily_cache.json"]:
+            if cp.exists():
+                try:
+                    meta_summary = {"daily": json.loads(cp.read_text(encoding="utf-8")), "summary": {}}
+                    break
+                except Exception:
+                    pass
+
+    # GA4 데이터 로드
+    ga4_data = None
+    for gp in [_dir/"ga4_latest.json", OUTPUT_DIR/"ga4_latest.json"]:
+        if gp.exists():
+            try:
+                ga4_data = json.loads(gp.read_text(encoding="utf-8"))
+                break
+            except Exception:
+                pass
+
+    # cafe24_data.json 번들 저장 (breakdown 제외로 크기 최적화)
+    meta_for_bundle = {}
+    if meta_summary:
+        meta_for_bundle = {
+            "daily":   meta_summary.get("daily", []),
+            "summary": meta_summary.get("summary", {}),
+        }
+    def _safe_write(src_path, dst_path):
+        """shutil.copy2 대신 직접 읽고 써서 파일 잠금 문제 우회"""
+        content = src_path.read_bytes()
+        try:
+            dst_path.write_bytes(content)
+        except PermissionError:
+            import time as _time
+            _time.sleep(2)
+            try:
+                dst_path.write_bytes(content)
+            except PermissionError:
+                print(f"  ⚠️  {dst_path.name} 복사 실패 (파일 사용 중) — 건너뜀")
+
+    data_bundle = {"c24": result, "meta": meta_for_bundle, "ga4": ga4_data or {}}
+    data_out = OUTPUT_DIR / "cafe24_data.json"
+    data_out.write_text(json.dumps(data_bundle, ensure_ascii=False, default=str), encoding="utf-8")
+    _safe_write(data_out, _dir / "cafe24_data.json")
+    print(f"✅ cafe24_data.json 생성 완료 ({data_out.stat().st_size:,} bytes)")
+
+    # 대시보드 HTML 복사 (데이터 없는 fetch 템플릿 그대로)
+    dash_src = _dir / "cafe24_dashboard.html"
+    dash_out = OUTPUT_DIR / "cafe24_dashboard.html"
+    if dash_src.exists():
+        _safe_write(dash_src, dash_out)
+        print(f"✅ 대시보드 HTML 복사 완료")
+
     if GH_TOKEN and GH_USER and GH_REPO:
         print("\nGitHub 업로드 중...")
-        upload_to_github(out_path, "cafe24_latest.json", GH_TOKEN, GH_USER, GH_REPO, "main")
-        upload_to_github(out_path, "cafe24_latest.json", GH_TOKEN, GH_USER, GH_REPO, "gh-pages")
+        upload_to_github(out_path,  "cafe24_latest.json",    GH_TOKEN, GH_USER, GH_REPO, "gh-pages")
+        upload_to_github(data_out,  "cafe24_data.json",      GH_TOKEN, GH_USER, GH_REPO, "gh-pages")
+        if dash_out.exists():
+            upload_to_github(dash_out, "cafe24_dashboard.html", GH_TOKEN, GH_USER, GH_REPO, "gh-pages")
+        print(f"  → https://{GH_USER}.github.io/{GH_REPO}/cafe24_dashboard.html")
 
     if not _is_ci:
         input("\n[엔터] 종료")
