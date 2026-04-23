@@ -648,46 +648,4 @@ function showPopupKw(kw){
   if(!rows.length){alert('데이터 없음');return;}
   const byd={};rows.forEach(r=>{byd[r.date]=byd[r.date]||{ad_cost:0,impressions:0,clicks:0,revenue_14d:0};byd[r.date].ad_cost+=r.ad_cost;byd[r.date].impressions+=r.impressions;byd[r.date].clicks+=r.clicks;byd[r.date].revenue_14d+=r.revenue_14d;});
   const dates=Object.keys(byd).sort();
-  openModal('🔑 '+kw,[{label:'광고비',val:fmtW(sum(rows,'ad_cost'))},{label:'전환매출(14일)',val:fmtW(sum(rows,'revenue_14d'))},{label:'노출수',val:fmt(sum(rows,'impressions'))},{label:'클릭수',val:fmt(sum(rows,'clicks'))}],popupChart(dates.map(d=>d.slice(5)),dates.map(d=>byd[d].ad_cost),'광고비',dates.map(d=>byd[d].revenue_14d),'전환매출(14일)'),'<table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:#f7f7fb"><th style="padding:6px 8px;text-align:left">날짜</th><th style="text-align:right;padding:6px 8px">광고비</th><th style="text-align:right;padding:6px 8px">노출</th><th style="text-align:right;padding:6px 8px">클릭</th><th style="text-align:right;padding:6px 8px">전환매출</th></tr>'+dates.map(d=>`<tr><td style="padding:5px 8px">${d}</td><td style="text-align:right;padding:5px 8px">${fmtW(byd[d].ad_cost)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].impressions)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].clicks)}</td><td style="text-align:right;padding:5px 8px">${fmtW(byd[d].revenue_14d)}</td></tr>`).join('')+'</table>');
-}
-function showPopupPs(oid){
-  const ds=getFilteredDates();
-  const rows=(RAW.sales_detail||[]).filter(r=>ds.has(r.date)&&(r.option_id===oid||r.product_name===oid));
-  if(!rows.length){alert('데이터 없음');return;}
-  const byd={};rows.forEach(r=>{byd[r.date]=byd[r.date]||{revenue:0,orders:0,units:0};byd[r.date].revenue+=r.revenue;byd[r.date].orders+=r.orders;byd[r.date].units+=r.units;});
-  const dates=Object.keys(byd).sort();
-  const totRev=sum(rows,'revenue'),totOrd=sum(rows,'orders');
-  const pname=rows[0].product_name||oid;
-  openModal('📊 '+pname,[{label:'매출 합계',val:fmtW(totRev)},{label:'주문건수',val:fmt(totOrd)+'건'},{label:'판매량',val:fmt(sum(rows,'units'))+'개'},{label:'평균 객단가',val:fmtW(totOrd>0?Math.round(totRev/totOrd):0)}],{type:'bar',data:{labels:dates.map(d=>d.slice(5)),datasets:[{label:'매출',data:dates.map(d=>byd[d].revenue),backgroundColor:'rgba(67,206,162,.7)',yAxisID:'y'},{label:'주문',data:dates.map(d=>byd[d].orders),type:'line',borderColor:'#6c63ff',tension:.3,yAxisID:'y2',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true},y2:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false}}}}},'<table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:#f7f7fb"><th style="padding:6px 8px;text-align:left">날짜</th><th style="text-align:right;padding:6px 8px">매출</th><th style="text-align:right;padding:6px 8px">주문</th><th style="text-align:right;padding:6px 8px">판매량</th></tr>'+dates.map(d=>`<tr><td style="padding:5px 8px">${d}</td><td style="text-align:right;padding:5px 8px">${fmtW(byd[d].revenue)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].orders)}</td><td style="text-align:right;padding:5px 8px">${fmt(byd[d].units)}</td></tr>`).join('')+'</table>');
-}
-
-function render(){
-  if(!RAW)return;
-  const ds=getFilteredDates();
-  renderGoalBanner();
-  renderKPIs(ds);
-  try{renderCharts(ds);}catch(e){console.error('chart',e);}
-  renderPad(ds);renderKw(ds);renderPs(ds);renderDaily(ds);
-  renderMonthly();
-}
-
-async function loadData(){
-  const base=window.location.href.replace(/[^/]*(\?.*)?$/,'');
-  const url=base+'coupang_data.json?t='+Date.now();
-  try{
-    const resp=await fetch(url);
-    if(!resp.ok)throw new Error('HTTP '+resp.status);
-    RAW=await resp.json();
-    if(RAW&&RAW.updated_at){document.getElementById('updatedAt').textContent='최종 업데이트: '+new Date(RAW.updated_at).toLocaleString('ko-KR');}
-    document.getElementById('loadingMsg').style.display='none';
-    document.getElementById('mainContent').style.display='block';
-    render();
-  }catch(e){
-    document.getElementById('loadingMsg').innerHTML='<div style="color:#e55;padding:80px;text-align:center"><h2>데이터 로드 실패</h2><p style="margin-top:8px;color:#888">'+e.message+'</p><p style="margin-top:4px;color:#aaa;font-size:12px">BAT 실행 후 새로고침하세요</p></div>';
-    console.error('loadData error',e);
-  }
-}
-document.addEventListener('DOMContentLoaded',loadData);
-</script>
-</body>
-</html>
+  openModal('🔑 '+kw,[{label:'광고비',val:fmtW(sum(rows,'ad_cost'))},{label:'전환매출(14일)',val:fmtW(sum(rows,'revenue_14d'))},{label:'노출수',val:fmt(sum(rows,'impressions'))},{label:'클릭수',val:fmt(sum(rows,'clicks'))}],popupChart(dates.map(d=>d.slice(5)),dates.map(d=>byd[d].ad_cost),'광고비',dates.map(d=>byd[d].revenue_14d),'전환매출(14일)'),'<table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:#f7f7fb"><th style="padding:6px 8px;text-align:left">날짜</th><th style="text-align:right;padding:6px 8px">광고비</th><th style="text-align:right;padding:6px 8px">노출</th><th style="text-align:right;padding:6px 8px">클릭</th><th style="text-align:right;padding:6px 8px">전환매
