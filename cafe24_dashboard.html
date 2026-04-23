@@ -120,6 +120,74 @@ tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
+<!-- BBagio Login Overlay -->
+<div id="bbagio-login-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a3c6b 0%,#2563eb 100%);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;">
+  <div style="background:#fff;border-radius:16px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div style="font-size:36px;font-weight:900;color:#1a3c6b;letter-spacing:-1px;">BBagio</div>
+      <div style="font-size:14px;color:#64748b;margin-top:8px;">대시보드 로그인</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">아이디</label>
+      <input id="bb-user" type="text" placeholder="아이디 입력" autocomplete="username"
+        style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:15px;outline:none;box-sizing:border-box;transition:border 0.2s;"
+        onfocus="this.style.borderColor='#1a3c6b'" onblur="this.style.borderColor='#e2e8f0'" />
+    </div>
+    <div style="margin-bottom:24px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">비밀번호</label>
+      <input id="bb-pass" type="password" placeholder="비밀번호 입력" autocomplete="current-password"
+        style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:15px;outline:none;box-sizing:border-box;transition:border 0.2s;"
+        onfocus="this.style.borderColor='#1a3c6b'" onblur="this.style.borderColor='#e2e8f0'" />
+    </div>
+    <div id="bb-err" style="color:#ef4444;font-size:13px;text-align:center;margin-bottom:12px;display:none;">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+    <button onclick="bbLogin()"
+      style="width:100%;padding:14px;background:linear-gradient(135deg,#1a3c6b,#2563eb);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:opacity 0.2s;"
+      onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">로그인</button>
+  </div>
+</div>
+<script>
+(function(){
+  var OVERLAY_ID = 'bbagio-login-overlay';
+  var AUTH_KEY   = 'bbagio_auth';
+  var CORRECT_ID = 'bbagio';
+  var CORRECT_PW = 'bbagio20!';
+
+  function hide(){
+    var el = document.getElementById(OVERLAY_ID);
+    if(el) el.style.display = 'none';
+  }
+
+  function checkLogin(){
+    if(localStorage.getItem(AUTH_KEY) === 'ok') hide();
+  }
+
+  window.bbLogin = function(){
+    var u = document.getElementById('bb-user').value.trim();
+    var p = document.getElementById('bb-pass').value;
+    if(u === CORRECT_ID && p === CORRECT_PW){
+      localStorage.setItem(AUTH_KEY, 'ok');
+      hide();
+    } else {
+      document.getElementById('bb-err').style.display = 'block';
+      document.getElementById('bb-pass').value = '';
+      document.getElementById('bb-pass').focus();
+    }
+  };
+
+  // Enter key support
+  document.addEventListener('keydown', function(e){
+    var overlay = document.getElementById(OVERLAY_ID);
+    if(e.key === 'Enter' && overlay && overlay.style.display !== 'none') window.bbLogin();
+  });
+
+  // Check on load
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', checkLogin);
+  } else {
+    checkLogin();
+  }
+})();
+</script>
 <div id="loading"><div class="sp"></div><p style="color:#888;font-size:.85rem">데이터 로딩 중...</p></div>
 
 <div class="overlay" id="modal" onclick="closeMo(event)">
