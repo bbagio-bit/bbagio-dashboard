@@ -7,50 +7,53 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #f0f2f5; color: #1a1a2e; font-family: 'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif; font-size: 14px; }
-.page-wrap { max-width: 1600px; margin: 0 auto; padding: 20px 20px 20px; }
-.header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-.header-left { display: flex; flex-direction: column; gap: 4px; }
-.header-left h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
-.updated { font-size: 12px; color: #999; }
-.filter-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; background: #fff; padding: 12px 16px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
-.btn-p { padding: 6px 14px; border: 1.5px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-size: 13px; color: #555; transition: .15s; }
-.btn-p:hover { background: #dbeafe; border-color: #1a3c6b; color: #1a3c6b; }
-.btn-p.active { background: #1a3c6b; color: #fff; border-color: #1a3c6b; font-weight: 600; }
-.custom-wrap { display: none; align-items: center; gap: 6px; }
+body { background: #f0f2f5; color: #1a1a2e; font-family: 'Segoe UI', -apple-system, sans-serif; font-size: 14px; }
+.header { background: #fff; border-bottom: 3px solid #7c5cfc; padding: 8px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.05rem; font-weight: 900; color: #7c5cfc; letter-spacing: -.5px; }
+.logo span { color: #1a1a2e; }
+.header-sub { font-size: .78rem; color: #888; border-left: 1px solid #e5e7eb; padding-left: 12px; }
+.updated { font-size: .72rem; color: #aaa; margin-left: auto; }
+.filter-bar { background: #fff; border-bottom: 1px solid #e8eaf0; padding: 7px 20px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+.filter-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-right: 3px; }
+.btn-p { background: #f4f5f7; border: 1px solid #e2e5ea; color: #666; padding: 4px 11px; border-radius: 4px; cursor: pointer; font-size: .78rem; transition: all .12s; }
+.btn-p:hover { background: #ede9ff; border-color: #7c5cfc; color: #7c5cfc; }
+.btn-p.active { background: #7c5cfc; border-color: #7c5cfc; color: #fff; font-weight: 700; }
+.custom-wrap { display: none; align-items: center; gap: 5px; }
 .custom-wrap.show { display: flex; }
-.custom-wrap input { border: 1.5px solid #ddd; border-radius: 6px; padding: 5px 8px; font-size: 13px; }
-.custom-wrap .apply-btn { background: #1a3c6b; border: none; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
-main { padding: 0; }
-.kpi-section { margin-bottom: 12px; }
-.kpi-section-label { font-size: 12px; color: #888; font-weight: 500; margin-bottom: 10px; padding-left: 2px; }
-.kpi-row { display: grid; gap: 12px; }
-.kpi-row-1 { grid-template-columns: repeat(7, 1fr); }
-.kpi { background: #fff; border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); border: none; }
-.kpi.fake { background: #fff5f5; border: 1.5px solid #fecaca; }
-.kpi-lbl { font-size: 11px; color: #888; margin-bottom: 6px; font-weight: 500; }
-.kpi-val { font-size: 22px; font-weight: 700; color: #1a1a2e; line-height: 1; }
-.kpi-val.fake { color: #ef4444; }
-.kpi-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-.delta { font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 3px; }
+.custom-wrap input { border: 1px solid #dde1e7; border-radius: 4px; padding: 3px 7px; font-size: .75rem; }
+.custom-wrap .apply-btn { background: #7c5cfc; border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; }
+.range-badge { margin-left: auto; background: #f3f0ff; border: 1px solid #ddd6fe; padding: 3px 10px; border-radius: 20px; font-size: .72rem; color: #7c5cfc; font-weight: 600; }
+main { padding: 14px 20px; max-width: 1600px; margin: 0 auto; }
+.kpi-section { margin-bottom: 14px; }
+.kpi-section-label { font-size: .72rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; padding-left: 2px; }
+.kpi-row { display: grid; gap: 10px; }
+.kpi-row-1 { grid-template-columns: repeat(4, 1fr); }
+.kpi-row-2 { grid-template-columns: 1fr 1fr; margin-top: 10px; }
+.kpi { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; padding: 13px 16px; border-top: 3px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+.kpi.purple { border-top-color: #7c5cfc; } .kpi.blue { border-top-color: #3b82f6; } .kpi.green { border-top-color: #10b981; } .kpi.amber { border-top-color: #f59e0b; } .kpi.red { border-top-color: #ef4444; } .kpi.pink { border-top-color: #ec4899; }
+.kpi-lbl { font-size: .7rem; color: #999; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
+.kpi-val { font-size: 1.45rem; font-weight: 900; color: #1a1a2e; line-height: 1; margin-bottom: 5px; }
+.kpi-val.xxl { font-size: 1.8rem; }
+.kpi-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.delta { font-size: .73rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; }
 .delta.up { background: #fee2e2; color: #dc2626; } .delta.down { background: #dbeafe; color: #1d4ed8; } .delta.same { background: #f3f4f6; color: #9ca3af; }
-.kpi-prev-txt { font-size: 11px; color: #aaa; }
-.roas-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 700; }
+.kpi-prev-txt { font-size: .7rem; color: #bbb; }
+.roas-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .78rem; font-weight: 800; }
 .roas-good { background: #dcfce7; color: #15803d; } .roas-ok { background: #fef3c7; color: #b45309; } .roas-bad { background: #fee2e2; color: #b91c1c; }
-.row { display: grid; gap: 16px; margin-bottom: 16px; }
+.row { display: grid; gap: 12px; margin-bottom: 12px; }
 .r-2-1 { grid-template-columns: 2fr 1fr; } .r-3 { grid-template-columns: 1fr 1fr 1fr; } .r-2 { grid-template-columns: 1fr 1fr; }
-.card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); overflow: hidden; }
-.card-hd { padding: 16px 20px 12px; border-bottom: 1px solid #f0f1f5; display: flex; align-items: center; justify-content: space-between; }
-.card-ttl { font-size: 15px; font-weight: 700; color: #1a1a2e; }
-.card-sub { font-size: 12px; color: #bbb; }
-.card-body { padding: 16px 20px; }
+.card { background: #fff; border-radius: 6px; border: 1px solid #e8eaf0; box-shadow: 0 1px 3px rgba(0,0,0,.04); overflow: hidden; }
+.card-hd { padding: 10px 14px 8px; border-bottom: 1px solid #f0f1f5; display: flex; align-items: center; justify-content: space-between; }
+.card-ttl { font-size: .8rem; font-weight: 700; color: #333; }
+.card-sub { font-size: .72rem; color: #bbb; }
+.card-body { padding: 10px 14px; }
 .hbar-list { padding: 6px 14px 10px; }
 .hbar-item { margin-bottom: 8px; }
 .hbar-hd { font-size: .74rem; color: #444; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .hbar-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hbar-val { font-weight: 700; color: #1a3c6b; font-size: .74rem; flex-shrink: 0; }
+.hbar-val { font-weight: 700; color: #7c5cfc; font-size: .74rem; flex-shrink: 0; }
 .hbar-track { background: #f0f1f8; border-radius: 3px; height: 7px; }
-.hbar-fill { height: 7px; border-radius: 3px; background: linear-gradient(90deg,#1a3c6b,#2563eb); }
+.hbar-fill { height: 7px; border-radius: 3px; background: linear-gradient(90deg,#7c5cfc,#a78bfa); }
 .hbar-fill.blue { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
 .hbar-fill.green { background: linear-gradient(90deg,#10b981,#34d399); }
 .tbl-wrap { overflow-x: auto; }
@@ -60,12 +63,12 @@ td { padding: 8px 10px; font-size: .82rem; border-bottom: 1px solid #f5f5f8; ver
 tr:last-child td { border-bottom: none; }
 .tr-hover:hover td { background: #faf8ff; }
 .td-r { text-align: right; font-variant-numeric: tabular-nums; }
-.rb { display:inline-block;width:22px;height:22px;border-radius:50%;background:#dbeafe;color:#1a3c6b;font-size:.7rem;font-weight:800;text-align:center;line-height:22px; }
+.rb { display:inline-block;width:22px;height:22px;border-radius:50%;background:#ede9ff;color:#7c5cfc;font-size:.7rem;font-weight:800;text-align:center;line-height:22px; }
 .rb.g1{background:#fef3c7;color:#d97706;} .rb.g2{background:#e5e7eb;color:#6b7280;} .rb.g3{background:#fde8d8;color:#c2410c;}
 .pname { font-weight: 600; color: #222; cursor: pointer; }
-.pname:hover { color: #1a3c6b; }
+.pname:hover { color: #7c5cfc; }
 .rev-bar-wrap { background: #f0f0f8; border-radius: 2px; height: 4px; margin-top: 4px; }
-.rev-bar { height: 4px; border-radius: 2px; background: linear-gradient(90deg,#1a3c6b,#2563eb); }
+.rev-bar { height: 4px; border-radius: 2px; background: linear-gradient(90deg,#7c5cfc,#a78bfa); }
 .expand-ic { float:right;color:#ccc;font-size:.75rem; }
 .drill-row { display: none; }
 .drill-row.open { display: table-row; }
@@ -75,7 +78,7 @@ tr:last-child td { border-bottom: none; }
 .drill-item:last-child{border-bottom:none;}
 .di-pname{flex:1;color:#444;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .di-opt{flex:1;color:#888;font-size:.72rem;margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.di-q{width:44px;text-align:right;font-weight:700;color:#1a3c6b;}
+.di-q{width:44px;text-align:right;font-weight:700;color:#7c5cfc;}
 .di-r{width:78px;text-align:right;font-weight:700;color:#10b981;}
 .donut-wrap { display:flex; align-items:center; gap:14px; padding:10px 14px; }
 .donut-chart-area { position:relative; width:140px; height:140px; flex-shrink:0; }
@@ -93,101 +96,32 @@ tr:last-child td { border-bottom: none; }
 .modal-cls{background:none;border:none;font-size:1.2rem;cursor:pointer;color:#aaa;padding:0 3px;}
 .modal-body{padding:14px 18px;}
 #loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:9999;}
-.sp{width:32px;height:32px;border:3px solid #bfdbfe;border-top-color:#1a3c6b;border-radius:50%;animation:spin .7s linear infinite;}
+.sp{width:32px;height:32px;border:3px solid #e0deff;border-top-color:#7c5cfc;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .no-data{text-align:center;color:#ccc;font-size:.8rem;padding:20px;}
 /* ── 목표 달성 배너 ── */
-.goal-banner{background:linear-gradient(135deg,#1a3c6b 0%,#2563eb 100%);border-radius:16px;padding:20px 28px;color:#fff;margin:0 0 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+.goal-banner{background:linear-gradient(135deg,#7c5cfc 0%,#a78bfa 100%);padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}
 .goal-left{color:#fff}
-.goal-title{font-size:15px;font-weight:600;opacity:.85;margin-bottom:8px}
-.goal-rev{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px}
-.goal-target-lbl{font-size:12px;opacity:.7;margin-bottom:10px}
-.goal-bar-track{background:rgba(255,255,255,.25);border-radius:99px;height:10px;overflow:hidden;margin-bottom:8px}
-.goal-bar-fill{height:100%;background:#fff;border-radius:99px;transition:width .6s ease;max-width:100%}
-.goal-rate{font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px}
-.goal-right{display:flex;flex-direction:column;gap:12px}
-.goal-stat{background:rgba(255,255,255,.15);border-radius:10px;padding:12px 16px;color:#fff}
-.goal-stat-lbl{font-size:11px;opacity:.75;margin-bottom:4px}
-.goal-stat-val{font-size:20px;font-weight:700}
-.goal-stat-sub{font-size:11px;opacity:.65;margin-top:2px}
-.g-trend-up{color:#86efac}
-.g-trend-down{color:#fca5a5}
+.goal-title{font-size:.78rem;font-weight:700;opacity:.85;margin-bottom:6px}
+.goal-rev{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:6px}
+.goal-target-lbl{font-size:.72rem;opacity:.7;margin-bottom:8px}
+.goal-bar-track{background:rgba(255,255,255,.25);border-radius:99px;height:8px;margin-bottom:6px}
+.goal-bar-fill{height:8px;background:#fff;border-radius:99px;transition:width .6s ease;max-width:100%}
+.goal-rate{font-size:2rem;font-weight:900;color:#fff;margin-top:4px}
+.goal-right{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.goal-stat{background:rgba(255,255,255,.15);border-radius:8px;padding:10px 14px;color:#fff}
+.goal-stat-lbl{font-size:.68rem;opacity:.75;margin-bottom:4px}
+.goal-stat-val{font-size:1.05rem;font-weight:800}
+.goal-stat-sub{font-size:.68rem;opacity:.7;margin-top:2px}
+.g-trend-up{color:#bbf7d0}
+.g-trend-down{color:#fecaca}
 /* ── 월별 테이블 ── */
 .monthly-tbl-wrap{overflow-x:auto}
-@media(max-width:1300px){.kpi-row-1{grid-template-columns:repeat(4,1fr);}.goal-banner{grid-template-columns:1fr;}}
-@media(max-width:900px){.r-2-1,.r-3{grid-template-columns:1fr;}.kpi-row-1{grid-template-columns:repeat(4,1fr);}}
-@media(max-width:600px){.kpi-row-1{grid-template-columns:repeat(2,1fr);}.r-2{grid-template-columns:1fr;}main{padding:0 12px 12px;}}
+@media(max-width:1100px){.r-2-1,.r-3{grid-template-columns:1fr;}.kpi-row-1{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:680px){.kpi-row-1,.kpi-row-2{grid-template-columns:repeat(2,1fr);}.r-2{grid-template-columns:1fr;}main{padding:10px 12px;}}
 </style>
 </head>
 <body>
-<!-- BBagio Login Overlay -->
-<div id="bbagio-login-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a3c6b 0%,#2563eb 100%);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;">
-  <div style="background:#fff;border-radius:16px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-    <div style="text-align:center;margin-bottom:32px;">
-      <div style="font-size:36px;font-weight:900;color:#1a3c6b;letter-spacing:-1px;">BBagio</div>
-      <div style="font-size:14px;color:#64748b;margin-top:8px;">대시보드 로그인</div>
-    </div>
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">아이디</label>
-      <input id="bb-user" type="text" placeholder="아이디 입력" autocomplete="username"
-        style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:15px;outline:none;box-sizing:border-box;transition:border 0.2s;"
-        onfocus="this.style.borderColor='#1a3c6b'" onblur="this.style.borderColor='#e2e8f0'" />
-    </div>
-    <div style="margin-bottom:24px;">
-      <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">비밀번호</label>
-      <input id="bb-pass" type="password" placeholder="비밀번호 입력" autocomplete="current-password"
-        style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:15px;outline:none;box-sizing:border-box;transition:border 0.2s;"
-        onfocus="this.style.borderColor='#1a3c6b'" onblur="this.style.borderColor='#e2e8f0'" />
-    </div>
-    <div id="bb-err" style="color:#ef4444;font-size:13px;text-align:center;margin-bottom:12px;display:none;">아이디 또는 비밀번호가 올바르지 않습니다.</div>
-    <button onclick="bbLogin()"
-      style="width:100%;padding:14px;background:linear-gradient(135deg,#1a3c6b,#2563eb);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:opacity 0.2s;"
-      onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">로그인</button>
-  </div>
-</div>
-<script>
-(function(){
-  var OVERLAY_ID = 'bbagio-login-overlay';
-  var AUTH_KEY   = 'bbagio_auth';
-  var CORRECT_ID = 'bbagio';
-  var CORRECT_PW = 'bbagio20!';
-
-  function hide(){
-    var el = document.getElementById(OVERLAY_ID);
-    if(el) el.style.display = 'none';
-  }
-
-  function checkLogin(){
-    if(localStorage.getItem(AUTH_KEY) === 'ok') hide();
-  }
-
-  window.bbLogin = function(){
-    var u = document.getElementById('bb-user').value.trim();
-    var p = document.getElementById('bb-pass').value;
-    if(u === CORRECT_ID && p === CORRECT_PW){
-      localStorage.setItem(AUTH_KEY, 'ok');
-      hide();
-    } else {
-      document.getElementById('bb-err').style.display = 'block';
-      document.getElementById('bb-pass').value = '';
-      document.getElementById('bb-pass').focus();
-    }
-  };
-
-  // Enter key support
-  document.addEventListener('keydown', function(e){
-    var overlay = document.getElementById(OVERLAY_ID);
-    if(e.key === 'Enter' && overlay && overlay.style.display !== 'none') window.bbLogin();
-  });
-
-  // Check on load
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', checkLogin);
-  } else {
-    checkLogin();
-  }
-})();
-</script>
 <div id="loading"><div class="sp"></div><p style="color:#888;font-size:.85rem">데이터 로딩 중...</p></div>
 
 <div class="overlay" id="modal" onclick="closeMo(event)">
@@ -200,17 +134,27 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
-<div class="page-wrap">
 <div class="header">
-  <div class="header-left">
-    <h1>🛍 BBagio 자사몰 대시보드</h1>
+  <div class="logo">BBagio <span>자사몰</span></div>
+  <div class="header-sub">커머스 분석 대시보드</div>
+  <div class="updated" id="updated">-</div>
+  <button id="refresh-btn" onclick="refreshData()" style="margin-left:10px;background:#7c5cfc;border:none;color:#fff;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:5px;" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
+    <span id="refresh-icon">🔄</span> 데이터 갱신
+  </button>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">기간</span>
+  <button class="btn-p active" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
+  <button class="btn-p" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
+  <button class="btn-p" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
+  <button class="btn-p" data-p="thisyear"  onclick="setPeriod('thisyear')">2026년</button>
+  <button class="btn-p" data-p="custom"    onclick="setPeriod('custom')">날짜선택</button>
+  <div class="custom-wrap" id="cw">
+    <input type="date" id="df"><span style="color:#ccc">~</span><input type="date" id="dt">
+    <button class="apply-btn" onclick="applyCustom()">적용</button>
   </div>
-  <div style="display:flex;align-items:center;gap:12px">
-    <div class="updated" id="updated">최종 업데이트: -</div>
-    <button onclick="refreshData()" style="background:#1a3c6b;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px">
-      <span id="refresh-icon">🔄</span> 갱신
-    </button>
-  </div>
+  <span class="range-badge" id="range-badge">-</span>
 </div>
 
 <!-- 목표 달성 배너 -->
@@ -229,36 +173,50 @@ tr:last-child td { border-bottom: none; }
       <div class="goal-stat-sub" id="goal-remain-days">-</div>
     </div>
     <div class="goal-stat">
-      <div class="goal-stat-lbl">전월 동기간 대비</div>
+      <div class="goal-stat-lbl">전월 대비</div>
       <div class="goal-stat-val" id="goal-vs-last">0%</div>
       <div class="goal-stat-sub" id="goal-vs-last-amt"></div>
+    </div>
+    <div class="goal-stat">
+      <div class="goal-stat-lbl">공구 매출 제외</div>
+      <div class="goal-stat-val" id="goal-group-rev">-</div>
+      <div class="goal-stat-sub">공동구매 차감액</div>
+    </div>
+    <div class="goal-stat">
+      <div class="goal-stat-lbl">잔여 일수</div>
+      <div class="goal-stat-val" id="goal-days-left">-</div>
+      <div class="goal-stat-sub">일 평균 필요</div>
     </div>
   </div>
 </div>
 
-<div class="filter-bar">
-  <button class="btn-p active" data-p="yesterday" onclick="setPeriod('yesterday')">어제</button>
-  <button class="btn-p" data-p="thismonth" onclick="setPeriod('thismonth')">이번달</button>
-  <button class="btn-p" data-p="lastmonth" onclick="setPeriod('lastmonth')">저번달</button>
-  <button class="btn-p" data-p="thisyear"  onclick="setPeriod('thisyear')">2026년</button>
-  <button class="btn-p" data-p="custom"    onclick="setPeriod('custom')">날짜선택</button>
-  <div class="custom-wrap" id="cw">
-    <input type="date" id="df"><span style="color:#ccc">~</span><input type="date" id="dt">
-    <button class="apply-btn" onclick="applyCustom()">적용</button>
-  </div>
-  <span id="range-badge" style="display:none"></span>
-</div>
-
 <main>
   <div class="kpi-section">
+    <div class="kpi-section-label">🛒 자사몰 실적</div>
     <div class="kpi-row kpi-row-1">
-      <div class="kpi"><div class="kpi-lbl">순 매출</div><div class="kpi-val" id="kv-rev">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-rev">-</span></div></div>
-      <div class="kpi"><div class="kpi-lbl">주문건수</div><div class="kpi-val" id="kv-ord">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-ord">-</span></div></div>
-      <div class="kpi"><div class="kpi-lbl">객단가</div><div class="kpi-val" id="kv-aov">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-aov">-</span></div></div>
-      <div class="kpi"><div class="kpi-lbl">신규 고객</div><div class="kpi-val" id="kv-nc">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-nc">-</span></div></div>
-      <div class="kpi"><div class="kpi-lbl">광고비 (Meta)</div><div class="kpi-val" id="kv-sp">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-sp">-</span></div></div>
-      <div class="kpi"><div class="kpi-lbl">실제 ROAS</div><div class="kpi-val" id="kv-roas">-</div><div class="kpi-foot" id="kv-roas-detail">-</div></div>
-      <div class="kpi fake"><div class="kpi-lbl">공구 매출</div><div class="kpi-val fake" id="kv-group">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-group">-</span></div></div>
+      <div class="kpi purple"><div class="kpi-lbl">총 매출</div><div class="kpi-val" id="kv-rev">-</div><div class="kpi-foot"><span class="delta" id="kd-rev">-</span><span class="kpi-prev-txt" id="kp-rev">-</span></div></div>
+      <div class="kpi blue">  <div class="kpi-lbl">주문 건수</div><div class="kpi-val" id="kv-ord">-</div><div class="kpi-foot"><span class="delta" id="kd-ord">-</span><span class="kpi-prev-txt" id="kp-ord">-</span></div></div>
+      <div class="kpi green"> <div class="kpi-lbl">객단가</div><div class="kpi-val" id="kv-aov">-</div><div class="kpi-foot"><span class="delta" id="kd-aov">-</span><span class="kpi-prev-txt" id="kp-aov">-</span></div></div>
+      <div class="kpi amber"> <div class="kpi-lbl">신규 고객</div><div class="kpi-val" id="kv-nc">-</div><div class="kpi-foot"><span class="delta" id="kd-nc">-</span><span class="kpi-prev-txt" id="kp-nc">-</span></div></div>
+    </div>
+    <div class="kpi-row kpi-row-2">
+      <div class="kpi red">
+        <div class="kpi-lbl">📣 Meta 광고비</div>
+        <div class="kpi-val" id="kv-sp">-</div>
+        <div class="kpi-foot"><span class="delta" id="kd-sp">-</span><span class="kpi-prev-txt" id="kp-sp">-</span></div>
+      </div>
+      <div class="kpi pink">
+        <div class="kpi-lbl">🎯 실제 ROAS <span style="font-size:.62rem;color:#bbb;font-weight:400">(자사몰 매출 ÷ 광고비)</span></div>
+        <div class="kpi-val xxl" id="kv-roas">-</div>
+        <div class="kpi-foot" id="kv-roas-detail">-</div>
+      </div>
+    </div>
+    <div class="kpi-row" style="grid-template-columns:1fr;margin-top:10px">
+      <div class="kpi" style="border-top-color:#ef4444;background:#fff7f7">
+        <div class="kpi-lbl" style="color:#ef4444">🏷 공구 매출 <span style="font-size:.62rem;color:#bbb;font-weight:400">(공동구매 — 실제 매출에서 제외됨)</span></div>
+        <div class="kpi-val" id="kv-group" style="color:#ef4444">-</div>
+        <div class="kpi-foot"><span class="kpi-prev-txt" id="kp-group" style="color:#bbb">-</span></div>
+      </div>
     </div>
   </div>
 
@@ -338,29 +296,16 @@ tr:last-child td { border-bottom: none; }
       <table>
         <thead><tr>
           <th style="width:105px">날짜</th>
-          <th class="td-r" style="width:65px">주문</th>
-          <th class="td-r" style="width:110px">순 매출</th>
-          <th class="td-r" style="width:85px">객단가</th>
-          <th class="td-r" style="width:90px">쿠폰 할인</th>
-          <th class="td-r" style="width:90px">적립금</th>
-          <th class="td-r" style="width:90px">광고비</th>
-          <th class="td-r" style="width:70px">ROAS</th>
-          <th class="td-r" style="width:65px">신규고객</th>
+          <th class="td-r" style="width:75px">주문</th>
+          <th class="td-r" style="width:115px">자사몰 매출</th>
+          <th class="td-r" style="width:95px">객단가</th>
+          <th class="td-r" style="width:100px">광고비</th>
+          <th class="td-r" style="width:80px">ROAS</th>
+          <th class="td-r" style="width:75px">신규고객</th>
         </tr></thead>
         <tbody id="daily-tbody"></tbody>
       </table>
     </div>
-  </div>
-
-  <!-- 쿠폰/적립금 (참고용) -->
-  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px">
-    <div class="kpi"><div class="kpi-lbl">쿠폰 할인액</div><div class="kpi-val" id="kv-cpn">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-cpn">-</span></div></div>
-    <div class="kpi"><div class="kpi-lbl">적립금 사용액</div><div class="kpi-val" id="kv-mlg">-</div><div class="kpi-foot"><span class="kpi-prev-txt" id="kp-mlg">-</span></div></div>
-    <span id="kd-rev" style="display:none"></span>
-    <span id="kd-ord" style="display:none"></span>
-    <span id="kd-aov" style="display:none"></span>
-    <span id="kd-nc" style="display:none"></span>
-    <span id="kd-sp" style="display:none"></span>
   </div>
 
   <!-- 월별 매출 테이블 -->
@@ -422,12 +367,11 @@ tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
-  <div id="ga4-placeholder" style="margin-bottom:12px;background:#fff;border-radius:6px;border:1px dashed #bfdbfe;padding:18px 20px;display:none">
-    <div style="font-size:.82rem;font-weight:700;color:#1a3c6b;margin-bottom:6px">🌐 GA4 트래픽 연동 준비 중</div>
+  <div id="ga4-placeholder" style="margin-bottom:12px;background:#fff;border-radius:6px;border:1px dashed #e0deff;padding:18px 20px;display:none">
+    <div style="font-size:.82rem;font-weight:700;color:#7c5cfc;margin-bottom:6px">🌐 GA4 트래픽 연동 준비 중</div>
     <div style="font-size:.78rem;color:#999"><code>ga4_latest.json</code> 파일이 없습니다.<br><code>ga4_collector.py</code>를 실행하면 웹사이트 UV·세션·유입 채널 데이터가 여기에 표시됩니다.</div>
   </div>
 </main>
-</div><!-- /page-wrap -->
 
 <script>
 // ── 전역 상태 ─────────────────────────────────────────────────────
@@ -508,14 +452,7 @@ function deltaHtml(cur, prev) {
 // ── 메타 일별 인덱스 ─────────────────────────────────────────────
 function metaByDate() {
   const idx = {};
-  const daily = META_D.daily || [];
-  if (Array.isArray(daily)) {
-    // 리스트 형식: [{date:'2026-04-01', ...}, ...]
-    daily.forEach(r => { idx[r.date] = r; });
-  } else if (typeof daily === 'object') {
-    // 딕셔너리 형식: {'2026-04-01': {...}, ...}
-    Object.assign(idx, daily);
-  }
+  ((META_D.daily)||[]).forEach(r => { idx[r.date] = r; });
   return idx;
 }
 
@@ -540,8 +477,7 @@ function render() {
   renderGA4();
   const badge = dates.length ? dates[0]+' ~ '+dates[dates.length-1]+' ('+dates.length+'일)' : '-';
   setText('range-badge', badge);
-  const ts = C24.collected_at ? '최종 업데이트: ' + new Date(C24.collected_at).toLocaleString('ko-KR') : '최종 업데이트: -';
-  setText('updated', ts);
+  setText('updated', C24.collected_at || '-');
   document.getElementById('loading').style.display = 'none';
 }
 
@@ -549,18 +485,16 @@ function render() {
 function calcPeriod(set) {
   const d = C24.daily || {};
   const mb = metaByDate();
-  let rev=0,ord=0,nc=0,sp=0,mem=0,non=0,grp=0,cpn=0,mlg=0;
+  let rev=0,ord=0,nc=0,sp=0,mem=0,non=0,grp=0;
   [...set].forEach(dt => {
     const v=d[dt]||{};
     rev+=v.revenue||0; ord+=v.orders||0; nc+=v.new_customers||0;
     mem+=v.member_orders||0; non+=v.nonmember_orders||0;
     grp+=v.group_revenue||0;
-    cpn+=v.coupon_discount||0;
-    mlg+=v.mileage_used||0;
     sp+=(mb[dt]||{}).spend||0;
   });
   const net=rev-grp;
-  return {rev,net,grp,ord,nc,sp,mem,non,cpn,mlg,aov:ord?net/ord:0,roas:sp?net/sp:0};
+  return {rev,net,grp,ord,nc,sp,mem,non,aov:ord?net/ord:0,roas:sp?net/sp:0};
 }
 
 function renderKPI(ds, prevDs) {
@@ -574,11 +508,6 @@ function renderKPI(ds, prevDs) {
   // 공구 매출 카드
   setText('kv-group', c.grp>0 ? krwFull(c.grp) : '없음');
   setText('kp-group', c.grp>0 ? '직전 ₩'+krw(p.grp) : '해당 기간 없음');
-  // 쿠폰/적립금
-  setText('kv-cpn', c.cpn>0 ? krwFull(c.cpn) : '없음');
-  setText('kp-cpn', c.cpn>0 ? '직전 ₩'+krw(p.cpn) : '-');
-  setText('kv-mlg', c.mlg>0 ? krwFull(c.mlg) : '없음');
-  setText('kp-mlg', c.mlg>0 ? '직전 ₩'+krw(p.mlg) : '-');
   setHtml('kd-rev', deltaHtml(c.net,p.net)); setText('kp-rev', p.net?'직전 ₩'+krw(p.net):'비교 없음');
   setHtml('kd-ord', deltaHtml(c.ord,p.ord)); setText('kp-ord', p.ord?'직전 '+p.ord+'건':'-');
   setHtml('kd-aov', deltaHtml(c.aov,p.aov)); setText('kp-aov', p.aov?'직전 ₩'+krw(p.aov):'-');
@@ -615,7 +544,7 @@ function renderCmpGrid(ds, prevDs) {
 }
 
 // ── 차트 헬퍼 ────────────────────────────────────────────────────
-const PALETTE = ['#1a3c6b','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#8b5cf6','#06b6d4'];
+const PALETTE = ['#7c5cfc','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#8b5cf6','#06b6d4'];
 function dc(id) { if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];} }
 function baseOpts(twoAxis) {
   const o = { responsive:true, maintainAspectRatio:false,
@@ -636,7 +565,7 @@ function renderTrendChart(dates) {
     data:{
       labels:dates.map(d=>d.slice(5)),
       datasets:[
-        {type:'bar', label:'순매출', data:dates.map(dt=>{ const v=d[dt]||{}; return (v.revenue||0)-(v.group_revenue||0); }), backgroundColor:'rgba(26,60,107,.7)', yAxisID:'y', order:2},
+        {type:'bar', label:'매출', data:dates.map(dt=>(d[dt]||{}).revenue||0), backgroundColor:'rgba(124,92,252,.7)', yAxisID:'y', order:2},
         {type:'line', label:'주문', data:dates.map(dt=>(d[dt]||{}).orders||0), borderColor:'#3b82f6', backgroundColor:'transparent', tension:.3, pointRadius:2, yAxisID:'y2', order:1}
       ]
     }, options:baseOpts(true)
@@ -652,9 +581,9 @@ function renderRoasChart(dates) {
     data:{
       labels:dates.map(d=>d.slice(5)),
       datasets:[
-        {type:'bar', label:'순매출',     data:dates.map(dt=>{ const v=d[dt]||{}; return (v.revenue||0)-(v.group_revenue||0); }), backgroundColor:'rgba(26,60,107,.6)', yAxisID:'y', order:3},
+        {type:'bar', label:'자사몰매출', data:dates.map(dt=>(d[dt]||{}).revenue||0), backgroundColor:'rgba(124,92,252,.6)', yAxisID:'y', order:3},
         {type:'bar', label:'광고비',     data:dates.map(dt=>(mb[dt]||{}).spend||0),   backgroundColor:'rgba(239,68,68,.5)',  yAxisID:'y', order:2},
-        {type:'line',label:'ROAS',       data:dates.map(dt=>{ const v=d[dt]||{}, s=(mb[dt]||{}).spend||0, r=(v.revenue||0)-(v.group_revenue||0); return s>0?+(r/s).toFixed(2):null; }),
+        {type:'line',label:'ROAS',       data:dates.map(dt=>{ const s=(mb[dt]||{}).spend||0,r=(d[dt]||{}).revenue||0; return s>0?+(r/s).toFixed(2):null; }),
           borderColor:'#f59e0b', backgroundColor:'transparent', tension:.3, pointRadius:2, yAxisID:'y2', order:1, spanGaps:true}
       ]
     }, options:baseOpts(true)
@@ -667,7 +596,7 @@ function renderHourlyChart(ds) {
   [...ds].forEach(dt => { const ho=(d[dt]||{}).hourly_orders||{}; Object.entries(ho).forEach(([h,v])=>{hAgg[+h]+=v;}); });
   const ctx=document.getElementById('hourlyChart').getContext('2d');
   CHARTS.hourlyChart = new Chart(ctx, {
-    type:'bar', data:{labels:Array.from({length:24},(_,i)=>i+'시'), datasets:[{data:hAgg,backgroundColor:'rgba(26,60,107,.7)',label:'주문'}]},
+    type:'bar', data:{labels:Array.from({length:24},(_,i)=>i+'시'), datasets:[{data:hAgg,backgroundColor:'rgba(124,92,252,.7)',label:'주문'}]},
     options:baseOpts(false)
   });
 }
@@ -679,10 +608,10 @@ function renderMemberChart(ds) {
   const total=mem+non; if(!total) return;
   const ctx=document.getElementById('memberChart').getContext('2d');
   CHARTS.memberChart = new Chart(ctx, {
-    type:'doughnut', data:{labels:['회원','비회원'],datasets:[{data:[mem,non],backgroundColor:['#1a3c6b','#3b82f6'],borderWidth:0}]},
+    type:'doughnut', data:{labels:['회원','비회원'],datasets:[{data:[mem,non],backgroundColor:['#7c5cfc','#3b82f6'],borderWidth:0}]},
     options:{cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+c.raw+'건 ('+pct(c.raw,total)+')' }}}}
   });
-  document.getElementById('member-legend').innerHTML = [['회원','#1a3c6b',mem],['비회원','#3b82f6',non]].map(([n,c,v])=>
+  document.getElementById('member-legend').innerHTML = [['회원','#7c5cfc',mem],['비회원','#3b82f6',non]].map(([n,c,v])=>
     `<div class="donut-leg-item"><div class="donut-dot" style="background:${c}"></div><div><div class="donut-leg-txt">${n}</div><div class="donut-leg-val">${v}건</div><div class="donut-leg-sub">${pct(v,total)}</div></div></div>`
   ).join('');
 }
@@ -791,19 +720,16 @@ function renderDailyTable(dates) {
     const sp=m.spend||0, roas=sp>0?(net/sp).toFixed(2):'-';
     const aov=v.orders?net/v.orders:0;
     const grpMark=v.group_revenue>0?` <span style="font-size:.67rem;color:#ef4444">(-₩${krw(v.group_revenue)})</span>`:'';
-    const cpn=v.coupon_discount||0, mlg=v.mileage_used||0;
     return `<tr class="tr-hover" onclick="toggleDailyDrill('dd${i}','${dt}')">
       <td><strong>${dt}</strong></td>
       <td class="td-r">${v.orders||0}</td>
       <td class="td-r">${krwFull(net)}${grpMark}</td>
       <td class="td-r">₩${krw(aov)}</td>
-      <td class="td-r" style="color:${cpn>0?'#b45309':'#ccc'}">${cpn>0?'₩'+krw(cpn):'-'}</td>
-      <td class="td-r" style="color:${mlg>0?'#065f46':'#ccc'}">${mlg>0?'₩'+krw(mlg):'-'}</td>
       <td class="td-r">${sp?'₩'+krw(sp):'-'}</td>
       <td class="td-r">${roas!=='-'?roas+'x':'-'}</td>
       <td class="td-r">${v.new_customers||0}</td>
     </tr>
-    <tr class="drill-row" id="dd${i}"><td class="drill-cell" colspan="9"><div class="drill-inner" id="ddi${i}"></div></td></tr>`;
+    <tr class="drill-row" id="dd${i}"><td class="drill-cell" colspan="7"><div class="drill-inner" id="ddi${i}"></div></td></tr>`;
   }).join('');
 }
 
@@ -813,10 +739,9 @@ function toggleDailyDrill(rowId, dt) {
     const idx=rowId.replace('dd',''), ddi=document.getElementById('ddi'+idx);
     if(!ddi.innerHTML){
       const dp=(C24.daily_products||{})[dt]||[];
-      ddi.innerHTML=dp.length?dp.map(i=>{
-        const isGrp=i.product_name&&i.product_name.includes(C24.group_purchase_keyword||'공동구매');
-        return `<div class="drill-item"><div class="di-pname" style="${isGrp?'color:#ef4444':''}">${esc(shortStr(i.product_name||'-',22))}${isGrp?' 🏷':''}</div><div class="di-opt">${esc(shortStr(i.option_name||'-',30))}</div><div class="di-q">${i.quantity}</div><div class="di-r">₩${krw(i.revenue||0)}</div></div>`;
-      }).join(''):'<div style="color:#ccc;font-size:.78rem;padding:6px 0">상품 내역 없음</div>';
+      ddi.innerHTML=dp.length?dp.map(i=>
+        `<div class="drill-item"><div class="di-pname">${esc(shortStr(i.product_name||'-',22))}</div><div class="di-opt">${esc(shortStr(i.option_name||'-',30))}</div><div class="di-q">${i.quantity}</div><div class="di-r">₩${krw(i.revenue||0)}</div></div>`
+      ).join(''):'<div style="color:#ccc;font-size:.78rem;padding:6px 0">상품 내역 없음</div>';
     }
   }
 }
@@ -873,7 +798,7 @@ function renderGA4() {
       data:{
         labels: t7.map(r => r.date?.slice(5) || r.date),
         datasets: [
-          {label:'UV',   data:t7.map(r=>r.uv||r.users||0),       borderColor:'#1a3c6b', backgroundColor:'rgba(26,60,107,.1)', fill:true, tension:.3, pointRadius:2},
+          {label:'UV',   data:t7.map(r=>r.uv||r.users||0),       borderColor:'#7c5cfc', backgroundColor:'rgba(124,92,252,.1)', fill:true, tension:.3, pointRadius:2},
           {label:'세션', data:t7.map(r=>r.sessions||0),           borderColor:'#3b82f6', backgroundColor:'transparent',         tension:.3, pointRadius:2}
         ]
       }, options:baseOpts(true)
@@ -962,7 +887,12 @@ function renderGoalBanner() {
   document.getElementById('goal-bar-fill').style.width = rate+'%';
   document.getElementById('goal-rate').textContent = '달성률 '+rate+'%';
   document.getElementById('goal-remain').textContent = '₩'+remain.toLocaleString('ko-KR');
-  document.getElementById('goal-remain-days').textContent = '잔여 '+daysLeft+'일 · 일 평균 '+(dailyNeed>0?'₩'+Math.round(dailyNeed/10000)+'만 필요':'목표 달성!');
+  document.getElementById('goal-remain-days').textContent = '잔여 '+daysLeft+'일';
+  document.getElementById('goal-group-rev').textContent = thisMthGrp>0?'₩'+thisMthGrp.toLocaleString('ko-KR'):'없음';
+  document.getElementById('goal-days-left').textContent = daysLeft+'일 남음';
+  const sub2 = document.getElementById('goal-days-left').nextElementSibling||document.getElementById('goal-days-left').parentElement.querySelector('.goal-stat-sub');
+  // 일 평균 필요 업데이트
+  document.getElementById('goal-days-left').parentElement.querySelector('.goal-stat-sub').textContent = dailyNeed>0?'일 평균 ₩'+Math.round(dailyNeed/10000)+'만':'목표 달성!';
 
   // 전월 대비 (동기간 → 전월 합산 → 0%)
   const el = document.getElementById('goal-vs-last');
@@ -1017,7 +947,7 @@ function renderMonthlyTable() {
       <td class="td-r" style="font-weight:700">${krwFull(m.net)}</td>
       <td class="td-r">${tgt>0?krwFull(tgt):'-'}</td>
       <td class="td-r">${ratePct!=null?ratePct+'%':'-'}</td>
-      <td style="min-width:80px"><div style="background:#f0f1f8;border-radius:3px;height:6px"><div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#1a3c6b,#2563eb);width:${barW}%"></div></div></td>
+      <td style="min-width:80px"><div style="background:#f0f1f8;border-radius:3px;height:6px"><div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#7c5cfc,#a78bfa);width:${barW}%"></div></div></td>
       <td class="td-r">${vsHtml}</td>
     </tr>`;
   }).join('');
