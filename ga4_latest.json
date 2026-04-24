@@ -1,0 +1,271 @@
+{
+  "updated_at": "2026-04-24 02:08:42",
+  "property_id": "492805857",
+  "today": "2026-04-24",
+  "yesterday": "2026-04-23",
+  "today_metrics": {
+    "sessions": 0,
+    "uv": 0,
+    "pageviews": 0,
+    "bounce_rate": 0.0
+  },
+  "yesterday_metrics": {
+    "sessions": 0,
+    "uv": 0,
+    "pageviews": 0,
+    "bounce_rate": 0.0
+  },
+  "traffic_sources": [
+    {
+      "channel": "Organic Social",
+      "sessions": 627,
+      "uv": 586
+    },
+    {
+      "channel": "Paid Social",
+      "sessions": 418,
+      "uv": 362
+    },
+    {
+      "channel": "Direct",
+      "sessions": 319,
+      "uv": 264
+    },
+    {
+      "channel": "Organic Search",
+      "sessions": 314,
+      "uv": 168
+    },
+    {
+      "channel": "Referral",
+      "sessions": 141,
+      "uv": 56
+    },
+    {
+      "channel": "Unassigned",
+      "sessions": 23,
+      "uv": 22
+    },
+    {
+      "channel": "Paid Other",
+      "sessions": 14,
+      "uv": 14
+    },
+    {
+      "channel": "Organic Video",
+      "sessions": 4,
+      "uv": 2
+    }
+  ],
+  "top_pages": [
+    {
+      "page": "/shop1/order/basket.html",
+      "pageviews": 2750,
+      "uv": 989
+    },
+    {
+      "page": "/",
+      "pageviews": 1019,
+      "uv": 439
+    },
+    {
+      "page": "/product/list.html",
+      "pageviews": 791,
+      "uv": 152
+    },
+    {
+      "page": "/surl/P/179",
+      "pageviews": 681,
+      "uv": 523
+    },
+    {
+      "page": "/product/detail.html",
+      "pageviews": 379,
+      "uv": 114
+    },
+    {
+      "page": "/surl/O/206",
+      "pageviews": 277,
+      "uv": 209
+    },
+    {
+      "page": "/order/basket.html",
+      "pageviews": 226,
+      "uv": 45
+    },
+    {
+      "page": "/protected/loginSns.html",
+      "pageviews": 221,
+      "uv": 57
+    },
+    {
+      "page": "/skin-skin2/index.html",
+      "pageviews": 178,
+      "uv": 4
+    },
+    {
+      "page": "/skin-skin2/product/detail.html",
+      "pageviews": 150,
+      "uv": 2
+    }
+  ],
+  "hourly_uv_today": {
+    "00": {
+      "uv": 25,
+      "sessions": 28
+    },
+    "01": {
+      "uv": 19,
+      "sessions": 20
+    },
+    "02": {
+      "uv": 13,
+      "sessions": 13
+    },
+    "03": {
+      "uv": 8,
+      "sessions": 8
+    },
+    "04": {
+      "uv": 6,
+      "sessions": 6
+    },
+    "05": {
+      "uv": 3,
+      "sessions": 3
+    },
+    "06": {
+      "uv": 11,
+      "sessions": 11
+    },
+    "07": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "08": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "09": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "10": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "11": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "12": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "13": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "14": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "15": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "16": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "17": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "18": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "19": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "20": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "21": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "22": {
+      "uv": 0,
+      "sessions": 0
+    },
+    "23": {
+      "uv": 0,
+      "sessions": 0
+    }
+  },
+  "device_breakdown": [
+    {
+      "device": "mobile",
+      "sessions": 1350,
+      "uv": 1166
+    },
+    {
+      "device": "desktop",
+      "sessions": 506,
+      "uv": 282
+    },
+    {
+      "device": "tablet",
+      "sessions": 7,
+      "uv": 7
+    }
+  ],
+  "trend_7day": [
+    {
+      "date": "20260418",
+      "uv": 201,
+      "sessions": 223,
+      "pageviews": 826
+    },
+    {
+      "date": "20260419",
+      "uv": 166,
+      "sessions": 183,
+      "pageviews": 619
+    },
+    {
+      "date": "20260420",
+      "uv": 209,
+      "sessions": 262,
+      "pageviews": 2173
+    },
+    {
+      "date": "20260421",
+      "uv": 209,
+      "sessions": 284,
+      "pageviews": 1315
+    },
+    {
+      "date": "20260422",
+      "uv": 287,
+      "sessions": 346,
+      "pageviews": 1512
+    },
+    {
+      "date": "20260423",
+      "uv": 407,
+      "sessions": 476,
+      "pageviews": 1804
+    },
+    {
+      "date": "20260424",
+      "uv": 85,
+      "sessions": 89,
+      "pageviews": 386
+    }
+  ]
+}
